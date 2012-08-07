@@ -1,0 +1,160 @@
+<html>
+<head>
+	<title></title>
+	{#    	'@PhotoAssessmentBundle/Resources/assets/scss/outlines.scss' #}
+	{% stylesheets output='css/survey.css' filter="?yui_css" combine=true
+		'@PhotoAssessmentBundle/Resources/assets/scss/reset.scss'
+		'@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.modif.css'
+		'@PhotoAssessmentBundle/Resources/assets/bem/layouts/l-survey/*.scss'
+		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.scss'
+	    %}
+	    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="all" />
+	{% endstylesheets %}
+</head>
+
+<body class="l-survey">
+	<div class="l-survey-header">
+		<div class="b-userbox"></div>
+		<h1><a href="{{ path("pat_default_index") }}">Photo Content Assessment Tool</a>: Flickr (<span class="i-done">1</span>/<span class="i-total">42</span>)</h1>
+	</div>
+	<div class="l-survey__leftcol">
+		<a href="{photo.mediumURL}" title="View this photo on Flickr" class="b-survey-photo">
+			<img class="b-survey-photo__photo" src="http://farm9.staticflickr.com/8013/7669755650_e0e9d4cb04_z.jpg" />
+			<span class="b-survey-photo__title">Olympic stadium and The Orbit during London Olympics opening ceremony (2012-07-27)</span>
+			<!-- span class="b-survey-photo__description">Some description</span -->
+			<span class="b-survey-photo__user">Alexander Kachkaev</span>
+			<span class="b-survey-photo__timestamp" />2012-07-28 02:03:15</span>
+		</a>
+		<div class="b-survey-dashboard"></div>
+	</div>
+	<div class="l-survey__rightcol">
+		<ul class="b-survey-questionnaire">
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">Is the item a real photograph?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+						<ul class="b-switch">
+						<li data-v="false" class="red">no</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="true"  class="green">yes</li>
+					</ul>
+				</div>
+			</li>
+
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">Is the photograph taken outdoors?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+					<ul class="b-switch">
+						<li data-v="false" class="red">no</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="true"  class="green">yes</li>
+					</ul>
+				</div>
+			</li>
+			
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">At what time of the day is the photograph taken?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+					<ul class="b-switch">
+						<li data-v="1"     class="gray">twilight</li>
+						<li data-v="2"     class="darkblue">night</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="0"     class="green">day</li>
+					</ul>
+				</div>
+			</li>
+			
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during an event?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+					<ul class="b-switch">
+						<li data-v="false" class="red">no</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="true"  class="green">yes</li>
+					</ul>
+				</div>
+			</li>
+			
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">Is the main subject of the photograph:<br/>— a person?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+					<ul class="b-switch">
+						<li data-v="false" class="green">no</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="true"  class="red">yes</li>
+					</ul>
+				</div>
+			</li>
+
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">— any other moving object?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+					<ul class="b-switch">
+						<li data-v="false" class="green">no</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="true"  class="red">yes</li>
+					</ul>
+				</div>
+			</li>
+			
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">Is the photograph geotagged correctly?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+					<ul class="b-switch">
+						<li data-v="false" class="yellow">no</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="true"  class="green">yes</li>
+					</ul>
+				</div>
+				<div class="b-survey-map"></div>
+			</li>
+			
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">Does the photograph describe surrounding space?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+					<ul class="b-switch">
+						<li data-v="false" class="red">no</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="true"  class="green">yes</li>
+					</ul>
+				</div>
+			</li>
+
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">Is the place on the photograph scenic?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+					<ul class="b-switch">
+						<li data-v="false" class="red">no</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="true"  class="green">yes</li>
+					</ul>
+				</div>
+			</li>
+			
+		</ul>
+		<div class="b-survey-controls"><div class="b-button b-button_color-blue b-button_size-medium">Done</div></div>
+	</div>
+
+	{% javascripts output='js/vendors.js' filter="" combine=true
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.dump.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.timers.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.tmpl.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.scrollintoview.modif.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.js'
+
+    '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.string.js'
+    %}
+    	<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+	{% javascripts output='js/survey.js' filter="" combine=true
+		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
+    %}
+	    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;language={{ app.request.locale }}"></script>
+	
+</body>
+</html>

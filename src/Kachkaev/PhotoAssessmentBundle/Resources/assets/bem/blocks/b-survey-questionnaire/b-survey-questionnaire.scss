@@ -1,0 +1,24 @@
+.b-survey-questionnaire {
+	padding: 0;	
+	margin: 0;
+}
+
+.b-survey-questionnaire__question {
+	margin: 0 0 18px;
+	min-height: 36px;
+	list-style: none;
+	display: block;
+	overflow: visible;
+	position: relative;
+}
+
+.b-survey-questionnaire__questiontext {
+	line-height: 16px;
+	float: left;
+}
+
+.b-survey-questionnaire__questionanswer {
+	float: right;
+	height: 18px;
+	overflow: visible;
+}

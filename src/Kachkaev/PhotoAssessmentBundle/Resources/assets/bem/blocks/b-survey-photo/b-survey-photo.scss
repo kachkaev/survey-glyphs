@@ -1,0 +1,36 @@
+.b-survey-photo {
+	display: block;
+	margin: -15px -15px 30px;
+	padding: 15px;
+	left: -15px;
+	overflow: hidden;
+	text-decoration: none;
+	color: #000;
+	
+}
+
+.b-survey-photo:hover {
+	background: #eee;
+}
+
+.b-survey-photo__photo {
+	display: block;
+	max-width: 100%;
+	padding-bottom: 18px;
+}
+
+.b-survey-photo__title {
+	display: block;
+}
+
+.b-survey-photo__description {
+	display: block;
+}
+.b-survey-photo__user {
+	color: #666;
+	display: block;
+}
+.b-survey-photo__timestamp {
+	color: #666;
+	display: block;
+}

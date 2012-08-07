@@ -1,0 +1,33 @@
+.b-switch {
+	
+}
+
+.b-switch li{
+	display: none;
+}
+
+.b-switch li:first-child,
+.b-switch li:last-child {
+	color: gray;
+}
+
+.b-switch__ui.ui-slider {
+	background: #ccc url("/static/i/b-switch__ui.png") no-repeat -20px 0;
+	display: block;
+	height: 20px;
+	position: relative;
+	border: none;
+	border-radius: none;
+	padding: none !important;
+}
+
+.b-switch__ui .ui-slider-handle {
+	height: 22px;
+	width: 22px;
+	display: block;
+	border: none;
+	background: url("/static/i/b-switch__ui.png") no-repeat 0 -20px;
+	padding: 0 !important;
+	margin: 0 0 0 -11px !important;
+	top: -3px !important;
+}

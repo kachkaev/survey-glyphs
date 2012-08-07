@@ -1,0 +1,14 @@
+parameters:
+    database_driver: pdo_pgsql
+    database_host: localhost
+    database_port: null
+    database_name: pr_data_survey
+    database_user: symfony
+    database_password: hh
+    mailer_transport: smtp
+    mailer_host: localhost
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: dd461dfe3d10c589f2ae3bccc445245b
+    database_path: null

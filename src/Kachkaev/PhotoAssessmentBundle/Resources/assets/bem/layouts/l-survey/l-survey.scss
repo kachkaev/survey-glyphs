@@ -1,0 +1,40 @@
+.l-survey {
+	margin: 0px auto 18px;
+	width: 940px;
+	padding: 0 30px;
+	
+	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+	font-size: 14px;
+	line-height: 18px;
+}
+
+.l-survey__leftcol {
+	width: 500px;
+	float:left;
+}
+
+.l-survey__rightcol {
+	padding-left: 530px;
+	border-top: 1px solid #fff;
+}
+
+.l-survey-header{
+	height: 54px;
+}
+
+.l-survey-header h1{
+	font-size: 25px;
+	font-weight: normal;
+	margin: 0px;
+	line-height: 36px;
+	padding-top: 10px;
+}
+
+.l-survey-header h1 a{
+	color: #000;
+	text-decoration: none;
+}
+
+.l-survey-header h1 a:hover{
+	text-decoration: underline;
+}

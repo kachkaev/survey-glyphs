@@ -1,0 +1,90 @@
+/* ===========================
+   Highlight images that have no height or width specified
+   @see http://37signals.com/svn/posts/2979-css-tip-spot-unsized-images-during-development
+   =========================== */
+
+/*img:not([width]) {
+  border-left: 2px solid red !important;
+  border-right: 2px solid red !important;
+}
+img:not([height]) {
+  border-top: 2px solid red !important;
+  border-bottom: 2px solid red !important;
+}*/
+
+
+/* ===========================
+   Symfony toolbar
+   =========================== */
+
+.sf-toolbarreset {
+    display: none !important;
+    padding: 4px;
+    position: absolute !important;
+    overflow: visible;
+    right: 15px;
+    font-size: 9px !important;
+    z-index: 9999;
+    width: 170px !important; 
+    background: #fff !important;
+    border: 1px solid #d9d9d9 !important;
+    border-radius: 6px;
+    box-shadow: 0px 1px 4px rgba(0,0,0,.17);
+    padding-top: 0 !important;
+}
+
+.sf-toolbarreset-native-container {
+    display: none !important;
+}
+.sf-toolbarreset-container {
+    position: fixed;
+    top: 85px;
+    right: 0px;
+}
+.sf-toolbarreset-container_page-with-tabs {
+    top: 109px;
+}
+
+.sf-toolbarreset-container .sf-toolbarreset{
+    display: block !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+.sf-toolbarreset-container img[width="15"]{
+    display: none !important;
+}
+
+.sf-toolbarreset span:FIRST-CHILD {
+    display: none !important;
+}
+.sf-toolbarreset span:LAST-CHILD {
+    border-bottom: none !important;
+}
+.sf-toolbarreset span {
+    cursor: default !important;
+    display: block !important;
+    overflow: hidden !important;
+    clear: left !important;
+    border-right: none !important;
+    padding: 8px 0 8px 45px !important;
+    width: 120px !important; 
+    position: relative;
+    white-space: normal !important;
+}
+.sf-toolbarreset span span {
+    display: inline !important;
+    clear: none !important;
+    border-bottom: none !important;
+    padding: 0 !important;
+    width: auto !important;
+    float: left; 
+}
+.sf-toolbarreset span img {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    padding: 0 !important;
+    margin: 0 !important;
+}
