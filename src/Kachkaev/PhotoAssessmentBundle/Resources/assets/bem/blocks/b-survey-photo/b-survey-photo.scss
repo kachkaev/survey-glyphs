@@ -9,8 +9,16 @@
 	
 }
 
+.b-survey-photo span {
+	opacity: 0.6;
+}
+
 .b-survey-photo:hover {
 	background: #eee;
+}
+
+.b-survey-photo:hover span {
+	opacity: 1;
 }
 
 .b-survey-photo__photo {
@@ -26,11 +34,11 @@
 .b-survey-photo__description {
 	display: block;
 }
-.b-survey-photo__user {
-	color: #666;
-	display: block;
-}
 .b-survey-photo__timestamp {
-	color: #666;
-	display: block;
+	color: #888;
+	font-size: 10px;
+}
+.b-survey-photo__user {
+	color: #888;
+	font-size: 10px;
 }

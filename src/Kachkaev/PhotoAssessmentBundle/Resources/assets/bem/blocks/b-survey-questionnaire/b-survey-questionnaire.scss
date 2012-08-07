@@ -10,6 +10,11 @@
 	display: block;
 	overflow: visible;
 	position: relative;
+	padding-left: 16px;
+}
+
+.b-survey-questionnaire__question_current {
+/*	background: url("/static/i/b-survey-questionnaire__question_current.png") no-repeat 0 0; */
 }
 
 .b-survey-questionnaire__questiontext {
@@ -21,4 +26,5 @@
 	float: right;
 	height: 18px;
 	overflow: visible;
+	position: relative;
 }

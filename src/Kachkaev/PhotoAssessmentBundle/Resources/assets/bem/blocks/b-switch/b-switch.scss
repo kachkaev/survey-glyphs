@@ -1,24 +1,50 @@
 .b-switch {
-	
+	float: right;
 }
 
-.b-switch li{
-	display: none;
+.b-switch li {
+	font-size: 11px;
+	opacity: 0.4;
+	cursor: pointer;
+}
+.b-switch li:hover {
+	opacity: 0.8;
 }
 
-.b-switch li:first-child,
+.b-switch li:first-child {
+	float: right;
+	overflow: visible;
+	margin-right: 5px;
+}
+
+.b-switch li:nth-child(2){
+	position: absolute;
+	right: 43px;
+	top: 20px;
+	text-align: center;
+	overflow: visible;
+	padding-right: 7px;
+	background: url("/static/i/b-switch__ui.png") right -45px;
+}
+
 .b-switch li:last-child {
-	color: gray;
+	position: absolute;
+	left: 100%;
+	margin-left: 5px;
 }
 
+
+.b-switch__ui{
+	float: right;
+}
 .b-switch__ui.ui-slider {
-	background: #ccc url("/static/i/b-switch__ui.png") no-repeat -20px 0;
+	background: url("/static/i/b-switch__ui.png") no-repeat -10px 0;
 	display: block;
 	height: 20px;
 	position: relative;
 	border: none;
 	border-radius: none;
-	padding: none !important;
+	padding: 0 !important;
 }
 
 .b-switch__ui .ui-slider-handle {
@@ -29,5 +55,25 @@
 	background: url("/static/i/b-switch__ui.png") no-repeat 0 -20px;
 	padding: 0 !important;
 	margin: 0 0 0 -11px !important;
-	top: -3px !important;
+	top: -2px !important;
+}
+
+.b-switch__ui .ui-slider-handle:focus {
+    outline: none;
+    background-position: -30px -20px;	
+}
+
+
+.b-switch__uiwrapright,
+.b-switch__uiwrapleft {
+	float: right;
+	background: url("/static/i/b-switch__ui.png") no-repeat 0 0;
+	display: block;
+	height: 20px;
+	width: 10px;
+	position: relative;
+}
+
+.b-switch__uiwrapright {
+	background-position: -90px 0px;
 }

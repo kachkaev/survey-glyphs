@@ -7,8 +7,8 @@ $(function() {
 		var currentAnswer = 2;
 		console.log(nAnswers);
 
-		var $switchUI = $switch.before('<div class="b-switch__ui" />').prev();
-		$switchUI.width((nAnswers-1)*20);
+		var $switchUI = $switch.before('<div class="b-switch__uiwrapright" /><div class="b-switch__ui" /><div class="b-switch__uiwrapleft" />').prev().prev();
+		$switchUI.width((nAnswers-1)*15);
 		$switchUI.slider({
 			value : currentAnswer,
 			min : 1,

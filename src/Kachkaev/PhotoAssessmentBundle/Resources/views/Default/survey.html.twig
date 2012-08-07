@@ -22,14 +22,14 @@
 			<img class="b-survey-photo__photo" src="http://farm9.staticflickr.com/8013/7669755650_e0e9d4cb04_z.jpg" />
 			<span class="b-survey-photo__title">Olympic stadium and The Orbit during London Olympics opening ceremony (2012-07-27)</span>
 			<!-- span class="b-survey-photo__description">Some description</span -->
-			<span class="b-survey-photo__user">Alexander Kachkaev</span>
 			<span class="b-survey-photo__timestamp" />2012-07-28 02:03:15</span>
+			<span class="b-survey-photo__user">Alexander Kachkaev</span>
 		</a>
 		<div class="b-survey-dashboard"></div>
 	</div>
 	<div class="l-survey__rightcol">
 		<ul class="b-survey-questionnaire">
-			<li class="b-survey-questionnaire__question">
+			<li class="b-survey-questionnaire__question b-survey-questionnaire__question_current">
 				<div class="b-survey-questionnaire__questiontext">Is the item a real photograph?</div>
 				<div data-q="" class="b-survey-questionnaire__questionanswer">
 						<ul class="b-switch">
@@ -52,18 +52,6 @@
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">At what time of the day is the photograph taken?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
-					<ul class="b-switch">
-						<li data-v="1"     class="gray">twilight</li>
-						<li data-v="2"     class="darkblue">night</li>
-						<li data-v="null"  class="default"></li>
-						<li data-v="0"     class="green">day</li>
-					</ul>
-				</div>
-			</li>
-			
-			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during an event?</div>
 				<div data-q="" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
@@ -75,7 +63,19 @@
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">Is the main subject of the photograph:<br/>— a person?</div>
+				<div class="b-survey-questionnaire__questiontext">At what time of the day is the photograph taken?</div>
+				<div data-q="" class="b-survey-questionnaire__questionanswer">
+					<ul class="b-switch">
+						<li data-v="2"     class="darkblue">night</li>
+						<li data-v="1"     class="gray">twilight</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="0"     class="green">day</li>
+					</ul>
+				</div>
+			</li>
+			
+			<li class="b-survey-questionnaire__question">
+				<div class="b-survey-questionnaire__questiontext">Is the main subject of the photograph:<br/> — a person?</div>
 				<div data-q="" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="false" class="green">no</li>
@@ -86,7 +86,7 @@
 			</li>
 
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">— any other moving object?</div>
+				<div class="b-survey-questionnaire__questiontext"> — any other moving object?</div>
 				<div data-q="" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="false" class="green">no</li>
