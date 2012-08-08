@@ -1,5 +1,7 @@
 .b-switch {
 	float: right;
+	background: #fff;
+	height: 20px;
 }
 
 .b-switch li {
@@ -33,10 +35,38 @@
 	margin-left: 5px;
 }
 
+/****************
+ *	wrap
+ */
+.b-switch__wrap {
+	float:right;
+	-moz-transition: background-color 0.4s;
+}
 
+.b-switch__wrap.color_darkblue {
+	background-color: #008;
+}
+.b-switch__wrap.color_red {
+	background-color: red;
+}
+.b-switch__wrap.color_gray {
+	background-color: gray;
+}
+.b-switch__wrap.color_green {
+	background-color: green;
+}
+.b-switch__wrap.color_yellow {
+	background-color: yellow;
+}
+
+
+/****************
+ *	ui (slider)
+ */
 .b-switch__ui{
 	float: right;
 }
+
 .b-switch__ui.ui-slider {
 	background: url("/static/i/b-switch__ui.png") no-repeat -10px 0;
 	display: block;
@@ -64,6 +94,9 @@
 }
 
 
+/****************
+ *	custom slider sides
+ */
 .b-switch__uiwrapright,
 .b-switch__uiwrapleft {
 	float: right;
