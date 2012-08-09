@@ -9,6 +9,7 @@
 	opacity: 0.4;
 	cursor: pointer;
 }
+
 .b-switch li:hover {
 	opacity: 0.8;
 }
@@ -19,7 +20,7 @@
 	margin-right: 5px;
 }
 
-.b-switch li:nth-child(2){
+.b-switch li:nth-child(2) {
 	position: absolute;
 	right: 43px;
 	top: 20px;
@@ -39,31 +40,34 @@
  *	wrap
  */
 .b-switch__wrap {
-	float:right;
+	float: right;
 	-moz-transition: background-color 0.4s;
 }
 
 .b-switch__wrap.color_darkblue {
-	background-color: #008;
-}
-.b-switch__wrap.color_red {
-	background-color: red;
-}
-.b-switch__wrap.color_gray {
-	background-color: gray;
-}
-.b-switch__wrap.color_green {
-	background-color: green;
-}
-.b-switch__wrap.color_yellow {
-	background-color: yellow;
+	background-color: rgba(0,0, 160, 0.7);
 }
 
+.b-switch__wrap.color_red {
+	background-color: rgba(255, 0, 0, .6);
+}
+
+.b-switch__wrap.color_gray {
+	background-color: rgba(100, 100, 200, 0.6);
+}
+
+.b-switch__wrap.color_green {
+	background-color: rgba(0, 200, 0, .7);
+}
+
+.b-switch__wrap.color_yellow {
+	background-color: rgba(200, 200, 0, 0.5);
+}
 
 /****************
  *	ui (slider)
  */
-.b-switch__ui{
+.b-switch__ui {
 	float: right;
 }
 
@@ -89,16 +93,14 @@
 }
 
 .b-switch__ui .ui-slider-handle:focus {
-    outline: none;
-    background-position: -30px -20px;	
+	outline: none;
+	background-position: -30px -20px;
 }
-
 
 /****************
  *	custom slider sides
  */
-.b-switch__uiwrapright,
-.b-switch__uiwrapleft {
+.b-switch__uiwrapright,.b-switch__uiwrapleft {
 	float: right;
 	background: url("/static/i/b-switch__ui.png") no-repeat 0 0;
 	display: block;

@@ -31,7 +31,13 @@ $(function() {
 
     var map = new google.maps.Map($bSurveyMap.get(0),
             myOptions);
+    // Removing tabfocus within the map
+    google.maps.event.addListenerOnce(map, 'idle', function(){
+    	$bSurveyMap.find('a').attr('tabindex', -1);
+    });
 
+    $('body').oneTime(1000, function() {
+    });
 
     // Object show/hide depending on zoom level
     google.maps.event.addListener(map, 'zoom_changed', function() {

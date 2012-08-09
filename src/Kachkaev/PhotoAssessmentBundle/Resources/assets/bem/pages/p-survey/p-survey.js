@@ -1,7 +1,9 @@
 $(function(){
 
 	var apiURL = "/api/";
-
+	
+	$bQuestionnaire = $('.b-survey-questionnaire');
+	
 	/* ===================================
 	 * Loading photo queue
 	 */
@@ -40,17 +42,7 @@ $(function(){
 				"qSpaceAttractive" : false,
 		};
 		
-		// Applying answers
-		$('.b-switch').each(function() {
-			var $switch = $(this);
-			var $question = $(this).parent().parent();
-			$switch.get(0).setValue(answer[$question.data('q')]);
-		});
+		$bQuestionnaire.get(0).loadData(answer);
 	};
-	
-	/* ===================================
-	 * Navigation between survey questions
-	 */
-	
 	loadPhoto('flickr', 123);
 });

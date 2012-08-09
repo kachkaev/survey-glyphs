@@ -1,8 +1,6 @@
 $(function() {
 
 	
-	// Custom methods (API
-	
 	// Sets value
 	var setValue = function(value) {
 		$switchWrap = $(this).parent();
@@ -19,6 +17,12 @@ $(function() {
 		var $switchWrap = $(this).parent();
 		var i = $switchWrap.find('.b-switch__ui').slider('value');
 		return $(this).find('li').eq(i - 1).data('v');
+	};
+	
+	// Focuses the switch
+	var focus = function() {
+		var $switchUIHandle = $(this).parent().find('.ui-slider-handle');
+		$switchUIHandle.focus();
 	};
 
 	
@@ -94,24 +98,23 @@ $(function() {
 		$switchUIHandle.bind('keydown', function(event) {
 			if (switchIsDisabled())
 				return;
-			var dv = 0;
-			if (event.keyCode == 37) {
-				// ←
-				dv = -1;
-			} else if (event.keyCode == 39) {
-				// →
-				dv = 1;
+			var delta = 0;
+			if (event.keyCode == KEY_LEFT) {
+				delta = -1;
+			} else if (event.keyCode == KEY_RIGHT) {
+				delta = 1;
 			} else {
 				return;
 			}
-			var newValue = $switchUI.slider('value') + dv;
+			var newValue = $switchUI.slider('value') + delta;
 			if ($switchLIs.eq(newValue - 1).hasClass('default'))
-				newValue += dv;
+				newValue += delta;
 			$switchUI.slider('value', newValue);
 		});
 		
 		// Applying custom methods
 		this.setValue = setValue;
 		this.getValue = getValue;
+		this.focus = focus;
 	});
 });

@@ -5,19 +5,19 @@
 	{% stylesheets output='css/survey.css' filter="?yui_css" combine=true
 		'@PhotoAssessmentBundle/Resources/assets/scss/reset.scss'
 		'@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.modif.css'
-		'@PhotoAssessmentBundle/Resources/assets/bem/layouts/l-survey/*.scss'
+		'@PhotoAssessmentBundle/Resources/assets/bem/pages/p-survey/*.scss'
 		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.scss'
 	    %}
 	    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="all" />
 	{% endstylesheets %}
 </head>
 
-<body class="l-survey">
-	<div class="l-survey-header">
+<body class="p-survey">
+	<div class="p-survey-header">
 		<div class="b-userbox"></div>
-		<h1><a href="{{ path("pat_default_index") }}">Photo Content Assessment Tool</a>: Flickr (<span class="i-done">1</span>/<span class="i-total">42</span>)</h1>
+		<h1><a href="{{ path("pat_default_index") }}">Photo Content Assessment Tool</a>: Flickr (<span class="i-info-countdone">1</span>/<span class="i-info-counttotal">42</span>)</h1>
 	</div>
-	<div class="l-survey__leftcol">
+	<div class="p-survey__leftcol">
 		<a href="{photo.mediumURL}" title="View this photo on Flickr" class="b-survey-photo">
 			<img class="b-survey-photo__photo" src="http://farm9.staticflickr.com/8013/7669755650_e0e9d4cb04_z.jpg" />
 			<span class="b-survey-photo__title">Olympic stadium and The Orbit during London Olympics opening ceremony (2012-07-27)</span>
@@ -27,7 +27,7 @@
 		</a>
 		<div class="b-survey-dashboard"></div>
 	</div>
-	<div class="l-survey__rightcol">
+	<div class="p-survey__rightcol">
 		<ul class="b-survey-questionnaire">
 			<li class="b-survey-questionnaire__question b-survey-questionnaire__question_current">
 				<div class="b-survey-questionnaire__questiontext">Is the item a real photograph?</div>
@@ -131,7 +131,7 @@
 			</li>
 			
 		</ul>
-		<div class="b-survey-controls"><div class="b-button b-button_color-blue b-button_size-medium">Done</div></div>
+		<div class="b-survey-controls"><a class="i-button-done b-button b-button_color-blue b-button_size-medium" href="#">Done</a></div>
 	</div>
 
 	{% javascripts output='js/vendors.js' filter="" combine=true
@@ -144,13 +144,15 @@
 
     '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.js'
     '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.string.js'
+
+    '@PhotoAssessmentBundle/Resources/assets/vendor/keycodes.js'
     %}
     	<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
 	{% javascripts output='js/survey.js' filter=""
 		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
-		'@PhotoAssessmentBundle/Resources/assets/bem/layouts/l-survey/l-survey.js'
+		'@PhotoAssessmentBundle/Resources/assets/bem/pages/p-survey/p-survey.js'
 		%}
 	    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
