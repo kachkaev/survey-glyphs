@@ -8,10 +8,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  */
-class PhotoSurvey extends AbstractStandardEntity {
+class PhotoSurveyAnswer extends AbstractStandardEntity {
 	protected $standardProperties = ["participant", "qIsRealPhoto",
-			"qIsOutdoors", "qTimeOfDay", "qSubjectPortrait",
-			"qSubjectMovingObject", "qDescribesSpace", "qSpaceScenic"];
+			"qIsOutdoors", "qIsOnEvent", "qTimeOfDay", "qSubjectPerson",
+			"qSubjectMovingObject", "qIsLocationCorrect", "correctedLon", "correctedLon", "qDescribesSpace", "qSpaceAttractive"];
 
 	protected $standardGetters = ["id"];
 
@@ -33,17 +33,33 @@ class PhotoSurvey extends AbstractStandardEntity {
 	 */
 	protected $qIsOutdoors;
 
+	/** @ORM\Column(type="boolean", nullable=true)
+	 */
+	protected $qDuringEvent;
+	
 	/** @ORM\Column(type="int", nullable=true)
 	 */
 	protected $qTimeOfDay;
 
 	/** @ORM\Column(type="boolean", nullable=true)
 	 */
-	protected $qSubjectPortrait;
+	protected $qSubjectPerson;
 
 	/** @ORM\Column(type="boolean", nullable=true)
 	 */
 	protected $qSubjectMovingObject;
+
+	/** @ORM\Column(type="boolean", nullable=true)
+	 */
+	protected $qIsLocationCorrect;
+	
+	/** @ORM\Column(type="float", nullable=true)
+	 */
+	protected $correctedLon;
+
+	/** @ORM\Column(type="float", nullable=true)
+	 */
+	protected $correctedLat;
 
 	/** @ORM\Column(type="boolean", nullable=true)
 	 */

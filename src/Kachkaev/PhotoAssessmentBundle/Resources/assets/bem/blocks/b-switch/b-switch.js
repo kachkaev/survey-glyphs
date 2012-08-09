@@ -1,5 +1,27 @@
 $(function() {
 
+	
+	// Custom methods (API
+	
+	// Sets value
+	var setValue = function(value) {
+		$switchWrap = $(this).parent();
+		$switchWrap.find('li').each(function(i) {
+			if ($(this).data('v') === value) {
+				$switchWrap.find('.b-switch__ui').slider('value', i + 1);
+				return false;
+			};
+		});
+	};
+
+	// Gets value
+	var getValue = function() {
+		var $switchWrap = $(this).parent();
+		var i = $switchWrap.find('.b-switch__ui').slider('value');
+		return $(this).find('li').eq(i - 1).data('v');
+	};
+
+	
 	$('.b-switch').each(function() {
 
 		var $switch = $(this);
@@ -12,7 +34,7 @@ $(function() {
 		$switchLIs.each(function(i) {
 			if ($(this).hasClass('default'))
 				currentAnswer = i + 1;
-		})
+		});
 
 		// Generating switch UI (jQuery UI slider)
 		var $switchUI = $switch.before('<div class="b-switch__uiwrapright" /><div class="b-switch__ui" /><div class="b-switch__uiwrapleft" />').prev().prev();
@@ -31,7 +53,7 @@ $(function() {
 		// "Enabled state" checker
 		var switchIsDisabled = function() {
 			return $switch.parent().hasClass("disabled");
-		}
+		};
 		
 		// Making "ears" of the slider clickable
 		$switchUI.prev().click(function(){
@@ -45,7 +67,7 @@ $(function() {
 				return;
 			$switchUI.slider('value', $switchUI.slider("option", "min"));
 			$switchUIHandle.focus();
-		})
+		});
 		
 		// Making values clickable
 		$switchLIs.each(function(i){
@@ -55,7 +77,7 @@ $(function() {
 				$switchUI.slider('value', i+1);
 				$switchUIHandle.focus();
 			});
-		})
+		});
 		
 		// Slider colouring according to value
 		$switchUI.bind( "slidechange", function(event, ui) {
@@ -72,7 +94,6 @@ $(function() {
 		$switchUIHandle.bind('keydown', function(event) {
 			if (switchIsDisabled())
 				return;
-			// TODO skip default value;
 			var dv = 0;
 			if (event.keyCode == 37) {
 				// ←
@@ -87,6 +108,10 @@ $(function() {
 			if ($switchLIs.eq(newValue - 1).hasClass('default'))
 				newValue += dv;
 			$switchUI.slider('value', newValue);
-		})
+		});
+		
+		// Applying custom methods
+		this.setValue = setValue;
+		this.getValue = getValue;
 	});
 });

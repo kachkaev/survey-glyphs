@@ -31,7 +31,7 @@
 		<ul class="b-survey-questionnaire">
 			<li class="b-survey-questionnaire__question b-survey-questionnaire__question_current">
 				<div class="b-survey-questionnaire__questiontext">Is the item a real photograph?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
+				<div data-q="qIsRealPhoto" class="b-survey-questionnaire__questionanswer">
 						<ul class="b-switch">
 						<li data-v="false" class="color_red">no</li>
 						<li data-v="null"  class="default"></li>
@@ -42,7 +42,7 @@
 
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken outdoors?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
+				<div data-q="qIsOutdoors" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="false" class="color_red">no</li>
 						<li data-v="null"  class="default"></li>
@@ -53,7 +53,7 @@
 			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during an event?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
+				<div data-q="qDuringEvent" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="false" class="color_red">no</li>
 						<li data-v="null"  class="default"></li>
@@ -64,7 +64,7 @@
 			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">At what time of the day is the photograph taken?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
+				<div data-q="qTimeOfDay" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="2"     class="color_darkblue">night</li>
 						<li data-v="1"     class="color_gray">twilight</li>
@@ -76,7 +76,7 @@
 			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">Is the main subject of the photograph:<br/> — a person?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
+				<div data-q="qSubjectPerson" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="false" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
@@ -87,7 +87,7 @@
 
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext"> — any other moving object?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
+				<div data-q="qSubjectMovingObject" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="false" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
@@ -98,7 +98,7 @@
 			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">Is the photograph geotagged correctly?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
+				<div data-q="qIsLocationCorrect" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="false" class="color_yellow">no</li>
 						<li data-v="null"  class="default"></li>
@@ -110,7 +110,7 @@
 			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">Does the photograph describe surrounding space?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
+				<div data-q="qDescribesSpace" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="false" class="color_red">no</li>
 						<li data-v="null"  class="default"></li>
@@ -120,8 +120,8 @@
 			</li>
 
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">Is the place on the photograph scenic?</div>
-				<div data-q="" class="b-survey-questionnaire__questionanswer">
+				<div class="b-survey-questionnaire__questiontext">Is the place on the photograph attractive for a walk?</div>
+				<div data-q="qSpaceAttractive" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="false" class="color_red">no</li>
 						<li data-v="null"  class="default"></li>
@@ -148,9 +148,10 @@
     	<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
-	{% javascripts output='js/survey.js' filter="" combine=true
+	{% javascripts output='js/survey.js' filter=""
 		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
-    %}
+		'@PhotoAssessmentBundle/Resources/assets/bem/layouts/l-survey/l-survey.js'
+		%}
 	    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     
