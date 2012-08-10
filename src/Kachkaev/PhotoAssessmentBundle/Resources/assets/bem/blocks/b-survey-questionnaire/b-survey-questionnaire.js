@@ -15,6 +15,7 @@ $(function() {
 		});
 		
 		$('.b-switch').eq(0).bswitch('focus');
+		$('.b-switch').bswitch('option', 'disabled', true);
 		
 		// Enabling / disabling questions
 		$('.b-survey-questionnaire__question').addClass('b-survey-questionnaire__question_enabled');

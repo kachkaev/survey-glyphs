@@ -5,8 +5,6 @@
  * Get Value: value = $element.bswitch('option', 'value');
  * Focus:     $element.bswitch('focus');
  * 
- * 
- * 
  */
 $.widget('ui.bswitch', {
 
@@ -68,9 +66,9 @@ $.widget('ui.bswitch', {
 		
 		// Making values clickable
 		w.lis.each(function(i){
-			if (w._self.options.disabled)
-				return;
 			$(this).click(function(){
+				if (w._self.options.disabled)
+					return;
 				w.ui.slider('value', i+1);
 				w.uiHandle.focus();
 			});
@@ -119,7 +117,9 @@ $.widget('ui.bswitch', {
 					});
 				};
 				break;
-			
+			case 'disabled':
+				this.w.ui.slider('option', 'disabled', value);
+				break;
 			default:
 				return;
 		}
