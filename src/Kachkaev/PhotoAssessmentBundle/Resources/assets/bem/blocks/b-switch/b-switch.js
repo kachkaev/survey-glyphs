@@ -107,15 +107,13 @@ $.widget('ui.bswitch', {
 	_setOption: function (key, value) {
 		switch (key) {
 			case 'value':
-				if (key == 'value') {
-					var w = this.w;
-					this.w.lis.each(function(i) {
-						if ($(this).data('v') === value) {
-							w.ui.slider('value', i + 1);
-							return false;
-						}
-					});
-				};
+				var w = this.w;
+				this.w.lis.each(function(i) {
+					if ($(this).data('v') === value) {
+						w.ui.slider('value', i + 1);
+						return false;
+					}
+				});
 				break;
 			case 'disabled':
 				this.w.ui.slider('option', 'disabled', value);

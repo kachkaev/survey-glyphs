@@ -30,7 +30,7 @@ $(function(){
 		// Loading existing answers
 		//var url = "photo_survey/";
 		
-		var answer = {
+		var answers = {
 				"qIsRealPhoto": true,
 				"qIsOutdoors": null,
 				"qDuringEvent": null,
@@ -41,8 +41,7 @@ $(function(){
 				"qDescribesSpace": true,
 				"qSpaceAttractive" : false,
 		};
-		
-		$bQuestionnaire.get(0).loadData(answer);
+		$bQuestionnaire.bsurveyquestionnaire({answers: answers});
 	};
 	loadPhoto('flickr', 123);
 });
