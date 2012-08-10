@@ -1,20 +1,24 @@
+// TODO Shift - right - set all to green
 $(function() {
 
 	$iDone = $('.i-button-done');
 	$bQuestionnaire = $('.b-survey-questionnaire');
+	
+	$bQuestionnaire.find('.b-switch').bswitch();
 
 	var loadData = function(answer) {
 
 		// Applying answers
 		$('.b-switch').each(function() {
-			var $switch = $(this);
-			var $question = $(this).parent().parent();
-			$switch.get(0).setValue(answer[$question.data('q')]);
+			var $question = $(this).parent();
+			$(this).bswitch('option', 'value', answer[$question.data('q')]);
 		});
+		
+		$('.b-switch').eq(0).bswitch('focus');
 		
 		// Enabling / disabling questions
 		$('.b-survey-questionnaire__question').addClass('b-survey-questionnaire__question_enabled');
-	}
+	};
 	
 	var disableDependentQuestions = {
 			qIsRealPhoto: {
@@ -47,15 +51,15 @@ $(function() {
 		var $focusedElem = $(document.activeElement);
 		//// Transposing switch handle to b-switch
 		if ($focusedElem.hasClass('ui-slider-handle')) {
-			$focusedElem = $focusedElem.parent().parent().find('.b-switch');
+			$focusedElem = $focusedElem.parent().parent();
 		};
 		var focusedElem = $focusedElem.get(0);
-
+		
 		// Getting all elements that can be focused in a loop
 		//// Switches
 		var elems = $('.b-survey-questionnaire__question_enabled .b-switch').get();
 		//// 'Done' button
-		elems.push($iDone.get(0));
+		//elems.push($iDone.get(0));
 		
 		var focusedElemIndex = -1;
 		$.each(elems, function(i, elem) {
@@ -73,10 +77,12 @@ $(function() {
 			if (newElemIndex >= elems.length)
 				newElemIndex = 0;
 		}
+		
 		var $newElem = $(elems[newElemIndex]);
-		if ($newElem.hasClass('.b-switch'))
-			$newElem.get(0).focus();
-		$newElem.focus();
+		if ($newElem.hasClass('b-switch'))
+			$newElem.bswitch('focus');
+		else
+			$newElem.focus();
 		return false;
 	});
 	

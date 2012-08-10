@@ -55,9 +55,9 @@
 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during an event?</div>
 				<div data-q="qDuringEvent" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="false" class="color_red">no</li>
+						<li data-v="true"  class="color_red">yes</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="true"  class="color_green">yes</li>
+						<li data-v="false" class="color_green">no</li>
 					</ul>
 				</div>
 			</li>
@@ -78,9 +78,9 @@
 				<div class="b-survey-questionnaire__questiontext">Is the main subject of the photograph:<br/> — a person?</div>
 				<div data-q="qSubjectPerson" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="false" class="color_green">no</li>
-						<li data-v="null"  class="default"></li>
 						<li data-v="true"  class="color_red">yes</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="false" class="color_green">no</li>
 					</ul>
 				</div>
 			</li>
@@ -89,9 +89,9 @@
 				<div class="b-survey-questionnaire__questiontext"> — any other moving object?</div>
 				<div data-q="qSubjectMovingObject" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="false" class="color_green">no</li>
-						<li data-v="null"  class="default"></li>
 						<li data-v="true"  class="color_red">yes</li>
+						<li data-v="null"  class="default"></li>
+						<li data-v="false" class="color_green">no</li>
 					</ul>
 				</div>
 			</li>
@@ -131,7 +131,10 @@
 			</li>
 			
 		</ul>
-		<div class="b-survey-controls"><a class="i-button-done b-button b-button_color-blue b-button_size-medium" href="#">Done</a></div>
+		<div class="b-survey-controls">
+{#			<a class="i-button-prev b-button b-button_color-white b-button_size-medium" href="#">Previous</a>
+#}			<a class="i-button-next b-button b-button_color-blue b-button_size-medium" href="#">Next</a>
+		</div>
 	</div>
 
 	{% javascripts output='js/vendors.js' filter="" combine=true

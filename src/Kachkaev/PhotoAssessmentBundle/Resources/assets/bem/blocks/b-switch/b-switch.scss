@@ -1,26 +1,54 @@
 .b-switch {
 	float: right;
+	-moz-transition: background-color 0.4s;
+}
+
+.b-switch.color_darkblue {
+	background-color: rgba(0,0, 160, 0.7);
+}
+
+.b-switch.color_red {
+	background-color: rgba(255, 0, 0, .6);
+}
+
+.b-switch.color_gray {
+	background-color: rgba(100, 100, 200, 0.6);
+}
+
+.b-switch.color_green {
+	background-color: rgba(0, 200, 0, .7);
+}
+
+.b-switch.color_yellow {
+	background-color: rgba(200, 200, 0, 0.5);
+}
+
+/****************
+ *	options
+ */
+.b-switch__options {
+	float: right;
 	background: #fff;
 	height: 20px;
 }
 
-.b-switch li {
+.b-switch__options li {
 	font-size: 11px;
 	opacity: 0.4;
 	cursor: pointer;
 }
 
-.b-switch li:hover {
+.b-switch__options li:hover {
 	opacity: 0.8;
 }
 
-.b-switch li:first-child {
+.b-switch__options li:first-child {
 	float: right;
 	overflow: visible;
 	margin-right: 5px;
 }
 
-.b-switch li:nth-child(2) {
+.b-switch__options li:nth-child(2) {
 	position: absolute;
 	right: 43px;
 	top: 20px;
@@ -30,38 +58,10 @@
 	background: url("/static/i/b-switch__ui.png") right -45px;
 }
 
-.b-switch li:last-child {
+.b-switch__options li:last-child {
 	position: absolute;
 	left: 100%;
 	margin-left: 5px;
-}
-
-/****************
- *	wrap
- */
-.b-switch__wrap {
-	float: right;
-	-moz-transition: background-color 0.4s;
-}
-
-.b-switch__wrap.color_darkblue {
-	background-color: rgba(0,0, 160, 0.7);
-}
-
-.b-switch__wrap.color_red {
-	background-color: rgba(255, 0, 0, .6);
-}
-
-.b-switch__wrap.color_gray {
-	background-color: rgba(100, 100, 200, 0.6);
-}
-
-.b-switch__wrap.color_green {
-	background-color: rgba(0, 200, 0, .7);
-}
-
-.b-switch__wrap.color_yellow {
-	background-color: rgba(200, 200, 0, 0.5);
 }
 
 /****************

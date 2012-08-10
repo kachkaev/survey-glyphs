@@ -1,49 +1,46 @@
-$(function() {
+/**
+ * Switch is UI element accessible as a jQuery UI widget
+ * 
+ * Set Value: $element.bswitch('option', 'value', value);
+ * Get Value: value = $element.bswitch('option', 'value');
+ * Focus:     $element.bswitch('focus');
+ * 
+ * 
+ * 
+ */
+$.widget('ui.bswitch', {
 
-	
-	// Sets value
-	var setValue = function(value) {
-		$switchWrap = $(this).parent();
-		$switchWrap.find('li').each(function(i) {
-			if ($(this).data('v') === value) {
-				$switchWrap.find('.b-switch__ui').slider('value', i + 1);
-				return false;
-			};
-		});
-	};
+	options: {
+		value: null,
+	},
 
-	// Gets value
-	var getValue = function() {
-		var $switchWrap = $(this).parent();
-		var i = $switchWrap.find('.b-switch__ui').slider('value');
-		return $(this).find('li').eq(i - 1).data('v');
-	};
-	
-	// Focuses the switch
-	var focus = function() {
-		var $switchUIHandle = $(this).parent().find('.ui-slider-handle');
-		$switchUIHandle.focus();
-	};
-
-	
-	$('.b-switch').each(function() {
-
-		var $switch = $(this);
-		var $switchWrap = $switch.wrap('<div class="b-switch__wrap" />').parent();
-		var $switchLIs = $switch.find('li');
-		var nAnswers = $switchLIs.size();
-		var currentAnswer = 2;
+	_init: function() {
+		// Wrapping the element with div
+		this.element.wrapInner('<ul class="b-switch__options" />');
+		this.element.get(0).tagName = 'div';
 		
-		// Picking default value
-		$switchLIs.each(function(i) {
+		var w = {
+				_self: this,
+				element: this.element,
+			};
+		
+		this.w = w; 
+		
+		// Saving reference to options (list items)
+		w.lis = this.element.find('li');
+		
+		var nAnswers = w.lis.size();
+
+		// FIXME Picking default value
+		w.lis.each(function(i) {
 			if ($(this).hasClass('default'))
 				currentAnswer = i + 1;
 		});
 
-		// Generating switch UI (jQuery UI slider)
-		var $switchUI = $switch.before('<div class="b-switch__uiwrapright" /><div class="b-switch__ui" /><div class="b-switch__uiwrapleft" />').prev().prev();
-		$switchUI.width((nAnswers-1)*15);
-		$switchUI.slider({
+		w.ui = this.element.prepend('<div class="b-switch__uiwrapright" /><div class="b-switch__ui" /><div class="b-switch__uiwrapleft" />').children().eq(1);
+		w.ui.width((nAnswers-1)*15); 
+		
+		w.ui.slider({
 			value : currentAnswer,
 			min : 1,
 			max : nAnswers,
@@ -52,51 +49,47 @@ $(function() {
 				$("#amount").val("$" + ui.value);
 			}
 		});
-		var $switchUIHandle = $switchUI.find('.ui-slider-handle');
+		w.uiHandle = w.ui.find('.ui-slider-handle');
 		
-		// "Enabled state" checker
-		var switchIsDisabled = function() {
-			return $switch.parent().hasClass("disabled");
-		};
+		// Making "ears" clickable
+		w.ui.prev().click(function(){
+			if (w._self.options.disabled)
+				return;
+			w.ui.slider('value', w.ui.slider("option", "max"));
+			w.uiHandle.focus();
+		});
+		w.ui.next().click(function(){
+			if (w._self.options.disabled)
+				return;
+			w.ui.slider('value', w.ui.slider("option", "min"));
+			w.uiHandle.focus();
+		});
 		
-		// Making "ears" of the slider clickable
-		$switchUI.prev().click(function(){
-			if (switchIsDisabled())
-				return;
-			$switchUI.slider('value', $switchUI.slider("option", "max"));
-			$switchUIHandle.focus();
-		});
-		$switchUI.next().click(function(){
-			if (switchIsDisabled())
-				return;
-			$switchUI.slider('value', $switchUI.slider("option", "min"));
-			$switchUIHandle.focus();
-		});
 		
 		// Making values clickable
-		$switchLIs.each(function(i){
-			if (switchIsDisabled())
+		w.lis.each(function(i){
+			if (w._self.options.disabled)
 				return;
 			$(this).click(function(){
-				$switchUI.slider('value', i+1);
-				$switchUIHandle.focus();
+				w.ui.slider('value', i+1);
+				w.uiHandle.focus();
 			});
 		});
 		
 		// Slider colouring according to value
-		$switchUI.bind( "slidechange", function(event, ui) {
+		w.ui.bind( "slidechange", function(event, ui) {
 			var value = ui.value;
-			var $valueLI = $switchLIs.eq(value - 1);
+			var $valueLI = w.lis.eq(value - 1);
 			// Removing all classes starting with 'color_'
-			$switchWrap[0].className = $switchWrap[0].className.replace(/\bcolor_.*?\b/g, '');
-			$switchWrap.addClass($valueLI.attr('class'));
+			w.element[0].className = w.element[0].className.replace(/\bcolor_.*?\b/g, '');
+			w.element.addClass($valueLI.attr('class'));
 		});
 		
 		// Disabling standard keydown method and replacing it with left-right actions only
 		// Default values are skipped when pressing left/right
-		$switchUIHandle.unbind('keydown');
-		$switchUIHandle.bind('keydown', function(event) {
-			if (switchIsDisabled())
+		w.uiHandle.unbind('keydown');
+		w.uiHandle.bind('keydown', function(event) {
+			if (w._self.options.disabled)
 				return;
 			var delta = 0;
 			if (event.keyCode == KEY_LEFT) {
@@ -106,15 +99,34 @@ $(function() {
 			} else {
 				return;
 			}
-			var newValue = $switchUI.slider('value') + delta;
-			if ($switchLIs.eq(newValue - 1).hasClass('default'))
+			var newValue = w.ui.slider('value') + delta;
+			if (w.lis.eq(newValue - 1).hasClass('default'))
 				newValue += delta;
-			$switchUI.slider('value', newValue);
+			w.ui.slider('value', newValue);
 		});
-		
-		// Applying custom methods
-		this.setValue = setValue;
-		this.getValue = getValue;
-		this.focus = focus;
-	});
+	},
+
+	_setOption: function (key, value) {
+		switch (key) {
+			case 'value':
+				if (key == 'value') {
+					var w = this.w;
+					this.w.lis.each(function(i) {
+						if ($(this).data('v') === value) {
+							w.ui.slider('value', i + 1);
+							return false;
+						}
+					});
+				};
+				break;
+			
+			default:
+				return;
+		}
+		$.Widget.prototype._setOption.apply( this, arguments );
+	},
+	
+	focus: function() {
+		this.w.uiHandle.focus();		
+	}
 });
