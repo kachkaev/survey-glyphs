@@ -11,10 +11,9 @@
 	overflow: visible;
 	position: relative;
 	padding-left: 16px;
-/*	opacity: 0.4;*/
 }
-.b-survey-questionnaire__question_enabled {
-	opacity: 1 !important;
+.b-survey-questionnaire__question_disabled {
+	opacity: 0.4;
 }
 
 .b-survey-questionnaire__question_current {

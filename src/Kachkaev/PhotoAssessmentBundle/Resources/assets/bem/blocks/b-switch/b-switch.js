@@ -81,6 +81,7 @@ $.widget('ui.bswitch', {
 			// Removing all classes starting with 'color_'
 			w.element[0].className = w.element[0].className.replace(/\bcolor_.*?\b/g, '');
 			w.element.addClass($valueLI.attr('class'));
+			w._self.options.value = $valueLI.data('v');
 		});
 		
 		// Disabling standard keydown method and replacing it with left-right actions only

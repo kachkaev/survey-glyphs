@@ -72,10 +72,14 @@ $.widget('ui.bsurveymap', {
     	        new google.maps.Size(21, 34),
     	        new google.maps.Point(0,0),
     	        new google.maps.Point(10, 34));
-	    var iconHelper = new google.maps.MarkerImage("http://missionlocal.org/wp-content/themes/missionlocal/images/crimeicons/green-dot.png",
-    	        new google.maps.Size(10, 10),
+	    var iconMainWrong = new google.maps.MarkerImage("http://maps.google.com/mapfiles/marker_red.png",
+    	        new google.maps.Size(21, 34),
     	        new google.maps.Point(0,0),
-    	        new google.maps.Point(5, 5));
+    	        new google.maps.Point(10, 34));
+	    var iconHelper = new google.maps.MarkerImage("/static/i/b-survey-map__circle.png",
+    	        new google.maps.Size(16, 16),
+    	        new google.maps.Point(0,0),
+    	        new google.maps.Point(8, 8));
 	    //// Main marker points to altered position or given position, if altered is null or the same.
 	    var mainMarker = new google.maps.Marker({
 	    	icon: iconMainGiven,
