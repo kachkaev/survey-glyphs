@@ -76,7 +76,10 @@ $.widget('ui.bsurveyquestionnaire', {
 			});
 		};
 		
-		$('body').everyTime(500, w.updateQuestionsDisability);
+		w.switches.bind("bswitchchangevalue", function(event) {
+			w.updateQuestionsDisability();
+			}
+		);
 		
 		// Up/down keypress to go to prev/next question
 		$(document.body).bind('keypress', function(event) {

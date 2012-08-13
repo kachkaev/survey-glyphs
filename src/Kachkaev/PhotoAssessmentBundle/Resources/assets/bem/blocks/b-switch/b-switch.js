@@ -5,6 +5,9 @@
  * Get Value: value = $element.bswitch('option', 'value');
  * Focus:     $element.bswitch('focus');
  * 
+ * Events:
+ *     valuechange - when value is change by a slider or is set
+ * 
  */
 $.widget('ui.bswitch', {
 
@@ -82,6 +85,7 @@ $.widget('ui.bswitch', {
 			w.element[0].className = w.element[0].className.replace(/\bcolor_.*?\b/g, '');
 			w.element.addClass($valueLI.attr('class'));
 			w._self.options.value = $valueLI.data('v');
+			w._self._trigger("changevalue");
 		});
 		
 		// Disabling standard keydown method and replacing it with left-right actions only
@@ -112,6 +116,7 @@ $.widget('ui.bswitch', {
 				this.w.lis.each(function(i) {
 					if ($(this).data('v') === value) {
 						w.ui.slider('value', i + 1);
+						w._self._trigger("changevalue");
 						return false;
 					}
 				});
