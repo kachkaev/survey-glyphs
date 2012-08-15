@@ -81,11 +81,10 @@ $.widget('ui.bswitch', {
 		w.ui.bind( "slidechange", function(event, ui) {
 			var value = ui.value;
 			var $valueLI = w.lis.eq(value - 1);
-			// Removing all classes starting with 'color_'
-			w.element[0].className = w.element[0].className.replace(/\bcolor_.*?\b/g, '');
-			w.element.addClass($valueLI.attr('class'));
 			w._self.options.value = $valueLI.data('v');
 			w._self._trigger("changevalue");
+
+			w._self._updateColor();
 		});
 		
 		// Disabling standard keydown method and replacing it with left-right actions only
@@ -112,6 +111,8 @@ $.widget('ui.bswitch', {
 	_setOption: function (key, value) {
 		switch (key) {
 			case 'value':
+				if (this.options.value == value)
+					return;
 				var w = this.w;
 				this.w.lis.each(function(i) {
 					if ($(this).data('v') === value) {
@@ -130,7 +131,26 @@ $.widget('ui.bswitch', {
 		$.Widget.prototype._setOption.apply( this, arguments );
 	},
 	
+	setAnswerColor: function(answer, color) {
+		//var value = this.ui.value;
+		var $valueLI = this.w.lis.filter(function() {
+			return $(this).data('v') == answer;
+		});
+		$valueLI[0].className = $valueLI[0].className.replace(/\bcolor_.*?\b/g, '');
+		$valueLI.addClass("color_"+color);
+		this._updateColor();
+		return;
+	},
+	
 	focus: function() {
 		this.w.uiHandle.focus();		
+	},
+	
+	_updateColor: function() {
+		var value = this.w.ui.slider("option", "value");
+		var $valueLI = this.w.lis.eq(value - 1);
+		// Removing all classes starting with 'color_'
+		this.w.element[0].className = this.w.element[0].className.replace(/\bcolor_.*?\b/g, '');
+		this.w.element.addClass($valueLI.attr('class'));
 	}
 });

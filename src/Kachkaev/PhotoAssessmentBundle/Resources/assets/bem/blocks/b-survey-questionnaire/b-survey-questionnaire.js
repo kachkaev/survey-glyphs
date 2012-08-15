@@ -29,6 +29,7 @@ $.widget('ui.bsurveyquestionnaire', {
 		w.map = this.element.find('.b-survey-map');
 		w.map.bsurveymap();
 		w.map.bsurveymap('option','given_pos',[-0.096867,51.513128]);
+		//w.map.bsurveymap('option','altered_pos',[-0.096867,51.513128]);
 		
 		// Getting list of question answers
 		w.answers = this.element.find('.b-survey-questionnaire__questionanswer');
@@ -65,7 +66,6 @@ $.widget('ui.bsurveyquestionnaire', {
 					return;
 				
 				$.each(value, function(answer, dependentDisabledQuestions) {
-					//console.log(a.children(":first").bswitch('option','value'), answer);
 					if (String(a.children(":first").bswitch('option','value')) == answer) {
 						$.each(dependentDisabledQuestions, function(i, q) {
 							w.answersMap[q].children(":first").bswitch('disable');
@@ -76,11 +76,45 @@ $.widget('ui.bsurveyquestionnaire', {
 			});
 		};
 		
+		// Change of the value in a switch toggles other switches' enabled state
 		w.switches.bind("bswitchchangevalue", function(event) {
 			w.updateQuestionsDisability();
 			}
 		);
+
+		// Binding map switch with map
+		var mapbswitch = w.answers.filter(function() { 
+			  return $(this).data("q") == "qIsLocationCorrect"; 
+		}).children(1);
 		
+		
+		//// Modifide coords are saved to restore them after a user moved the switch to "yes" and then back to "no"
+		w.savedAlteredPos = null;
+		
+		//// When switch value is changed, map coords are updated
+		mapbswitch.bind("bswitchchangevalue", function(event) {
+				var v = mapbswitch.bswitch("option", "value");
+				var initialGivenPos = w.map.bsurveymap("option", "given_pos");
+				
+				if (v == null) {
+				} else if (v == false) {
+					w.map.bsurveymap("option", "altered_pos", w.savedAlteredPos);
+					
+				} else {
+					w.map.bsurveymap("option", "altered_pos", initialGivenPos);
+				}
+			});
+		// When pointer is dragged, switch is updated
+		w.map.bind("bsurveymapchangealtered_pos", function(event) {
+				if (!w.map.bsurveymap("posIsAccurate")) {
+					w.savedAlteredPos = w.map.bsurveymap("option", "altered_pos");
+					mapbswitch.bswitch("setAnswerColor", false, w.savedAlteredPos == null ? "red" : "yellow");
+				}
+				
+				mapbswitch.bswitch("option", "value", w.map.bsurveymap("posIsAccurate"));
+			}
+		);
+
 		// Up/down keypress to go to prev/next question
 		$(document.body).bind('keypress', function(event) {
 			var delta;
@@ -97,7 +131,6 @@ $.widget('ui.bsurveyquestionnaire', {
 			if ($focusedElem.hasClass('ui-slider-handle')) {
 				$focusedElem = $focusedElem.parent().parent();
 			} else {
-				console.log('focused switch not found');
 				return;
 			}
 			var focusedElem = $focusedElem.get(0);
@@ -140,6 +173,8 @@ $.widget('ui.bsurveyquestionnaire', {
 	_setOption: function (key, value) {
 		switch (key) {
 			case 'answers':
+				// DONT FORGET TO RESET ALTERED POS
+				//w.savedAlteredPos = null;
 				console.log("answers set");
 				break;
 			case 'disabled':

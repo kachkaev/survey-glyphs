@@ -3,17 +3,14 @@
  * 
  * Position is null or an array with 2 elements: [lon, lat]
  * 
- * Set given position: $bquestionnaire('option', 'given_pos', value);
- * Get given position: $bquestionnaire('option', 'given_pos');
+ * Set given position: $bsurveymap('option', 'given_pos', value);
+ * Get given position: $bsurveymap('option', 'given_pos');
  *  
- * Set altered position: $bquestionnaire('option', 'altered_pos', value);
- * Get altered position: $bquestionnaire('option', 'altered_pos');
- * 
- * Check if position has been altered (returns true/false)
- * $bquestionnaire('isPositionAltered')
- * TODO
+ * Set altered position: $bsurveymap('option', 'altered_pos', value);
+ * Get altered position: $bsurveymap('option', 'altered_pos');
  * 
  * Events: marker dragged
+ * changealter_pos
  * TODO
  */
 $.widget('ui.bsurveymap', {
@@ -64,25 +61,25 @@ $.widget('ui.bsurveymap', {
 	    
 	    // Markers
 	    //// Icons
-	    var iconMainGiven = new google.maps.MarkerImage("http://maps.google.com/mapfiles/marker_green.png",
+	    var iconMainOK = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|1cb658",
     	        new google.maps.Size(21, 34),
     	        new google.maps.Point(0,0),
     	        new google.maps.Point(10, 34));
-	    var iconMainAltered = new google.maps.MarkerImage("http://maps.google.com/mapfiles/marker_yellow.png",
+	    var iconMainAltered = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fffb70",
     	        new google.maps.Size(21, 34),
     	        new google.maps.Point(0,0),
     	        new google.maps.Point(10, 34));
-	    var iconMainWrong = new google.maps.MarkerImage("http://maps.google.com/mapfiles/marker_red.png",
+	    var iconMainWrong = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|ff7b68",
     	        new google.maps.Size(21, 34),
     	        new google.maps.Point(0,0),
     	        new google.maps.Point(10, 34));
 	    var iconHelper = new google.maps.MarkerImage("/static/i/b-survey-map__circle.png",
-    	        new google.maps.Size(16, 16),
-    	        new google.maps.Point(0,0),
-    	        new google.maps.Point(8, 8));
+    	        new google.maps.Size(10, 10),
+    	        new google.maps.Point(3, 3),
+    	        new google.maps.Point(5, 5));
 	    //// Main marker points to altered position or given position, if altered is null or the same.
 	    var mainMarker = new google.maps.Marker({
-	    	icon: iconMainGiven,
+	    	icon: iconMainOK,
 	    	position: null,
 	    	map: map,
 	    	draggable: true,
@@ -118,7 +115,7 @@ $.widget('ui.bsurveymap', {
 	    /**
 	     * Moves and shows/hides markers according to options
 	     */
-    	var updateMarkers = function(centerMap) {
+    	var updateMarkers = function(needMapCentering) {
     		var pGiven = posToLatLon(w._self.options.given_pos);
     		var pAltered = posToLatLon(w._self.options.altered_pos);
     		var pCenter = null;
@@ -128,7 +125,7 @@ $.widget('ui.bsurveymap', {
     		} else if (pAltered == null || pGiven.equals(pAltered)) {
     			mainMarker.setVisible(true);
     			mainMarker.setPosition(pGiven);
-    			mainMarker.setIcon(iconMainGiven);
+    			mainMarker.setIcon(pAltered == null ? iconMainWrong : iconMainOK);
     			helperMarker.setVisible(true);
     			helperMarker.setPosition(pGiven);
     			pCenter = pGiven;
@@ -141,7 +138,7 @@ $.widget('ui.bsurveymap', {
     			pCenter = pAltered;
     		}
     		
-    		if (centerMap && pCenter) {
+    		if (needMapCentering && pCenter && (_.isUndefined(map.getBounds()) || !map.getBounds().contains(pCenter))) {
     			map.panTo(pCenter);
     			//w.map.setCenter(pCenter);
     		}
@@ -154,30 +151,39 @@ $.widget('ui.bsurveymap', {
 	    });
 	    
 	    google.maps.event.addListener(mainMarker, 'drag', function() {
-	    	w._self.options.altered_pos = posToArray(mainMarker.getPosition());
+	    	w._self._setAlteredPos(posToArray(mainMarker.getPosition()), false);
 	    });
 	    
 	    google.maps.event.addListener(mainMarker, 'dragend', function() {
-	    	w._self.options.altered_pos = posToArray(mainMarker.getPosition());
-	    	updateMarkers();
+	    	w._self._setAlteredPos(posToArray(mainMarker.getPosition()), false);
 	    });
 	    
 	    // Adding click events
 	    google.maps.event.addListener(mainMarker, 'dblclick', function() {
-	    	w._self._setOption("altered_pos", null);
-	    	w.updateMarkers();
+	    	w._self._setAlteredPos(w._self.options.altered_pos == null ? w._self.options.given_pos : null, true);
 	    });
 	    google.maps.event.addListener(helperMarker, 'dblclick', function() {
-	    	w._self._setOption("altered_pos", null);
-	    	w.updateMarkers();
+	    	w._self._setAlteredPos(w._self.options.altered_pos == null ? w._self.options.given_pos : null, true);
 	    });
 
 	},
 	
+	_setAlteredPos: function (value, needMapCentering) {
+
+		if (_.isEqual(this.options.altered_pos, value)) {
+			return;
+		}
+		$.Widget.prototype._setOption.apply( this, ["altered_pos", value] );
+		this._trigger("changealtered_pos");
+		this.w.updateMarkers(needMapCentering);
+	},
+	
 	_setOption: function (key, value) {
 		switch (key) {
-			case 'given_pos':
 			case 'altered_pos':
+				this._setAlteredPos(value, true);
+				return;
+			case 'given_pos':
 				$.Widget.prototype._setOption.apply( this, arguments );
 		    	this.w.updateMarkers(true);
 		    	return;
@@ -187,12 +193,8 @@ $.widget('ui.bsurveymap', {
 		$.Widget.prototype._setOption.apply( this, arguments );
 	},
 	
-	isPositionAltered: function () {
-		if (this.options.altered_pos == null || this.options.given_pos == null)
-			return false;
-		if (this.options.given_pos.equals(this.options.altered_pos))
-			return false;
-		return true;
+	posIsAccurate: function() {
+		return _.isEqual(this.options.altered_pos, this.options.given_pos) && this.options.given_pos != null;
 	}
 
 });
