@@ -82,6 +82,7 @@ $.widget('ui.bswitch', {
 			var value = ui.value;
 			var $valueLI = w.lis.eq(value - 1);
 			w._self.options.value = $valueLI.data('v');
+			w._self.stopBlink();
 			w._self._trigger("changevalue");
 
 			w._self._updateColor();
@@ -117,6 +118,7 @@ $.widget('ui.bswitch', {
 				this.w.lis.each(function(i) {
 					if ($(this).data('v') === value) {
 						w.ui.slider('value', i + 1);
+						w._self.stopBlink();
 						w._self._trigger("changevalue");
 						return false;
 					}
@@ -144,6 +146,27 @@ $.widget('ui.bswitch', {
 	
 	focus: function() {
 		this.w.uiHandle.focus();		
+	},
+	
+	blink: function() {
+		var className = 'blinking';
+		var w = this.w;
+		var elem = this.w.uiHandle;
+		elem.removeClass(className);
+		
+		var concurrentToken = Math.random();
+		w.concurrentToken = concurrentToken;
+		$(document.body).everyTime(100, function() {
+			if (concurrentToken != w.concurrentToken) {
+				return;
+			}
+			elem.toggleClass(className);
+		}, 4);
+	},
+	
+	stopBlink: function () {
+		this.w.concurrentToken = Math.random();
+		this.w.uiHandle.removeClass('blinking');
 	},
 	
 	_updateColor: function() {

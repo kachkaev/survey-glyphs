@@ -81,6 +81,34 @@ $.widget('ui.bsurveyquestionnaire', {
 			w.updateQuestionsDisability();
 			}
 		);
+		// When clicked on a disabled switch, the switch that blocks it is highlighted
+		w.switches.bind("click", function(event) {
+			var $currentSwitch = $(this);
+			var currentQuestion= $currentSwitch.parent('.b-survey-questionnaire__questionanswer').data("q");
+			
+			if (!$currentSwitch.bswitch("option", "disabled"))
+				return;
+			
+			// Getting the cause of blocking
+			var qCause = null;
+			$.each(disableDependentQuestions, function(key, value) {
+				if (qCause != null)
+					return false;
+				$.each(value, function(answer, dependentDisabledQuestions) {
+					$.each(dependentDisabledQuestions, function(i, q) {
+						if (q == currentQuestion && String(w.answersMap[key].children(":first").bswitch('option', 'value')) == answer) {
+							qCause = key;
+							return false;
+						};
+					});
+				});
+			});
+			
+			// Highlighting the cause switch
+			var $bSwitchCause = w.answersMap[qCause].children(":first");
+			$bSwitchCause.bswitch('focus');
+			$bSwitchCause.bswitch('blink');
+		});
 
 		// Binding map switch with map
 		var mapbswitch = w.answers.filter(function() { 
