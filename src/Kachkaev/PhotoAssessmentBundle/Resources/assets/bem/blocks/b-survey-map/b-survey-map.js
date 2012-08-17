@@ -30,7 +30,9 @@ $.widget('ui.bsurveymap', {
 	    var myOptions = {
             zoom : 18,
             center : new google.maps.LatLng(0,0),
-            mapTypeId : google.maps.MapTypeId.SATELLITE,
+            disableDefaultUI: true,
+			mapTypeId : google.maps.MapTypeId.SATELLITE,
+            keyboardShortcuts: false,	
             zoomControl: true,
             zoomControlOptions: {
               style: google.maps.ZoomControlStyle.SMALL
@@ -122,22 +124,23 @@ $.widget('ui.bsurveymap', {
     		if (pGiven == null) {
     			mainMarker.setVisible(false);
     			helperMarker.setVisible(false);
-    		} else if (pAltered == null || pGiven.equals(pAltered)) {
-    			mainMarker.setVisible(true);
-    			mainMarker.setPosition(pGiven);
-    			mainMarker.setIcon(pAltered == null ? iconMainWrong : iconMainOK);
-    			helperMarker.setVisible(true);
-    			helperMarker.setPosition(pGiven);
-    			pCenter = pGiven;
     		} else {
-    			mainMarker.setVisible(true);
-    			mainMarker.setPosition(pAltered);
-    			mainMarker.setIcon(iconMainAltered);
-    			helperMarker.setVisible(true);
-    			helperMarker.setPosition(pGiven);
-    			pCenter = pAltered;
+    			if (pAltered == null || pGiven.equals(pAltered)) {
+    				mainMarker.setVisible(true);
+    				mainMarker.setPosition(pGiven);
+    				mainMarker.setIcon(pAltered == null ? iconMainWrong : iconMainOK);
+    				helperMarker.setVisible(true);
+    				helperMarker.setPosition(pGiven);
+    				pCenter = pGiven;
+    			} else {
+    				mainMarker.setVisible(true);
+    				mainMarker.setPosition(pAltered);
+    				mainMarker.setIcon(iconMainAltered);
+    				helperMarker.setVisible(true);
+    				helperMarker.setPosition(pGiven);
+    				pCenter = pAltered;
+    			}
     		}
-    		
     		if (needMapCentering && pCenter && (_.isUndefined(map.getBounds()) || !map.getBounds().contains(pCenter))) {
     			map.panTo(pCenter);
     			//w.map.setCenter(pCenter);
@@ -182,19 +185,36 @@ $.widget('ui.bsurveymap', {
 		switch (key) {
 			case 'altered_pos':
 				this._setAlteredPos(value, true);
+				$.Widget.prototype._setOption.apply( this, arguments );
 				return;
 			case 'given_pos':
 				$.Widget.prototype._setOption.apply( this, arguments );
 		    	this.w.updateMarkers(true);
 		    	return;
+			case 'disabled':
+				this.w.map.setOptions({
+					disableDoubleClickZoom: value,
+					scrollwheel: !value,
+					zoomControl: !value,
+					draggable: !value,
+				});
+				this.w.mainMarker.setOptions({draggable: !value});
+				$.Widget.prototype._setOption.apply( this, arguments );
 			default:
 				return;
+			
 		}
-		$.Widget.prototype._setOption.apply( this, arguments );
 	},
 	
 	posIsAccurate: function() {
 		return _.isEqual(this.options.altered_pos, this.options.given_pos) && this.options.given_pos != null;
+	},
+	
+	setGivenAndAlteredPos: function(given_pos, altered_pos) {
+		this.options.given_pos = given_pos;
+		this.options.altered_pos = altered_pos;
+		this._trigger("changealtered_pos");
+		this.w.updateMarkers(true);
 	}
 
 });

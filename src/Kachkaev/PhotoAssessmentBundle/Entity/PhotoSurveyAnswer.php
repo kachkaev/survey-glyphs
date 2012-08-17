@@ -55,11 +55,11 @@ class PhotoSurveyAnswer extends AbstractStandardEntity {
 	
 	/** @ORM\Column(type="float", nullable=true)
 	 */
-	protected $correctedLon;
+	protected $alteredLon;
 
 	/** @ORM\Column(type="float", nullable=true)
 	 */
-	protected $correctedLat;
+	protected $alteredLat;
 
 	/** @ORM\Column(type="boolean", nullable=true)
 	 */
