@@ -29,6 +29,15 @@ $.widget('ui.bsurveyquestionnaire', {
 		w.map = this.element.find('.b-survey-map');
 		w.map.bsurveymap();
 		
+		// Getting the list of questions
+		w.questions = this.element.find('.b-survey-questionnaire__question');
+		w.questions.each(function() {
+			var $this = $(this);
+			$this.data('answer', $this.find('.b-survey-questionnaire__questionanswer'));
+			$this.data('q', $this.data('answer').data('q'));
+			$this.data('switch', $this.find('.b-switch'));
+		});
+		
 		// Getting list of question answers
 		w.answers = this.element.find('.b-survey-questionnaire__questionanswer');
 		w.answersMap = {};
@@ -56,16 +65,22 @@ $.widget('ui.bsurveyquestionnaire', {
 		// Change of the value in a switch toggles other switches' enabled state
 		w.switches.bind("bswitchchangevalue", function(event) {
 			w._self._updateQuestionsDisability();
-			}
-		);
-		// When clicked on a disabled switch, the switch that blocks it is highlighted
-		w.switches.bind("click", function(event) {
-			var $currentSwitch = $(this);
-			var currentQuestion= $currentSwitch.parent('.b-survey-questionnaire__questionanswer').data("q");
-			
-			if (!$currentSwitch.bswitch("option", "disabled"))
-				return;
-			
+		});
+		
+		// Saving reference to last focused switch
+		w.lastFocusedSwitch = null;
+		w.switches.bind("bswitchfocus", function(event) {
+			w.lastFocusedSwitch = $(this);
+			w._self._updateQuestionsDisability();
+		});
+		
+		$(document).bind("click", function () {
+			if (!$(document.activeElement).hasClass('ui-slider-handle'))
+				w.lastFocusedSwitch.bswitch('focus');
+		});
+		
+		// Focuses switch that is blocking given blocked question
+		var focusSwitchBlocking = function(blockedQuestion) {
 			// Getting the cause of blocking
 			var qCause = null;
 			$.each(w.disableDependentQuestions, function(key, value) {
@@ -73,7 +88,7 @@ $.widget('ui.bsurveyquestionnaire', {
 					return false;
 				$.each(value, function(answer, dependentDisabledQuestions) {
 					$.each(dependentDisabledQuestions, function(i, q) {
-						if (q == currentQuestion && String(w._self._getBswitchByAnswer(key).bswitch('option', 'value')) == answer) {
+						if (q == blockedQuestion && String(w._self._getBswitchByAnswer(key).bswitch('option', 'value')) == answer) {
 							qCause = key;
 							return false;
 						};
@@ -85,6 +100,16 @@ $.widget('ui.bsurveyquestionnaire', {
 			var $bSwitchCause = w._self._getBswitchByAnswer(qCause);
 			$bSwitchCause.bswitch('focus');
 			$bSwitchCause.bswitch('blink');
+		};
+
+		// When clicked on a disabled switch, the switch that blocks it is highlighted
+		w.switches.bind("click", function(event) {
+			var $currentSwitch = $(this);
+			
+			if (!$currentSwitch.bswitch("option", "disabled"))
+				return;
+			
+			focusSwitchBlocking($currentSwitch.parent().data("q"));
 		});
 
 		// Binding map switch with map
@@ -124,11 +149,26 @@ $.widget('ui.bsurveyquestionnaire', {
 			w.mapbwitch.bswitch("option", "value", w.map.bsurveymap("posIsAccurate"));
 		});
 		w.map.bind('click', function() {
-			w.mapbwitch.bswitch('focus');
+			if (!w.mapbwitch.bswitch('option', 'disabled')) {
+				w.mapbwitch.bswitch('focus');
+			} else {
+				focusSwitchBlocking(w.mapbwitch.parent().data('q'));
+			};
+		});
+		
+		w.questions.bind('click', function(event) {
+			var $this = $(this);
+			if (!$this.data('switch').bswitch('option', 'disabled')) {
+				$this.data('switch').bswitch('focus');
+			} else {
+				focusSwitchBlocking($this.data('q'));
+			};
+			event.stopPropagation();
 		});
 
-		// Up/down keypress to go to prev/next question
-		$(document.body).bind('keypress', function(event) {
+
+		// Up/down keydown to go to prev/next question
+		$(document).bind('keydown', function(event) {
 			var delta;
 			if (event.keyCode == KEY_UP)
 				delta = -1;
@@ -307,8 +347,16 @@ $.widget('ui.bsurveyquestionnaire', {
 		}); 
 		
 		// Updating the map
-		w.mapbwitch.bswitch('option', 'disabled', w.savedGivenPos == null);
+		if (!w.savedGivenPos)
+			w.mapbwitch.bswitch('option', 'disabled', true);
 		w.map.bsurveymap('option', 'disabled', w.mapbwitch.bswitch('option', 'disabled'));
+		
+		// Updating question text (fading it or not)
+		w.switches.each(function() {
+			var $bSwitch = $(this);
+			var $text = $(this).parent().prev();
+			$text.toggleClass('b-survey-questionnaire__questiontext_disabled', $bSwitch.bswitch('option', 'disabled'));
+		});
 	}
 });
 

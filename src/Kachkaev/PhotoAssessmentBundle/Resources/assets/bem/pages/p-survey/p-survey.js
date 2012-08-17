@@ -51,6 +51,7 @@ $(function(){
 	var apiURL = "/api/";
 	
 	var $bQuestionnaire = $('.b-survey-questionnaire');
+	var $iButtonNext = $('.i-button-next');
 	
 	/* ===================================
 	 * Loading photo queue
@@ -69,6 +70,7 @@ $(function(){
 		loadphoto(source, id);
 	};
 
+	$bQuestionnaire.bsurveyquestionnaire();
 	/* ===================================
 	 * Loading photo data
 	 */
@@ -78,16 +80,36 @@ $(function(){
 		// Loading existing answers
 		//var url = "photo_survey/";
 		
-		$bQuestionnaire.bsurveyquestionnaire();
 		$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[0]);
 	};
 	loadPhoto('flickr', 123);
+
+	/* ===================================
+	 * Saves answers
+	 */
+	var saveAnswers = function() {
+		console.log($bQuestionnaire.bsurveyquestionnaire('getAnswers'));
+	};
 	
-	$(document.body).bind("keypress", function(event) {
+	var submitQuestionnaire = function() {
+		saveAnswers();
+		//loadPhoto();
+		$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[Math.floor(Math.random()*4)]);
+	};
+
+	
+	// "Next" button press
+	$iButtonNext.bind('click', function() {
+		submitQuestionnaire();
+		return false;
+	});
+	
+	// Global keys
+	$(document.body).bind("keydown", function(event) {
 		var key = event.keyCode || event.which;
 		switch (key) {
 		case KEY_ENTER:
-			console.log($bQuestionnaire.bsurveyquestionnaire('getAnswers'));
+			submitQuestionnaire();
 			break;
 		case 49:
 		case 50:

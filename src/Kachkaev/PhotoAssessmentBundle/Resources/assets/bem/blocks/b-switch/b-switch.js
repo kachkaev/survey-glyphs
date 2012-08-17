@@ -7,6 +7,7 @@
  * 
  * Events:
  *     valuechange - when value is change by a slider or is set
+ *     focus - when bswitch is focused
  * 
  */
 $.widget('ui.bswitch', {
@@ -57,13 +58,13 @@ $.widget('ui.bswitch', {
 			if (w._self.options.disabled)
 				return;
 			w.ui.slider('value', w.ui.slider("option", "max"));
-			w.uiHandle.focus();
+			w._self.focus();
 		});
 		w.ui.next().click(function(){
 			if (w._self.options.disabled)
 				return;
 			w.ui.slider('value', w.ui.slider("option", "min"));
-			w.uiHandle.focus();
+			w._self.focus();
 		});
 		
 		
@@ -73,7 +74,7 @@ $.widget('ui.bswitch', {
 				if (w._self.options.disabled)
 					return;
 				w.ui.slider('value', i+1);
-				w.uiHandle.focus();
+				w._self.focus();
 			});
 		});
 		
@@ -145,7 +146,8 @@ $.widget('ui.bswitch', {
 	},
 	
 	focus: function() {
-		this.w.uiHandle.focus();		
+		this.w.uiHandle.focus();
+		this._trigger('focus');
 	},
 	
 	blink: function() {
