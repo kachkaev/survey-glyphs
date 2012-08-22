@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title></title>
@@ -20,10 +21,10 @@
 	<div class="p-survey__leftcol">
 		<a href="{photo.mediumURL}" title="View this photo on Panoramio" class="b-survey-photo">
 			<!--img class="b-survey-photo__photo" src="http://farm9.staticflickr.com/8013/7669755650_e0e9d4cb04_z.jpg" /-->
-			<img class="b-survey-photo__photo" src="http://static.panoramio.com/photos/1920x1280/75783395.jpg" />
+			<img class="b-survey-photo__photo" alt="" src="http://static.panoramio.com/photos/1920x1280/75783395.jpg" />
 			<span class="b-survey-photo__title">Sunset at St. Paul’s Cathedral</span>
 			<!-- span class="b-survey-photo__description">Some description</span -->
-			<span class="b-survey-photo__timestamp" />2012-05-01 19:13:30</span>
+			<span class="b-survey-photo__timestamp">2012-05-01 19:13:30</span>
 			<span class="b-survey-photo__user">Alexander Kachkaev</span>
 		</a>
 		<div class="b-survey-dashboard"></div>
@@ -64,7 +65,7 @@
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">At what time of the day is the photograph taken?</div>
+				<div class="b-survey-questionnaire__questiontext">At what time of the day is the photograph taken?</div>
 				<div data-q="qTimeOfDay" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
 						<li data-v="2"     class="color_darkblue">night</li>
@@ -133,8 +134,11 @@
 			
 		</ul>
 		<div class="b-survey-controls">
-{#			<a class="i-button-prev b-button b-button_color-white b-button_size-medium" href="#">Previous</a>
-#}			<a class="i-button-next b-button b-button_color-blue b-button_size-medium" href="#">Next</a>
+			<div class="b-survey-controls__buttons">
+	{#			<a class="i-button-prev b-button b-button_color-white b-button_size-medium" href="#">Previous</a>
+#}				<a class="i-button-next b-button b-button_color-blue b-button_size-medium" href="#">Next</a>
+			</div>
+			<div class="b-survey-controls__hint"></div>
 		</div>
 	</div>
 

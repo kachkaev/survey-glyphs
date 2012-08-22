@@ -1,4 +1,21 @@
 .b-survey-controls {
+	margin-left: 15px;
+	height: 23px;
+	overflow: visible;
+}
+
+.b-survey-controls__hint {
+	color: #999;
+	font-size: 12px;
+	padding-top: 5px;
+}
+
+.b-survey-controls__buttons {
 	float: right;
 	margin-right: -2px; /*To compensate button's margin*/
 }
+
+.b-survey-controls__buttons * {
+	z-index: 100;
+}
+

@@ -53,6 +53,9 @@ $(function(){
 	var $bQuestionnaire = $('.b-survey-questionnaire');
 	var $iButtonNext = $('.i-button-next');
 	
+	var $questionnaireHint = $('.b-survey-controls__hint');
+	$questionnaireHint.css('marginRight', $('.b-survey-controls__buttons').width());
+	
 	/* ===================================
 	 * Loading photo queue
 	 */
@@ -91,6 +94,19 @@ $(function(){
 		console.log($bQuestionnaire.bsurveyquestionnaire('getAnswers'));
 	};
 	
+	var submitQuestionnaireIfCompleteOrForced = function(event) {
+		if (event.shiftKey || $bQuestionnaire.bsurveyquestionnaire('isComplete'))
+			submitQuestionnaire();
+		else {
+			str = "Questinnaire is incomplete. Hold shift pressed to force submitting it. Some very long text";
+			$questionnaireHint.stop(true, true).text(str).fadeIn(0).delay(2000).fadeOut(2000);
+			//, function(){console.log("!");});});
+			//.text('str')
+			//	.show().fadeTo(1000, 1).fadeTo(2000, 0, function(){console.log("!");});
+			$bQuestionnaire.bsurveyquestionnaire('blinkFirstMissingAnswer');
+		}
+	};
+	
 	var submitQuestionnaire = function() {
 		saveAnswers();
 		//loadPhoto();
@@ -99,8 +115,8 @@ $(function(){
 
 	
 	// "Next" button press
-	$iButtonNext.bind('click', function() {
-		submitQuestionnaire();
+	$iButtonNext.bind('click', function(event) {
+		submitQuestionnaireIfCompleteOrForced(event);
 		return false;
 	});
 	
@@ -109,7 +125,7 @@ $(function(){
 		var key = event.keyCode || event.which;
 		switch (key) {
 		case KEY_ENTER:
-			submitQuestionnaire();
+			submitQuestionnaireIfCompleteOrForced(event);
 			break;
 		case 49:
 		case 50:

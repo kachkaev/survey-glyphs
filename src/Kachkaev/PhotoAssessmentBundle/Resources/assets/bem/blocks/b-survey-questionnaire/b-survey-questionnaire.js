@@ -4,6 +4,9 @@
  * Set answers: $bquestionnaire('option', 'answers', value);
  * Get answers: value = $element.bswitch('option', 'answers');
  * 
+ * Is complete: var isComplete = $bquestionnaire('isComplete');
+ * Blink first missing answer $bquestionnaire('blinkFirstMissingAnswer');
+ * 
  */
 $.widget('ui.bsurveyquestionnaire', {
 
@@ -314,6 +317,33 @@ $.widget('ui.bsurveyquestionnaire', {
 		this.w.uiHandle.focus();		
 	},
 	
+	isComplete: function() {
+		return this._getFirstMissingAnswer() === null;
+	},
+	
+	blinkFirstMissingAnswer: function() {
+		var q = this._getFirstMissingAnswer();
+		if (!q)
+			return;
+		this.w.answersMap[q].children(":first").bswitch('focus').bswitch('blink');
+	},
+	
+	_getFirstMissingAnswer: function() {
+		var w = this.w;
+		var result = null;
+		
+		$.each(w.answersMap, function(q) {
+			var $switch =  w.answersMap[q].children(":first");
+			if ($switch.bswitch('option', 'disabled'))
+				return;
+			if ($switch.bswitch('option', 'value') === null) {
+				result = q;
+				return false;
+			}
+		});
+		return result;
+	},
+	
 	_getBswitchByAnswer: function(answerId) {
 		var $answer = this.w.answersMap[answerId];
 		if ($answer)
@@ -358,17 +388,4 @@ $.widget('ui.bsurveyquestionnaire', {
 			$text.toggleClass('b-survey-questionnaire__questiontext_disabled', $bSwitch.bswitch('option', 'disabled'));
 		});
 	}
-});
-
-// TODO Shift - right - set all to green
-$(function() {
-
-	return;
-	/* ===================================
-	 * Navigation between survey questions with up/down
-	 */
-	
-	/* ===================================
-	 * Navigation between photos with enter / backspace
-	 */
 });
