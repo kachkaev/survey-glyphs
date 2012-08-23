@@ -1,11 +1,11 @@
 /**
  * Questionnaire is UI element accessible as a jQuery UI widget
  * 
- * Set answers: $bquestionnaire('option', 'answers', value);
- * Get answers: value = $element.bswitch('option', 'answers');
+ * Set answers: $bsurveyquestionnaire('option', 'answers', value);
+ * Get answers: value = $bsurveyquestionnaire('option', 'answers');
  * 
- * Is complete: var isComplete = $bquestionnaire('isComplete');
- * Blink first missing answer $bquestionnaire('blinkFirstMissingAnswer');
+ * Is complete: var isComplete = $bsurveyquestionnaire('isComplete');
+ * Blink first missing answer $bsurveyquestionnaire('blinkFirstMissingAnswer');
  * 
  */
 $.widget('ui.bsurveyquestionnaire', {
@@ -77,11 +77,6 @@ $.widget('ui.bsurveyquestionnaire', {
 			w._self._updateQuestionsDisability();
 		});
 		
-		$(document).bind("click", function () {
-			if (!$(document.activeElement).hasClass('ui-slider-handle'))
-				w.lastFocusedSwitch.bswitch('focus');
-		});
-		
 		// Focuses switch that is blocking given blocked question
 		var focusSwitchBlocking = function(blockedQuestion) {
 			// Getting the cause of blocking
@@ -151,12 +146,14 @@ $.widget('ui.bsurveyquestionnaire', {
 			w.mapbwitch.bswitch('focus');
 			w.mapbwitch.bswitch("option", "value", w.map.bsurveymap("posIsAccurate"));
 		});
-		w.map.bind('click', function() {
+
+		w.map.bind('click', function(event) {
 			if (!w.mapbwitch.bswitch('option', 'disabled')) {
-				w.mapbwitch.bswitch('focus');
+				$(document).oneTime(200, function() {w.mapbwitch.bswitch('focus');});
 			} else {
 				focusSwitchBlocking(w.mapbwitch.parent().data('q'));
 			};
+			event.stopPropagation();
 		});
 		
 		w.questions.bind('click', function(event) {
@@ -169,6 +166,11 @@ $.widget('ui.bsurveyquestionnaire', {
 			event.stopPropagation();
 		});
 
+		$(document).bind("click", function () {
+			if (!$(document.activeElement).hasClass('ui-slider-handle'))
+				w.lastFocusedSwitch.bswitch('focus');
+		});
+		
 
 		// Up/down keydown to go to prev/next question
 		$(document).bind('keydown', function(event) {

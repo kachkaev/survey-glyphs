@@ -1,23 +1,6 @@
 $(function(){
-
-	var answers = [
-	   {
-		   "qIsRealPhoto": true,
-	   },
-	   {
-			"qIsRealPhoto": true,
-			"qIsOutdoors": null,
-			"qDuringEvent": null,
-			"qTimeOfDay": 2,
-			"qSubjectPerson" : true,
-			"qSubjectMovingObject" : false,
-			"qIsLocationCorrect" : true,
-			"givenLon": -0.044867,
-			"givenLat": 51.5174128,
-			"qDescribesSpace": true,
-			"qSpaceAttractive" : false,
-	   },
-	   {
+	var answers = {
+	   '7672854730': {
 			"qIsRealPhoto": false,
 			"qIsOutdoors": null,
 			"qDuringEvent": null,
@@ -30,7 +13,20 @@ $(function(){
 			"qDescribesSpace": true,
 			"qSpaceAttractive" : false,
 	  },
-	  {
+	  '7672852814': {
+			"qIsRealPhoto": true,
+			"qIsOutdoors": null,
+			"qDuringEvent": null,
+			"qTimeOfDay": 2,
+			"qSubjectPerson" : true,
+			"qSubjectMovingObject" : false,
+			"qIsLocationCorrect" : true,
+			"givenLon": -0.044867,
+			"givenLat": 51.5174128,
+			"qDescribesSpace": true,
+			"qSpaceAttractive" : false,
+	   },
+	   '7672850642': {
 			"qIsRealPhoto": true,
 			"qIsOutdoors": true,
 			"qDuringEvent": false,
@@ -44,13 +40,15 @@ $(function(){
 			"alteredLat": 51.519128,
 			"qDescribesSpace": true,
 			"qSpaceAttractive" : true,
+	   }
+	};
 	
-	 }
-	];
+	var keys = ['7672854730', '7672852814', '7672850642'];
 	    		
 	var apiURL = "/api/";
 	
-	var $bQuestionnaire = $('.b-survey-questionnaire');
+	var $bQuestionnaire = $('.b-survey-questionnaire').bsurveyquestionnaire();
+	var $bPhoto = $('.b-survey-photo').bsurveyphoto();
 	var $iButtonNext = $('.i-button-next');
 	
 	var $questionnaireHint = $('.b-survey-controls__hint');
@@ -73,7 +71,6 @@ $(function(){
 		loadphoto(source, id);
 	};
 
-	$bQuestionnaire.bsurveyquestionnaire();
 	/* ===================================
 	 * Loading photo data
 	 */
@@ -83,9 +80,10 @@ $(function(){
 		// Loading existing answers
 		//var url = "photo_survey/";
 		
-		$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[0]);
+		$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[id]);
+		$bPhoto.bsurveyphoto('show','flickr', id);
 	};
-	loadPhoto('flickr', 123);
+	loadPhoto('flickr', keys[1]);
 
 	/* ===================================
 	 * Saves answers
@@ -98,7 +96,7 @@ $(function(){
 		if (event.shiftKey || $bQuestionnaire.bsurveyquestionnaire('isComplete'))
 			submitQuestionnaire();
 		else {
-			str = "Questinnaire is incomplete. Hold shift pressed to force submitting it. Some very long text";
+			str = "Questinnaire is incomplete. Hold shift pressed to force submitting it.";
 			$questionnaireHint.stop(true, true).text(str).fadeIn(0).delay(2000).fadeOut(2000);
 			//, function(){console.log("!");});});
 			//.text('str')
@@ -109,8 +107,8 @@ $(function(){
 	
 	var submitQuestionnaire = function() {
 		saveAnswers();
-		//loadPhoto();
-		$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[Math.floor(Math.random()*4)]);
+		loadPhoto('flickr', keys[Math.floor(Math.random()*3)]);
+		//$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[);
 	};
 
 	

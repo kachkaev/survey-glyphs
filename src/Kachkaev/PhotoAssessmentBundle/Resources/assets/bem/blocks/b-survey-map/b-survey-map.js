@@ -63,19 +63,25 @@ $.widget('ui.bsurveymap', {
 	    
 	    // Markers
 	    //// Icons
-	    var iconMainOK = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|1cb658",
+	    var iconMainOKSrc = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|1cb658";
+	    var iconMainAlteredSrc = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fffb70";
+	    var iconMainWrongSrc = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|ff7b68";
+	    var iconHelperSrc = "/static/i/b-survey-map__circle.png";
+	    $.preload([iconMainOKSrc, iconMainAlteredSrc, iconMainWrongSrc, iconHelperSrc, "http://maps.gstatic.com/mapfiles/closedhand_8_8.cur", "http://maps.gstatic.com/mapfiles/drag_cross_67_16.png"]);
+	    
+	    var iconMainOK = new google.maps.MarkerImage(iconMainOKSrc,
     	        new google.maps.Size(21, 34),
     	        new google.maps.Point(0,0),
     	        new google.maps.Point(10, 34));
-	    var iconMainAltered = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fffb70",
+	    var iconMainAltered = new google.maps.MarkerImage(iconMainAlteredSrc,
     	        new google.maps.Size(21, 34),
     	        new google.maps.Point(0,0),
     	        new google.maps.Point(10, 34));
-	    var iconMainWrong = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|ff7b68",
+	    var iconMainWrong = new google.maps.MarkerImage(iconMainWrongSrc,
     	        new google.maps.Size(21, 34),
     	        new google.maps.Point(0,0),
     	        new google.maps.Point(10, 34));
-	    var iconHelper = new google.maps.MarkerImage("/static/i/b-survey-map__circle.png",
+	    var iconHelper = new google.maps.MarkerImage(iconHelperSrc,
     	        new google.maps.Size(10, 10),
     	        new google.maps.Point(3, 3),
     	        new google.maps.Point(5, 5));
@@ -198,7 +204,8 @@ $.widget('ui.bsurveymap', {
 					zoomControl: !value,
 					draggable: !value,
 				});
-				this.w.mainMarker.setOptions({draggable: !value});
+				this.w.mainMarker.setOptions({draggable: !value, clickable: !value});
+				this.w.helperMarker.setOptions({clickable: !value});
 				$.Widget.prototype._setOption.apply( this, arguments );
 			default:
 				return;

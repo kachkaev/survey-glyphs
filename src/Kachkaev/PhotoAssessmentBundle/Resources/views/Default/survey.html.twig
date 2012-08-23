@@ -19,7 +19,7 @@
 		<h1><a href="{{ path("pat_default_index") }}">Photo Content Assessment Tool</a>: Panoramio (<span class="i-info-countdone">1</span>/<span class="i-info-counttotal">42</span>)</h1>
 	</div>
 	<div class="p-survey__leftcol">
-		<a href="{photo.mediumURL}" title="View this photo on Panoramio" class="b-survey-photo">
+		<a href="{photo.mediumURL}" target="_blank" title="View this photo on Panoramio" class="b-survey-photo">
 			<!--img class="b-survey-photo__photo" src="http://farm9.staticflickr.com/8013/7669755650_e0e9d4cb04_z.jpg" /-->
 			<img class="b-survey-photo__photo" alt="" src="http://static.panoramio.com/photos/1920x1280/75783395.jpg" />
 			<span class="b-survey-photo__title">Sunset at St. Paul’s Cathedral</span>
@@ -149,16 +149,19 @@
     '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.tmpl.js'
     '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.scrollintoview.modif.js'
     '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.js'
-
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.preload.js'
+    
     '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.js'
     '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.string.js'
 
     '@PhotoAssessmentBundle/Resources/assets/vendor/keycodes.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/namespace.js'
     %}
     	<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
 	{% javascripts output='js/survey.js' filter=""
+		'@PhotoAssessmentBundle/Resources/assets/js/pat/photoInfoProvider/*.js'
 		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
 		'@PhotoAssessmentBundle/Resources/assets/bem/pages/p-survey/p-survey.js'
 		%}
