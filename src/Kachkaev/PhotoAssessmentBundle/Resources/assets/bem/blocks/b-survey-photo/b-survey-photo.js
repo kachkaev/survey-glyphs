@@ -1,7 +1,7 @@
 /**
  * Questionnaire is UI element accessible as a jQuery UI widget
  * 
- * Show info: $elem.bsurveyphoto('show', source, id);
+ * Show info: $elem.bsurveyphoto('show', source, id, ready = function(status));
  * Preload info: value = $elem.bsurveyphoto('preload', source, id);
  * 
  * Event errorloading
@@ -29,23 +29,24 @@ $.widget('ui.bsurveyphoto', {
 	},
 
 	preload: function(source, id) {
-		var info = this.w.photoInfoProviders[source].getInfo(id);
-		if (info.status == 0)
-			$([info.imgSrc]).preload();
+		this.w.photoInfoProviders[source].load(id, function(info) {
+			if (info.status == 0)
+				$([info.imgSrc]).preload();
+		});
 	},
 	
 	show: function(source, id) {
 		var w = this.w;
-		var info = w.photoInfoProviders[source].getInfo(id);
-		
-		if (info.status == 0) {
-			w.photo.attr('src', info.imgSrc);
-			w.title.text('').text(info.title);
-			w.user.text('').text(info.user);
-			w.timestamp.text('').text(info.timestamp);
-			w.element.attr('href', info.permalink);
-		} else {
-			console.log('photo deleted ', id);
-		}
+		w.photoInfoProviders[source].load(id, function(info) {
+			if (info.status == 0) {
+				w.photo.attr('src', info.imgSrc);
+				w.title.text('').text(info.title);
+				w.user.text('').text(info.user);
+				w.timestamp.text('').text(info.timestamp);
+				w.element.attr('href', info.permalink);
+			} else {
+				console.log('photo deleted ', id);
+			}
+		});
 	}
 });
