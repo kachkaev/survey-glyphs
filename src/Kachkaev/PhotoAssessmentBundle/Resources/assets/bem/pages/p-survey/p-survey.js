@@ -1,6 +1,28 @@
 $(function(){
+	
+	var queue = [
+	     {
+	    	 source: 'flickr',
+	         id: '7672854730',
+         },
+         {
+        	 source: 'flickr',
+        	 id: '7672852814',
+         },
+	     {
+	    	 source: 'panoramio',
+	    	 userId: '3676734',
+	         id: '75783407',
+         },
+         {
+        	 source: 'panoramio',
+        	 userId: '3676734',
+        	 id: '75783404',
+         },
+         ];
+	
 	var answers = {
-	   '7672854730': {
+		'panoramio@75783407': {
 			"qIsRealPhoto": false,
 			"qIsOutdoors": null,
 			"qDuringEvent": null,
@@ -13,7 +35,7 @@ $(function(){
 			"qDescribesSpace": true,
 			"qSpaceAttractive" : false,
 	  },
-	  '7672852814': {
+	  'flickr@7672852814': {
 			"qIsRealPhoto": true,
 			"qIsOutdoors": null,
 			"qDuringEvent": null,
@@ -26,7 +48,7 @@ $(function(){
 			"qDescribesSpace": true,
 			"qSpaceAttractive" : false,
 	   },
-	   '7672850642': {
+	   'panoramio@75783404': {
 			"qIsRealPhoto": true,
 			"qIsOutdoors": true,
 			"qDuringEvent": false,
@@ -43,8 +65,6 @@ $(function(){
 	   }
 	};
 	
-	var keys = ['7672854730', '7672852814', '7672850642'];
-	    		
 	var apiURL = "/api/";
 	
 	var $bQuestionnaire = $('.b-survey-questionnaire').bsurveyquestionnaire();
@@ -67,23 +87,35 @@ $(function(){
 		// Displaying the queue
 		
 		// Taking the first photograph
-		var id = 0;
-		loadphoto(source, id);
+		//var id = 0;
+		//loadphoto(source, id);
 	};
 
+	var photoInfoProviders = {
+			flickr: new pat.photoInfoProvider.FlickrPhotoInfoProvider(),
+			panoramio: new pat.photoInfoProvider.PanoramioPhotoInfoProvider()
+		};
 	/* ===================================
 	 * Loading photo data
 	 */
-	var loadPhoto = function(source, id) {
+	var loadPhoto = function(queueElement) {
 		//Loading photo metadata
 		
 		// Loading existing answers
 		//var url = "photo_survey/";
 		
-		$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[id]);
-		$bPhoto.bsurveyphoto('show','flickr', id);
+		$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[queueElement.source + "@" + queueElement.id]);
+		
+		$bPhoto.bsurveyphoto('showLoading');
+		photoInfoProviders[queueElement.source].load(queueElement, function(info) {
+			if (info.imgSrc)
+				$.preload(info.imgSrc);
+			$(document).oneTime(1, function() {$bPhoto.bsurveyphoto('showPhotoInfo', info);});
+		});
+		
+		
 	};
-	loadPhoto('flickr', keys[1]);
+	loadPhoto(queue[0]);
 
 	/* ===================================
 	 * Saves answers
@@ -98,16 +130,13 @@ $(function(){
 		else {
 			str = "Questinnaire is incomplete. Hold shift pressed to force submitting it.";
 			$questionnaireHint.stop(true, true).text(str).fadeIn(0).delay(2000).fadeOut(2000);
-			//, function(){console.log("!");});});
-			//.text('str')
-			//	.show().fadeTo(1000, 1).fadeTo(2000, 0, function(){console.log("!");});
 			$bQuestionnaire.bsurveyquestionnaire('blinkFirstMissingAnswer');
 		}
 	};
 	
 	var submitQuestionnaire = function() {
 		saveAnswers();
-		loadPhoto('flickr', keys[Math.floor(Math.random()*3)]);
+		loadPhoto(queue[Math.floor(Math.random()*queue.length)]);
 		//$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[);
 	};
 

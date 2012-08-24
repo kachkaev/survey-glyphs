@@ -1,52 +1,65 @@
 /**
- * Questionnaire is UI element accessible as a jQuery UI widget
+ * Takes photo info and displays it
  * 
- * Show info: $elem.bsurveyphoto('show', source, id, ready = function(status));
- * Preload info: value = $elem.bsurveyphoto('preload', source, id);
- * 
- * Event errorloading
- * 
+ * Show photo: $elem.bsurveyphoto('showPhotoInfo', info);
+ * Show loading: $elem.bsurveyphoto('showLoading');
+ * Show loading: $elem.bsurveyphoto('showNothing');
  */
 $.widget('ui.bsurveyphoto', {
 
 	_init: function() {
+		var preloaderImg = '/static/i/b-survey-photo__loader.gif';
+		var defaultHeight = 400;
 		
 		var w = {
 				_self: this,
-				element: this.element,
+				$element: this.element,
 			};
 		this.w = w;
 		
-		w.photo = w.element.find(".b-survey-photo__photo");
-		w.title = w.element.find(".b-survey-photo__title");
-		w.timestamp = w.element.find(".b-survey-photo__timestamp");
-		w.user = w.element.find(".b-survey-photo__user");
+		w.lastInfoHeight = defaultHeight;
 		
-		w.photoInfoProviders = {
-			flickr: new pat.photoInfoProvider.FlickrPhotoInfoProvider(),
-			panoramio: new pat.photoInfoProvider.PanoramioPhotoInfoProvider()
-		};
+		w.$info = $('<a class="b-survey-photo__info" target="_blank"/>');
+		w.$infoPhoto = $('<img class="b-survey-photo__photo" />').appendTo(w.$info);
+		w.$infoTitle = $('<span class="b-survey-photo__title" />').appendTo(w.$info);
+		w.$infoTimestamp = $('<span class="b-survey-photo__timestamp" />').appendTo(w.$info);
+		w.$infoUser = $('<span class="b-survey-photo__user" />').appendTo(w.$info);
+		
+		w.$loading = $('<div class="b-survey-photo__loading"/>').append($('<img/>', {src: preloaderImg}));
+		$.preload([preloaderImg]);
+		
+		w.$error = $('<div class="b-survey-photo__error"/>').text('Error loading photograph. It seems like it was just deleted or got hidden.');
+		
 	},
 
-	preload: function(source, id) {
-		this.w.photoInfoProviders[source].load(id, function(info) {
-			if (info.status == 0)
-				$([info.imgSrc]).preload();
-		});
+	showNothing: function() {
+		this.w.$element.empty();
+	},
+
+	showLoading: function() {
+		var w = this.w;
+		
+		w.$element.empty();
+		w.$element.append(w.$loading);
 	},
 	
-	show: function(source, id) {
+	showPhotoInfo: function(info) {
 		var w = this.w;
-		w.photoInfoProviders[source].load(id, function(info) {
-			if (info.status == 0) {
-				w.photo.attr('src', info.imgSrc);
-				w.title.text('').text(info.title);
-				w.user.text('').text(info.user);
-				w.timestamp.text('').text(info.timestamp);
-				w.element.attr('href', info.permalink);
-			} else {
-				console.log('photo deleted ', id);
-			}
-		});
+		
+		if (info.status === 0) {
+			w.$infoPhoto.attr('src', '');
+			w.$infoPhoto.attr('src', info.imgSrc);
+			w.$infoTitle.text('').text(info.title);
+			w.$infoUser.text('').text(info.user);
+			w.$infoTimestamp.text('').text(info.timestamp);
+			w.$info.attr('href', info.permalink);
+			w.$element.empty();
+			w.$element.append(w.$info);
+			w.lastInfoHeight = w.$info.height();
+		} else {
+			w.$element.empty();
+			w.$element.append(w.$error);
+			console.log("Faulty photo: ", info.status);
+		};
 	}
 });

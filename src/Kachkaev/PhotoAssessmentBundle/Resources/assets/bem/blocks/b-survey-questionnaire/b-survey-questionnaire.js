@@ -10,9 +10,9 @@
  */
 $.widget('ui.bsurveyquestionnaire', {
 
-	options: {
-		answers: {},
-	},
+//	options: {
+//		answers: {},
+//	},
 
 	_init: function() {
 		
@@ -21,6 +21,10 @@ $.widget('ui.bsurveyquestionnaire', {
 				element: this.element,
 			};
 		this.w = w;
+		
+		w.defaultAnswers = {
+				'qIsRealPhoto': true
+		};
 		
 		// Initializing switches
 		w.switches = this.element.find('.b-switch');
@@ -227,7 +231,7 @@ $.widget('ui.bsurveyquestionnaire', {
 		});
 		
 		// Loading default answers
-		//this._setAnswers(this.options.answers);
+		this.setAnswers(w.defaultAnswers);
 	},
 
 	_setOption: function (key, value) {
@@ -241,6 +245,8 @@ $.widget('ui.bsurveyquestionnaire', {
 	},
 	
 	setAnswers: function(answers) {
+		if (!answers)
+			answers = this.w.defaultAnswers;
 		answers = $.extend({
 			givenLon: null,
 			givenLat: null,

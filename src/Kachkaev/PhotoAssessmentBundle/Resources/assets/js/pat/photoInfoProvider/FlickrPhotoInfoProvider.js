@@ -10,7 +10,7 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider = function() {
 
 pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype = new pat.photoInfoProvider.AbstractPhotoInfoProvider();
 
-pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(id, callback) {
+pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(params, callback) {
 	
 	var responseToInfo = function(response) {
 		var info = {};
@@ -22,6 +22,10 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(id, c
 			info.user = response.photo.owner.username;
 			info.status = 0;
 			info.timestamp = response.photo.dates.taken;
+			if (response.photo.location) {
+				info.lon = response.photo.location.longitude;
+				info.lat = response.photo.location.latitude;
+			}
 			info.imgSrc = "http://farm" +
 					response.photo.farm + ".staticflickr.com/" +
 					response.photo.server + "/" + 
@@ -29,13 +33,11 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(id, c
 		} else {
 			info.status = 1;
 		}
-		//console.log(response);
-		console.log(info);
 		callback.call(this, info);
 	};
 	
 	$.ajax({
-		url: this._apiURL + id,
+		url: this._apiURL + params.id,
 		success: function(data) {
 			responseToInfo($.parseJSON(data));
 		},

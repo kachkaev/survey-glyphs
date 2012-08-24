@@ -11,22 +11,20 @@
 	    %}
 	    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="all" />
 	{% endstylesheets %}
-</head>
-
+</head>	
 <body class="p-survey">
 	<div class="p-survey-header">
 		<div class="b-userbox"></div>
 		<h1><a href="{{ path("pat_default_index") }}">Photo Content Assessment Tool</a>: Panoramio (<span class="i-info-countdone">1</span>/<span class="i-info-counttotal">42</span>)</h1>
 	</div>
 	<div class="p-survey__leftcol">
-		<a href="{photo.mediumURL}" target="_blank" title="View this photo on Panoramio" class="b-survey-photo">
-			<!--img class="b-survey-photo__photo" src="http://farm9.staticflickr.com/8013/7669755650_e0e9d4cb04_z.jpg" /-->
+		<div class="b-survey-photo"></div>
+		<!-- a href="{photo.mediumURL}" target="_blank" title="View this photo on Panoramio" class="b-survey-photo">
 			<img class="b-survey-photo__photo" alt="" src="http://static.panoramio.com/photos/1920x1280/75783395.jpg" />
 			<span class="b-survey-photo__title">Sunset at St. Paul’s Cathedral</span>
-			<!-- span class="b-survey-photo__description">Some description</span -->
 			<span class="b-survey-photo__timestamp">2012-05-01 19:13:30</span>
 			<span class="b-survey-photo__user">Alexander Kachkaev</span>
-		</a>
+		</a-->
 		<div class="b-survey-dashboard"></div>
 	</div>
 	<div class="p-survey__rightcol">
@@ -169,6 +167,7 @@
     {% endjavascripts %}
     
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;language={{ app.request.locale }}"></script>
-	
+    <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&hl={{ app.request.locale }}"></script>
+
 </body>
 </html>
