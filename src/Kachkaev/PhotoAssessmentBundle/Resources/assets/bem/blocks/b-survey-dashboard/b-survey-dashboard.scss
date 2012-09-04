@@ -1,0 +1,41 @@
+.b-survey-dashboard {
+	outline: 1px solid red;
+	position: absolute;
+	width: 500px;
+	height: 200px;
+	bottom: 18px;
+	left: 20px;
+}
+
+.b-survey-dashboard__items {
+	overflow: hidden;
+}
+
+.b-survey-dashboard__item {
+	height: 17px;
+	width: 17px;
+	float: left;
+	color: #666;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	float: left;
+	cursor: pointer;
+	text-align: center;
+	font-size: 30px;
+	line-height: 18px;
+}
+
+.b-survey-dashboard__item.incomplete {
+	background-color: yellow;
+}
+
+.b-survey-dashboard__item.complete {
+	background-color: #00ADEE;
+}
+
+.b-survey-dashboard__item.current {
+	cursor: default;
+}
+.b-survey-dashboard__item.current:before {
+	content: "•";
+}

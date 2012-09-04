@@ -8,22 +8,34 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  */
-class PhotoSurveyAnswer extends AbstractStandardEntity {
-	protected $standardProperties = ["participant", "qIsRealPhoto",
+class PhotoResponse extends AbstractStandardEntity {
+	protected $standardProperties = ["user", "qIsRealPhoto",
 			"qIsOutdoors", "qIsOnEvent", "qTimeOfDay", "qSubjectPerson",
 			"qSubjectMovingObject", "qIsLocationCorrect", "correctedLon", "correctedLon", "qDescribesSpace", "qSpaceAttractive"];
 
 	protected $standardGetters = ["id"];
 
-	/** @ORM\Column(type="string", nullable=true, length=128)
+	/** @ORM\Column(type="integer")
+     *  @ORM\Id
+     *  @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
-
-	protected $participant;
-
-	/** @ORM\Column(type="string", nullable=true, length=128)
-	 */
+	
+	/**
+     * @ORM\ManyToOne(targetEntity="Photo", inversedBy="responses")
+     * @ORM\JoinColumn(name="photoId", referencedColumnName="id")
+     */
 	protected $photo;
+
+	/**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="responses")
+     * @ORM\JoinColumn(name="userId", referencedColumnName="id")
+     */
+	protected $user;
+
+	/** @ORM\Column(type="integer", nullable=false)
+	 */
+	protected $status = 0;
 
 	/** @ORM\Column(type="boolean", nullable=true)
 	 */
@@ -37,7 +49,7 @@ class PhotoSurveyAnswer extends AbstractStandardEntity {
 	 */
 	protected $qDuringEvent;
 	
-	/** @ORM\Column(type="int", nullable=true)
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
 	protected $qTimeOfDay;
 
@@ -69,15 +81,15 @@ class PhotoSurveyAnswer extends AbstractStandardEntity {
 	 */
 	protected $qSpaceScenic;
 
-	/** @ORM\Column(type="int", nullable=false)
-	 */
-	protected $status = 0;
-
-	/** @ORM\Column(type="int", nullable=true)
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
 	protected $duration;
 
-	/** @ORM\Column(type="DateTime", nullable=true)
+	/** @ORM\Column(type="datetime", nullable=true)
 	 */
 	protected $submittedAt;
+	
+	/** @ORM\Column(type="datetime", nullable=true)
+	 */
+	protected $statusCheckedAt;
 }
