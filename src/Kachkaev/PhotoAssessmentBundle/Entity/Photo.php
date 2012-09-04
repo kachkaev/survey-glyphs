@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Photo extends AbstractStandardEntity {
 	protected $standardProperties = ["status"];
-	protected $standardGetters = ["id", "source", "photoId", "userId", "respnoses"];
+	protected $standardGetters = ["source", "photoId", "userId", "respnoses"];
 
 	/** @ORM\Column(type="integer")
      *  @ORM\Id
@@ -34,13 +34,33 @@ class Photo extends AbstractStandardEntity {
 	 */
 	protected $userId;
 	
+	/** @ORM\Column(type="decimal")
+	 */
+	protected $lon;
+	
+	/** @ORM\Column(type="decimal")
+	 */
+	protected $lat;
+
 	/** @ORM\Column(type="integer", nullable=false)
 	 */
 	protected $status = 0;
 
-	public function __construct()
+	/** @ORM\Column(type="integer", nullable=false)
+	 */
+	protected $completeResponsesCount = 0;
+	
+	public function getId() {    
+        return $this->id;        
+    }     
+    
+    public function __construct()
 	{
 		parent::__construct();
 		$this->responses = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+
+	public function getSerializableProperties() {
+		return array("id", "source", "photoId", "userId");
 	}
 }

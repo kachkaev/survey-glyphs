@@ -12,7 +12,9 @@ security:
 
     providers:
         main:
-            entity: { class:  PhotoAssessmentBundle:User, property: id }
+            entity:
+                class:  PhotoAssessmentBundle:User
+                property: id
 
     firewalls:
         all:

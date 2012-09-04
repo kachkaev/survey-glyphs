@@ -1,6 +1,7 @@
 <?php
 
 namespace Kachkaev\PhotoAssessmentBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -9,11 +10,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  */
 class PhotoResponse extends AbstractStandardEntity {
-	protected $standardProperties = ["user", "qIsRealPhoto",
-			"qIsOutdoors", "qIsOnEvent", "qTimeOfDay", "qSubjectPerson",
-			"qSubjectMovingObject", "qIsLocationCorrect", "correctedLon", "correctedLon", "qDescribesSpace", "qSpaceAttractive"];
+	protected $standardProperties = ["status", "duration", "submittedAt", "qIsRealPhoto",
+			"qIsOutdoors", "qDuringEvent", "qTimeOfDay", "qSubjectPerson",
+			"qSubjectMovingObject", "qIsLocationCorrect", "alteredLon", "alteredLat", "qDescribesSpace", "qSpaceAttractive"];
 
-	protected $standardGetters = ["id"];
+	protected $standardGetters = ["id", "user", "photo"];
 
 	/** @ORM\Column(type="integer")
      *  @ORM\Id
@@ -79,7 +80,7 @@ class PhotoResponse extends AbstractStandardEntity {
 
 	/** @ORM\Column(type="boolean", nullable=true)
 	 */
-	protected $qSpaceScenic;
+	protected $qSpaceAttractive;
 
 	/** @ORM\Column(type="integer", nullable=true)
 	 */
@@ -92,4 +93,14 @@ class PhotoResponse extends AbstractStandardEntity {
 	/** @ORM\Column(type="datetime", nullable=true)
 	 */
 	protected $statusCheckedAt;
+	
+	public function __construct(Photo $photo, User $user) {
+		parent::__construct();
+		$this->photo = $photo;
+		$this->user = $user;
+	}
+	
+	public function getSerializableProperties() {
+		return $this->standardProperties;
+	}
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Kachkaev\PhotoAssessmentBundle\Entity;
 
+use Kachkaev\PhotoAssessmentBundle\Exception\MemberAccessException;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /*

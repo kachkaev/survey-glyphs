@@ -1,7 +1,7 @@
 /*
 
 updateQueue(callback)
-extendQueue(callback)
+//extendQueue(callback)
 
 getQueue()
 
