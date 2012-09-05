@@ -1,14 +1,15 @@
 $(function(){
-	
 	var surveyQueue = new pat.SurveyQueue();
-	surveyQueue.updated.add(function() {
-		console.log("HOORAY", surveyQueue.getQueue());
+	
+	var $bSurveyDashboard = $('.b-survey-dashboard').bsurveydashboard();
+	
+	surveyQueue.updated.add(function(queue) {
+		$bSurveyDashboard.bsurveydashboard("updateItems", queue);
 	});
 	
 	surveyQueue.updatedWithError.add(function() {
 		console.log("Oh no, API returned an error!");
 	});
-	
 	
 	surveyQueue.fetchQueue();
 	

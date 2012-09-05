@@ -1,41 +1,55 @@
 .b-survey-dashboard {
-	outline: 1px solid red;
 	position: absolute;
 	width: 500px;
-	height: 200px;
+	overflow: auto;
 	bottom: 18px;
 	left: 20px;
 }
 
 .b-survey-dashboard__items {
-	overflow: hidden;
+	overflow: auto;
+	max-height: 100px;
 }
 
 .b-survey-dashboard__item {
+	color: #666;
 	height: 17px;
 	width: 17px;
 	float: left;
-	color: #666;
 	border: 1px solid #ccc;
 	border-radius: 2px;
 	float: left;
 	cursor: pointer;
 	text-align: center;
-	font-size: 30px;
-	line-height: 18px;
 }
 
 .b-survey-dashboard__item.incomplete {
-	background-color: yellow;
+	background-color: #faf5b7;
+	color: #bdbc89;
+	font-weight: bold;
+	font-size: 15px;
+	line-height: 20px;
+}
+.b-survey-dashboard__item.incomplete:before {
+	content: "!";
 }
 
 .b-survey-dashboard__item.complete {
-	background-color: #00ADEE;
+	background-color: #afd3de;
+	color: #50a5c1;
+	font-size: 13px;
+	line-height: 21px;
+	width: 15px;
+	padding-left: 2px;
+}
+.b-survey-dashboard__item.complete:before {
+	content: "✓";
 }
 
 .b-survey-dashboard__item.current {
 	cursor: default;
+	border-color: #737373;
 }
-.b-survey-dashboard__item.current:before {
+/*.b-survey-dashboard__item.current:before {
 	content: "•";
-}
+}*/

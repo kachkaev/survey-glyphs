@@ -34,9 +34,9 @@ getCount()
 
 
 
-Events:
-updateQueue
-updateQueueError
+Events (signals):
+updated (queue)
+updatedWithError
 
 
 */
@@ -65,14 +65,14 @@ pat.SurveyQueue.prototype.fetchQueue = function() {
 		var newQueue = null;
 		try {
 			oldQueue = this._queue;
-			newQueue = data;
+			newQueue = data.response;
 		} catch (e) {
 			console.log(e);
 			obj.updatedWithError.dispatch();
 		};
 		if (!_.isEqual(oldQueue, newQueue)) {
 			obj._queue = newQueue;
-			obj.updated.dispatch();
+			obj.updated.dispatch(newQueue);
 		};
 	};
 	

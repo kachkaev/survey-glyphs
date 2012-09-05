@@ -75,6 +75,7 @@ class SurveyApiController extends Controller
     	foreach ($photoResponses as $photoResponse) {
     		$serializedPhotoResponse = [];
     		
+    		$serializedPhotoResponse["id"] = $photoResponse->getId();
     		foreach ($photoResponse->getSerializableProperties() as $property) {
     				$serializedPhotoResponse [$property] = $photoResponse->get($property);
     		}
@@ -84,7 +85,7 @@ class SurveyApiController extends Controller
     			$serializedPhoto[$property] = $photo->get($property);
     		}
     		$serializedPhotoResponse["photo"] = $serializedPhoto;
-    		$serializedPhotoResponses [$photoResponse->getId()]= $serializedPhotoResponse;
+    		$serializedPhotoResponses []= $serializedPhotoResponse;
     	}
     	$apiResponse = [
     		"response" => $serializedPhotoResponses,
