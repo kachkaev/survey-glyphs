@@ -16,6 +16,7 @@ $.widget('ui.bsurveydashboard', {
 		this.w = w;
 		
 		w.$items = w.$element.find(".b-survey-dashboard__items");
+		w.itemsMap = {};
 		
 		// Trigger changeitem when an item is clicked
 		$(".b-survey-dashboard__item").live("click", function(e) {
@@ -34,40 +35,50 @@ $.widget('ui.bsurveydashboard', {
 	 */
 	updateItems: function(queue, currentId) {
 		var w = this.w;
-		// Collecting all "ids" of items
-		var deletedIds = [];
-		w.$items.find(".b-survey-dashboard__item").each(function() {
-			deletedIds[$(this).data("id")] = true;
-		});
-		
-		// Looping through queue and updating/adding items
-		var $prevItem = null;
-		$.each(queue, function(k, v) {
-			
-			// Creating an item if it does not exist
-			var $currentItem = w.$items.find(".b-survey-dashboard__item:data(id="+v.id+")");
-			if (!$currentItem.length) {
-				$currentItem = $('<li class="b-survey-dashboard__item"></li>');
-				$currentItem.data("id", v.id);
-			}
-			// Placing current item
-			if ($prevItem)
-				$currentItem.insertAfter($prevItem);
-			else
-				$currentItem.prependTo(w.$items);
-			
-			// Assigning classes to the item
-			$currentItem.removeClass('incomplete complete current').addClass(pat.PhotoResponseStatus.valueToString(v.status, true));
-			if (v.id == currentId)
-				$currentItem.addClass("current");
 
-			delete deletedIds[v.id];
-			$prevItem = $currentItem;
-		});
-		
-		// Looking for items in dashboard but not in queue and deleting them (just in case)
-		$.each(deletedIds, function(id) {
-			$items.find(".b-survey-dashboard__item:data(id="+v.id+")").remove();
+		$(document).oneTime(1, function() {
+			
+			w.$items.detach();
+
+			// Collecting all "ids" of items
+			var deletedIds = [];
+			w.$items.find(".b-survey-dashboard__item").each(function() {
+				deletedIds[$(this).data("id")] = true;
+			});
+			
+			// Looping through queue and updating/adding items
+			var $prevItem = null;
+			$.each(queue, function(k, v) {
+				
+				// Creating an item if it does not exist
+				var $currentItem = w.itemsMap[v.id];
+				if (!$currentItem) {
+					$currentItem = $('<li class="b-survey-dashboard__item"></li>');
+					$currentItem.data("id", v.id);
+					w.itemsMap[v.id] = $currentItem;
+				}
+				// Placing current item
+				if ($prevItem)
+					$currentItem.insertAfter($prevItem);
+				else
+					$currentItem.prependTo(w.$items);
+				
+				// Assigning classes to the item
+				$currentItem.removeClass('incomplete complete current').addClass(pat.PhotoResponseStatus.valueToString(v.status, true));
+				if (v.id == currentId)
+					$currentItem.addClass("current");
+
+				delete deletedIds[v.id];
+				$prevItem = $currentItem;
+			});
+			
+			// Looking for items in dashboard but not in queue and deleting them (just in case)
+			$.each(deletedIds, function(id) {
+				w.itemsMap[v.id].remove();
+				delete w.itemsMap[v.id];
+			});
+			
+			w.$items.appendTo(w.$element);			
 		});
 	},
 });

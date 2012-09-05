@@ -61,6 +61,7 @@ pat.SurveyQueue.prototype.fetchQueue = function() {
 	var obj = this;
 	
 	var parseQueue = function(data) {
+		console.log("before parse");
 		var oldQueue = null;
 		var newQueue = null;
 		try {
@@ -74,6 +75,7 @@ pat.SurveyQueue.prototype.fetchQueue = function() {
 			obj._queue = newQueue;
 			obj.updated.dispatch(newQueue);
 		};
+		console.log("after parse");
 	};
 	
 	$.ajax({
@@ -86,6 +88,7 @@ pat.SurveyQueue.prototype.fetchQueue = function() {
 			obj.updatedWithError.dispatch();
 		},
 	});
+	console.log("before callback");
 };
 
 pat.SurveyQueue.prototype.getQueue = function() {
