@@ -36,16 +36,16 @@ class SurveyApiController extends Controller
     	
     	// Getting all responses by the user + info on photos themselves
     	$queryStr = "Select pr, p, u FROM PhotoAssessmentBundle:PhotoResponse pr LEFT JOIN pr.photo p LEFT JOIN pr.user u WHERE u.id = ".$user->getId()." ORDER BY pr.id";
-    	$responses = $em->createQuery($queryStr)->getResult();
-    	//$responses = $em->getRepository('PhotoAssessmentBundle:PhotoResponse')->findByUser($user);
+    	$photoResponses = $em->createQuery($queryStr)->getResult();
+    	//$photoResponses = $em->getRepository('PhotoAssessmentBundle:PhotoResponse')->findByUser($user);
     	
     	// Count unanswered replies
     	$countUnanswered = 0;
-    	$answeredPhotosIds = array();
-    	foreach ($responses as $response) {
-    		if ($response->getStatus() == PhotoResponseStatus::UNANSWERED)
+    	$answeredPhotosIds = [];
+    	foreach ($photoResponses as $photoResponse) {
+    		if ($photoResponse->getStatus() == PhotoResponseStatus::UNANSWERED)
     			++$countUnanswered;
-    		$answeredPhotosIds []= $response->getPhoto()->getId();
+    		$answeredPhotosIds []= $photoResponse->getPhoto()->getId();
     	};
     	
     	// Extend queue if less than  unanswered photos left
@@ -59,38 +59,41 @@ class SurveyApiController extends Controller
     		// Creating empty responses for these photos
     		foreach ($idsRes as $idRes) {
     			$photoref = $em->getReference('PhotoAssessmentBundle:Photo', $idRes['id']);
-    			$response = new PhotoResponse($photoref, $user);
-    			$em->persist($response);
-    			$responses []= $response;
+    			$photoResponse = new PhotoResponse($photoref, $user);
+    			$em->persist($photoResponse);
+    			$photoResponses []= $photoResponse;
     		}
     		// Saving them into DB
     		$em->flush();
     		
     		// Rerunning the queury to get all new data
-    		$responses = $em->createQuery($queryStr)->getResult();
+    		$photoResponses = $em->createQuery($queryStr)->getResult();
     	}
     	
     	// Serializing
-    	$serializedResponses = array();
-    	foreach ($responses as $response) {
-    		$serializedResponse = array();
+    	$serializedPhotoResponses = [];
+    	foreach ($photoResponses as $photoResponse) {
+    		$serializedPhotoResponse = [];
     		
-    		foreach ($response->getSerializableProperties() as $property) {
-    				$serializedResponse [$property] = $response->get($property);
+    		foreach ($photoResponse->getSerializableProperties() as $property) {
+    				$serializedPhotoResponse [$property] = $photoResponse->get($property);
     		}
-    		$photo = $response->getPhoto();
-    		$serializedPhoto = array();
+    		$photo = $photoResponse->getPhoto();
+    		$serializedPhoto = [];
     		foreach ($photo->getSerializableProperties() as $property) {
     			$serializedPhoto[$property] = $photo->get($property);
     		}
-    		$serializedResponse["photo"] = $serializedPhoto;
-    		$serializedResponses [$response->getId()]= $serializedResponse;
+    		$serializedPhotoResponse["photo"] = $serializedPhoto;
+    		$serializedPhotoResponses [$photoResponse->getId()]= $serializedPhotoResponse;
     	}
-    	return new Response(json_encode($serializedResponses));
+    	$apiResponse = [
+    		"response" => $serializedPhotoResponses,
+    	];
+    	return new Response(json_encode($apiResponse));
     }
 
     /**
-     * @Route("/api/submitReply", name="pat_api_setreply")
+     * @Route("/api/submit_response", name="pat_api_submitresponse")
      */
     public function submitReplyAction()
     {

@@ -1,6 +1,6 @@
 jQuery(function() {
 
-    var cookieName = 'debug_notoolbar'
+    var cookieName = 'debug_notoolbar';
     var animationSpeed = 200;
     var normalCss = {
             width: '200px'

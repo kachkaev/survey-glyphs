@@ -33,7 +33,8 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(param
 		} else {
 			info.status = 1;
 		}
-		callback.call(this, info);
+		if (_.isFunction(callback))
+			callback.call(this, info);
 	};
 	
 	$.ajax({

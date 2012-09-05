@@ -15,7 +15,8 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype = new pat.photoInfoPr
 
 pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(params, callback) {
 	var obj = this;
-	var photoLoaded = function() {
+	var photoLoaded = null;
+	photoLoaded = function() {
 		var photo = obj._widget.getPhoto();
 		var info = {};
 		
@@ -35,7 +36,9 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(pa
 		} else {
 			info.status = 1;
 		}
-		callback.call(this, info);
+
+		if (_.isFunction(callback))
+			callback.call(this, info);
 	};
 	
 	var myRequest = new panoramio.PhotoRequest({

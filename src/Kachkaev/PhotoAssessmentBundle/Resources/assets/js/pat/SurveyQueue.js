@@ -1,6 +1,6 @@
 /*
 
-updateQueue(callback)
+fetchQueue(callback)
 //extendQueue(callback)
 
 getQueue()
@@ -36,7 +36,58 @@ getCount()
 
 Events:
 updateQueue
-
+updateQueueError
 
 
 */
+
+
+namespace('pat');
+
+pat.SurveyQueue = function() {
+	this._queue = {};
+	
+	this.updated = new signals.Signal();
+	this.updatedWithError = new signals.Signal();
+};
+
+var apiBaseURL = "/app_dev.php/api/";
+pat.SurveyQueue._apiURLs = {
+		get_queue: apiBaseURL+"get_queue",
+		submit_response: apiBaseURL+"submit_response",
+};
+
+pat.SurveyQueue.prototype.fetchQueue = function() {
+	var obj = this;
+	
+	var parseQueue = function(data) {
+		var oldQueue = null;
+		var newQueue = null;
+		try {
+			oldQueue = this._queue;
+			newQueue = data;
+		} catch (e) {
+			console.log(e);
+			obj.updatedWithError.dispatch();
+		};
+		if (!_.isEqual(oldQueue, newQueue)) {
+			obj._queue = newQueue;
+			obj.updated.dispatch();
+		};
+	};
+	
+	$.ajax({
+		url: pat.SurveyQueue._apiURLs['get_queue'],
+		type: "POST",
+		success: function(data) {
+			parseQueue(data);
+		},
+		error: function() {
+			obj.updatedWithError.dispatch();
+		},
+	});
+};
+
+pat.SurveyQueue.prototype.getQueue = function() {
+	return this._queue;
+};

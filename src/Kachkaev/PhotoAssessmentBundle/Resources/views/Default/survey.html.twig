@@ -172,13 +172,15 @@
     '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.js'
     '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.string.js'
 
-    '@PhotoAssessmentBundle/Resources/assets/vendor/keycodes.js'
     '@PhotoAssessmentBundle/Resources/assets/vendor/namespace.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/keycodes.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/signals.js'
     %}
     	<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
 	{% javascripts output='js/survey.js' filter=""
+		'@PhotoAssessmentBundle/Resources/assets/js/pat/*.js'
 		'@PhotoAssessmentBundle/Resources/assets/js/pat/photoInfoProvider/*.js'
 		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
 		'@PhotoAssessmentBundle/Resources/assets/bem/pages/p-survey/p-survey.js'
