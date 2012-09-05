@@ -5,6 +5,8 @@ pat.PhotoResponseStatus.UNANSWERED = 0;
 pat.PhotoResponseStatus.INCOMPLETE = 1;
 pat.PhotoResponseStatus.COMPLETE = 2;
 
+pat.PhotoResponseStatus.PHOTO_PROBLEM = 0x10;
+
 pat.PhotoResponseStatus.valueToString = function (status, lowerCase) {
 	var result = null;
 	$.each(pat.PhotoResponseStatus, function(k, v) {

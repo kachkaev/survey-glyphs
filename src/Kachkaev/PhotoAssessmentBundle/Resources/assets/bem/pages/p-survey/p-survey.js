@@ -1,142 +1,88 @@
 $(function(){
-	var surveyQueue = new pat.SurveyQueue();
-	
+
+	// =====================================
+	// Objects with UI
+	// =====================================
+	//// Dashboard
 	var $bSurveyDashboard = $('.b-survey-dashboard').bsurveydashboard();
-	
-	surveyQueue.updated.add(function(queue) {
-		$bSurveyDashboard.bsurveydashboard("updateItems", queue);
-	});
-	
-	surveyQueue.updatedWithError.add(function() {
-		console.log("Oh no, API returned an error!");
-	});
-	
-	surveyQueue.fetchQueue();
-	
-	var queue = [
-	     {
-	    	 source: 'flickr',
-	         id: '7672854730',
-         },
-         {
-        	 source: 'flickr',
-        	 id: '7672852814',
-         },
-	     {
-	    	 source: 'panoramio',
-	    	 userId: '3676734',
-	         id: '75783407',
-         },
-         {
-        	 source: 'panoramio',
-        	 userId: '3676734',
-        	 id: '75783404',
-         },
-         ];
-	
-	var answers = {
-		'panoramio@75783407': {
-			"qIsRealPhoto": false,
-			"qIsOutdoors": null,
-			"qDuringEvent": null,
-			"qTimeOfDay": 2,
-			"qSubjectPerson" : true,
-			"qSubjectMovingObject" : false,
-			"qIsLocationCorrect" : false,
-			"givenLon": -0.094867,
-			"givenLat": 51.5172128,
-			"qDescribesSpace": true,
-			"qSpaceAttractive" : false,
-	  },
-	  'flickr@7672852814': {
-			"qIsRealPhoto": true,
-			"qIsOutdoors": null,
-			"qDuringEvent": null,
-			"qTimeOfDay": 2,
-			"qSubjectPerson" : true,
-			"qSubjectMovingObject" : false,
-			"qIsLocationCorrect" : true,
-			"givenLon": -0.044867,
-			"givenLat": 51.5174128,
-			"qDescribesSpace": true,
-			"qSpaceAttractive" : false,
-	   },
-	   'panoramio@75783404': {
-			"qIsRealPhoto": true,
-			"qIsOutdoors": true,
-			"qDuringEvent": false,
-			"qTimeOfDay": 0,
-			"qSubjectPerson" : false,
-			"qSubjectMovingObject" : false,
-			"qIsLocationCorrect" : false,
-			"givenLon": -0.096867,
-			"givenLat": 51.513128,
-			"alteredLon": -0.094867,
-			"alteredLat": 51.519128,
-			"qDescribesSpace": true,
-			"qSpaceAttractive" : true,
-	   }
-	};
-	
-	var apiURL = "/api/";
-	
+	//// Questionnarie
 	var $bQuestionnaire = $('.b-survey-questionnaire').bsurveyquestionnaire();
+	//// Box with photo
 	var $bPhoto = $('.b-survey-photo').bsurveyphoto();
+	//// "Next"
 	var $iButtonNext = $('.i-button-next');
 	
+	//// hint near the "Next" button
 	var $questionnaireHint = $('.b-survey-controls__hint');
 	$questionnaireHint.css('marginRight', $('.b-survey-controls__buttons').width());
 	
-	/* ===================================
-	 * Loading photo queue
-	 */
-	var loadQueue = function(source) {
-		// It is assumed that the user is logged in and has his own queue of photos to answer questions about
-		
-		// Requesting all photos of the queue
-		
-		// Sorting the queue
-		
-		// Displaying the queue
-		
-		// Taking the first photograph
-		//var id = 0;
-		//loadphoto(source, id);
-	};
-
+	// =====================================
+	// Objects with no UI
+	// =====================================
+	//// queue
+	var surveyQueue = new pat.SurveyQueue();
+	//// info providers
 	var photoInfoProviders = {
 			flickr: new pat.photoInfoProvider.FlickrPhotoInfoProvider(),
 			panoramio: new pat.photoInfoProvider.PanoramioPhotoInfoProvider()
 		};
-	/* ===================================
-	 * Loading photo data
-	 */
-	var loadPhoto = function(queueElement) {
+	
+	// =====================================
+	// Functions
+	// =====================================
+
+	// Goes to the next photo
+	// -------------------------------------
+	var gotoNextPhoto = function() {
+		surveyQueue.setCurrentId(surveyQueue.getNextIncompleteId());
+	};
+
+	
+	// Loads photo response
+	// -------------------------------------
+	var showPhotoResponse = function(photoResponse) {
 		//Loading photo metadata
 		
 		// Loading existing answers
 		//var url = "photo_survey/";
 		
-		$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[queueElement.source + "@" + queueElement.id]);
-		
+		//$bQuestionnaire.bsurveyquestionnaire('option', 'disabled', 'true');
 		$bPhoto.bsurveyphoto('showLoading');
-		photoInfoProviders[queueElement.source].load(queueElement, function(info) {
+		
+		photoInfoProviders[photoResponse.photo.source].load(photoResponse.photo, function(info) {
+			$bPhoto.bsurveyphoto('showPhotoInfo', info);
+			var answers = $.extend({}, photoResponse);
+			answers.givenLon = info.lon;
+			answers.givenLat = info.lat;
+			$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers);
+			//$bQuestionnaire.bsurveyquestionnaire('option', 'disabled', 'false');
+		});
+
+		// Preloading info for next photo
+		var nextPhotoResponseInQueue = surveyQueue.get(surveyQueue.getNextIncompleteId());
+		photoInfoProviders[nextPhotoResponseInQueue.photo.source].load(nextPhotoResponseInQueue.photo, function(info) {
 			if (info.imgSrc)
 				$.preload(info.imgSrc);
-			$(document).oneTime(1, function() {$bPhoto.bsurveyphoto('showPhotoInfo', info);});
 		});
-		
-		
 	};
-	loadPhoto(queue[0]);
 
-	/* ===================================
-	 * Saves answers
-	 */
+	// Saves answers
+	// -------------------------------------
 	var saveAnswers = function() {
+		//var answers = $bQuestionnaire.bsurveyquestionnaire('getAnswers');
+		//surveyQueue.setCurrentId()
 		console.log($bQuestionnaire.bsurveyquestionnaire('getAnswers'));
 	};
 	
+	// Submits questionnaire
+	// -------------------------------------
+	var submitQuestionnaire = function() {
+		saveAnswers();
+		gotoNextPhoto();
+	};
+
+	// Submits questionnaire only if complete or forced
+	// -------------------------------------
 	var submitQuestionnaireIfCompleteOrForced = function(event) {
 		if (event.shiftKey || $bQuestionnaire.bsurveyquestionnaire('isComplete'))
 			submitQuestionnaire();
@@ -147,32 +93,64 @@ $(function(){
 		}
 	};
 	
-	var submitQuestionnaire = function() {
-		saveAnswers();
-		loadPhoto(queue[Math.floor(Math.random()*queue.length)]);
-		//$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[);
+	// =====================================
+	// Bindings
+	// =====================================
+	
+	// Queue
+	// -------------------------------------
+	//// Updating dashboard when queue is updated
+	surveyQueue.updated.add(function(queue) {
+		$bSurveyDashboard.bsurveydashboard("updateItems", queue);
+	});
+	
+	//// Selecting first incomplete element on first load
+	var onFirstQueueUpdate = null;
+	onFirstQueueUpdate = function () {
+		gotoNextPhoto();
+		surveyQueue.updated.remove(onFirstQueueUpdate);
 	};
+	surveyQueue.updated.add(onFirstQueueUpdate);
+	
+	///// Error handling: API failure
+	surveyQueue.updatedWithError.add(function() {
+		//TODO Show proper error message
+		console.log("Oh no, API returned an error!");
+	});
+	
+	//// Changing current selected item in dashboard when currentId is changed in the queue
+	surveyQueue.changedCurrentId.add(function(newId) {
+		$bSurveyDashboard.bsurveydashboard("setCurrentItemId", newId);
+		showPhotoResponse(surveyQueue.get(newId));
+	});
 
+	// Dashboard affects on the current id in the queue
+	// -------------------------------------
+	$bSurveyDashboard.bind("bsurveydashboardchangeitem", function(event, id) {
+		surveyQueue.setCurrentId(id);
+	});
 	
 	// "Next" button press
+	// -------------------------------------
 	$iButtonNext.bind('click', function(event) {
 		submitQuestionnaireIfCompleteOrForced(event);
 		return false;
 	});
 	
 	// Global keys
+	// -------------------------------------
 	$(document.body).bind("keydown", function(event) {
 		var key = event.keyCode || event.which;
 		switch (key) {
 		case KEY_ENTER:
 			submitQuestionnaireIfCompleteOrForced(event);
 			break;
-		case 49:
-		case 50:
-		case 51:
-		case 52:
-			$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers[key - 49]);
-			break;
 		}
 	});
+	
+
+	// =====================================
+	// Starting it all up!
+	// =====================================
+	surveyQueue.fetchQueue();
 });

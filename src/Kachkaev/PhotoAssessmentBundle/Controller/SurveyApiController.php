@@ -20,7 +20,7 @@ use Kachkaev\PhotoAssessmentBundle\Entity\User;
 class SurveyApiController extends Controller
 {
     /**
-     * @Route("/api/get_queue", name="pat_api_getqueue",  defaults={"_format"="json"})
+     * @Route("/api/get_queue", name="pat_api_getqueue", defaults={"_format"="json"})
      * #@Method({"GET", "POST"})
      * @Method({"POST"})
 	 * @Template()
@@ -82,6 +82,8 @@ class SurveyApiController extends Controller
     		$photo = $photoResponse->getPhoto();
     		$serializedPhoto = [];
     		foreach ($photo->getSerializableProperties() as $property) {
+    			$p = $photo->get($property);
+    			if ($p !== null)
     			$serializedPhoto[$property] = $photo->get($property);
     		}
     		$serializedPhotoResponse["photo"] = $serializedPhoto;

@@ -5,12 +5,12 @@
 	display: block;
 	margin: -15px -15px 30px;
 	padding: 15px;
-	left: -15px;
+	float: left;
 	overflow: hidden;
 	text-decoration: none;
 	color: #000;
 	border-radius: 10px;
-	
+	position: relative;
 }
 
 .b-survey-photo__info span {
@@ -27,26 +27,35 @@
 
 .b-survey-photo__photo {
 	display: block;
-	max-width: 100%;
+	min-height: 100px;
+	min-width: 100px;
+	max-width: 500px;
+	max-height: 420px;
 	padding-bottom: 18px;
 }
 
 .b-survey-photo__title {
 	display: block;
+	float:left;
+	margin-right: -1000px;
+	white-space: nowrap;
+	max-width: 100%;
 }
 
 .b-survey-photo__description {
 	display: block;
+	white-space: nowrap;
+	max-width: 100%;
 }
-.b-survey-photo__timestamp {
+.b-survey-photo__timestampanduser {
+	float: left;
+	margin-right: -1000px;
+	clear:left;
 	color: #888;
 	font-size: 10px;
+	white-space: nowrap;
+	max-width: 100%;
 }
-.b-survey-photo__user {
-	color: #888;
-	font-size: 10px;
-}
-
 .b-survey-photo__loading {
 	text-align: center;
 	padding-top: 150px;
@@ -57,4 +66,26 @@
 	padding-top: 150px;
 	text-align: center;
 	width: 60%;
+}
+
+.b-survey-photo__logo {
+	position: absolute;
+	display: block;
+	right: 17px;
+	bottom: 15px;
+	width: 120px;
+	height: 30px;
+	background: url("/static/i/b-survey-photo__logo.png") no-repeat right 30px;
+	opacity: 0.2;
+}
+
+.b-survey-photo__logo.flickr {
+	background-position: right -30px;
+}
+.b-survey-photo__logo.panoramio {
+	background-position: right 0px;
+}
+
+.b-survey-photo__info.b-survey-photo__logo {
+	opacity: 1;
 }

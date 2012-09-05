@@ -13,7 +13,10 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype = new pat.photoInfoProvi
 pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(params, callback) {
 	
 	var responseToInfo = function(response) {
-		var info = {};
+		var info = {
+				source: "flickr"
+		};
+		console.log("flickr response", response);
 		if (response && response.photo) {
 			// See http://www.flickr.com/services/api/misc.urls.html
 			//   & http://www.flickr.com/services/api/explore/flickr.photos.getInfo
@@ -31,6 +34,8 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(param
 					response.photo.server + "/" + 
 					response.photo.id + "_" + response.photo.secret + "_z.jpg";
 		} else {
+			info.photoId = params.photoId;
+			info.userId = params.userId;
 			info.status = 1;
 		}
 		if (_.isFunction(callback))
@@ -38,9 +43,9 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(param
 	};
 	
 	$.ajax({
-		url: this._apiURL + params.id,
+		url: this._apiURL + params.photoId,
 		success: function(data) {
-			responseToInfo($.parseJSON(data));
+			responseToInfo(_.isString(data) ? $.parseJSON(data) : data);
 		},
 		error: function() {
 			responseToInfo();

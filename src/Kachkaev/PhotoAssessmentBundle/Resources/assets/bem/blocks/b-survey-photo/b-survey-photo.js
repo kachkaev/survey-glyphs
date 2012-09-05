@@ -22,8 +22,8 @@ $.widget('ui.bsurveyphoto', {
 		w.$info = $('<a class="b-survey-photo__info" target="_blank"/>');
 		w.$infoPhoto = $('<img class="b-survey-photo__photo" />').appendTo(w.$info);
 		w.$infoTitle = $('<span class="b-survey-photo__title" />').appendTo(w.$info);
-		w.$infoTimestamp = $('<span class="b-survey-photo__timestamp" />').appendTo(w.$info);
-		w.$infoUser = $('<span class="b-survey-photo__user" />').appendTo(w.$info);
+		w.$infoTimestampanduser = $('<span class="b-survey-photo__timestampanduser" />').appendTo(w.$info);
+		w.$infoLogo = $('<span class="b-survey-photo__logo" />').appendTo(w.$info);
 		
 		w.$loading = $('<div class="b-survey-photo__loading"/>').append($('<img/>', {src: preloaderImg}));
 		$.preload([preloaderImg]);
@@ -45,21 +45,20 @@ $.widget('ui.bsurveyphoto', {
 	
 	showPhotoInfo: function(info) {
 		var w = this.w;
-		
 		if (info.status === 0) {
 			w.$infoPhoto.attr('src', '');
 			w.$infoPhoto.attr('src', info.imgSrc);
 			w.$infoTitle.text('').text(info.title);
-			w.$infoUser.text('').text(info.user);
-			w.$infoTimestamp.text('').text(info.timestamp);
+			w.$infoTimestampanduser.text('').text((info.timestamp ? info.timestamp + " " : "") + "© " + info.user);
 			w.$info.attr('href', info.permalink);
+			w.$infoLogo.removeClass("flickr panoramio geograph picasa").addClass(info.source);
 			w.$element.empty();
 			w.$element.append(w.$info);
 			w.lastInfoHeight = w.$info.height();
 		} else {
 			w.$element.empty();
 			w.$element.append(w.$error);
-			console.log("Faulty photo: ", info.status);
+			console.log("Faulty photo: ", info);
 		};
 	}
 });

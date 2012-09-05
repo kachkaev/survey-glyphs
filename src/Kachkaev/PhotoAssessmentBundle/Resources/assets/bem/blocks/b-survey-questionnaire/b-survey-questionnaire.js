@@ -120,7 +120,7 @@ $.widget('ui.bsurveyquestionnaire', {
 		}).children(1);
 		
 		
-		//// Modifide coords are saved to restore them after a user moved the switch to "yes" and then back to "no"
+		//// Modified coords are saved to restore them after a user moved the switch to "yes" and then back to "no"
 		w.savedAlteredPos = null;
 		w.savedGivenPos = null;
 		
@@ -140,6 +140,9 @@ $.widget('ui.bsurveyquestionnaire', {
 			});
 		// When pointer is dragged, switch is updated
 		w.map.bind("bsurveymapchangealtered_pos", function(event) {
+			if (w.ignoreChangeMapPos)
+				return;
+			
 			if (w.map.bsurveymap("option", "given_pos") == null)
 				return;
 			
@@ -248,13 +251,13 @@ $.widget('ui.bsurveyquestionnaire', {
 		if (!answers)
 			answers = this.w.defaultAnswers;
 		answers = $.extend({
+			qIsLocationCorrect: null,
 			givenLon: null,
 			givenLat: null,
 			alteredLon: null,
 			alteredLat: null
 		}, answers);
 		
-		console.log('new answers', answers);
 		var w = this.w;
 		
 		w.updateQuestionsDisabilityIsTerminated = true;
@@ -274,7 +277,9 @@ $.widget('ui.bsurveyquestionnaire', {
 		w.updateQuestionsDisabilityIsTerminated = false;
 
 		// Map
-		w.map.bsurveymap('setGivenAndAlteredPos', givenPos, answers['qIsLocationCorrect'] ? givenPos : alteredPos);
+		w.ignoreChangeMapPos = true;
+		w.map.bsurveymap('setGivenAndAlteredPos', givenPos, answers['qIsLocationCorrect'] !== false ? givenPos : alteredPos);
+		w.ignoreChangeMapPos = false;
 		w._self._updateQuestionsDisability();
 		
 		// Focusing on a first enabled switch with value = null

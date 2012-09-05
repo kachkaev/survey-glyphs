@@ -7,20 +7,32 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider = function() {
 			+ "&format=json&nojsoncallback=1"
 			+ "&photo_id=";
 	
-	this._widget = new panoramio.PhotoWidget($('<div/>').get(0));
+	this._widgets = [];
+	this._currentWidgetId = 0;
+	for(var i=0; i<pat.photoInfoProvider.PanoramioPhotoInfoProvider.widgetCount; i++) {
+		this._widgets[i] = new panoramio.PhotoWidget($('<div/>').get(0));
+	}
+	
 	
 };
+
+pat.photoInfoProvider.PanoramioPhotoInfoProvider.widgetCount = 5;
 
 pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype = new pat.photoInfoProvider.AbstractPhotoInfoProvider();
 
 pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(params, callback) {
+	var currentWidget = this._widgets[this._currentWidgetId];
+	this._currentWidgetId = (this._currentWidgetId + 1) % pat.photoInfoProvider.PanoramioPhotoInfoProvider.widgetCount;
+	
 	var obj = this;
 	var photoLoaded = null;
 	photoLoaded = function() {
-		var photo = obj._widget.getPhoto();
-		var info = {};
+		var photo = currentWidget.getPhoto();
+		var info = {
+				source: "panoramio",
+		};
 		
-		panoramio.events.unlisten(obj._widget, panoramio.events.EventType.PHOTO_CHANGED, photoLoaded);
+		panoramio.events.unlisten(currentWidget, panoramio.events.EventType.PHOTO_CHANGED, photoLoaded);
 
 		if (photo) {
 			info.permalink = photo.getPhotoUrl();
@@ -29,22 +41,24 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(pa
 			info.status = 0;
 			var pos = photo.getPosition();
 			if (pos) {
-				info.lon = pos.lon;
+				info.lon = pos.lng;
 				info.lat = pos.lat;
 			}
-			info.imgSrc = "http://static.panoramio.com/photos/large/"+photo.getPhotoId()+".jpg";
+			info.imgSrc = photo.Ga[0].url;
+//			info.imgSrc = "http://static.panoramio.com/photos/large/"+photo.getPhotoId()+".jpg";
 		} else {
+			info.photoId = params.photoId;
+			info.userId = params.userId;
 			info.status = 1;
 		}
-
 		if (_.isFunction(callback))
-			callback.call(this, info);
+			callback.call(obj, info);
 	};
 	
 	var myRequest = new panoramio.PhotoRequest({
-		  ids: [{'userId': params.userId, photoId: params.id}]
+		  ids: [{'userId': params.userId, photoId: params.photoId}]
 		});
-	this._widget.setRequest(myRequest);
-	this._widget.setPosition(0);
-	panoramio.events.listen(this._widget, panoramio.events.EventType.PHOTO_CHANGED, photoLoaded);
+	currentWidget.setRequest(myRequest);
+	currentWidget.setPosition(0);
+	panoramio.events.listen(currentWidget, panoramio.events.EventType.PHOTO_CHANGED, photoLoaded);
 };
