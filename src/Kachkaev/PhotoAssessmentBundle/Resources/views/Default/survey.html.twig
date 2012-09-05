@@ -14,7 +14,7 @@
 </head>	
 <body class="p-survey">
 	<div class="p-survey-header">
-		<div class="b-userbox"></div>
+		<div class="b-userbox"><span class="b-userbox__name" title="You are anonimously authenticated as this person and submit data under this name. No personal data is being collected.">{{ app.user.name }}</span></div>
 		<h1><a href="{{ path("pat_default_index") }}">Photo Content Assessment Tool</a>: Panoramio (<span class="i-info-countdone">1</span>/<span class="i-info-counttotal">42</span>)</h1>
 	</div>
 	<div class="p-survey__leftcol">

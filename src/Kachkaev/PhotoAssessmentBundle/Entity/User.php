@@ -34,6 +34,10 @@ class User extends AbstractStandardEntity implements UserInterface {
         $this->responses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 	
+    public function getName() {
+    	return "Participant#".$this->id;
+    }
+    
 	/**
 	 * @inheritDoc
 	 */
