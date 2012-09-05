@@ -12,16 +12,31 @@ security:
 
     providers:
         main:
-            entity:
-                class:  PhotoAssessmentBundle:User
-                property: id
+           entity:
+               class:  PhotoAssessmentBundle:User
+               property: id
 
     firewalls:
-        all:
+        main:
           pattern: ^/
           security: true
           anonymous: ~
           provider: main
+          form_login: ~
+          remember_me:
+               lifetime: 315360000
+               domain:   ~
+               path:     /
+               key:      %remember_me_token%
+               name:     %remember_me_cookie%
+               always_remember_me: true
+               remember_me_parameter: _remember_me
+               secure: false
+          
+#          http_digest:
+#               provider: main
+#               key: main
+
 #        dev:
 #            pattern:  ^/(_(profiler|wdt)|css|images|js)/
 #            security: false

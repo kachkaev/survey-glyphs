@@ -59,7 +59,7 @@ class User extends AbstractStandardEntity implements UserInterface {
 	 * @inheritDoc
 	 */
 	public function getUsername() {
-		return "Participant#".$this->id;
+		return $this->id;
 	}
 	
 	/**
