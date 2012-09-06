@@ -16,7 +16,6 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(param
 		var info = {
 				source: "flickr"
 		};
-		console.log("flickr response", response);
 		if (response && response.photo) {
 			// See http://www.flickr.com/services/api/misc.urls.html
 			//   & http://www.flickr.com/services/api/explore/flickr.photos.getInfo

@@ -60,5 +60,9 @@ $.widget('ui.bsurveyphoto', {
 			w.$element.append(w.$error);
 			console.log("Faulty photo: ", info);
 		};
+	},
+	
+	isShowingError: function() {
+		return this.w.$error.parent().length != 0;
 	}
 });

@@ -341,6 +341,13 @@ $.widget('ui.bsurveyquestionnaire', {
 		this.w.answersMap[q].children(":first").bswitch('focus').bswitch('blink');
 	},
 	
+	zoomMapIn: function() {
+		this.w.map.bsurveymap("option", "zoom_level", this.w.map.bsurveymap("option", "zoom_level") + 1);
+	},
+	zoomMapOut: function() {
+		this.w.map.bsurveymap("option", "zoom_level", this.w.map.bsurveymap("option", "zoom_level") - 1);
+	},
+	
 	_getFirstMissingAnswer: function() {
 		var w = this.w;
 		var result = null;

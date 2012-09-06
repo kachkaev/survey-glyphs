@@ -26,7 +26,9 @@ $(function(){
 			flickr: new pat.photoInfoProvider.FlickrPhotoInfoProvider(),
 			panoramio: new pat.photoInfoProvider.PanoramioPhotoInfoProvider()
 		};
-	
+	//// History of opened photo responses
+	var photoSurveyIdHistory = [];
+	var photoSurveyIdHistoryNewCandidate = null;
 	// =====================================
 	// Functions
 	// =====================================
@@ -69,9 +71,13 @@ $(function(){
 	// Saves answers
 	// -------------------------------------
 	var saveAnswers = function() {
-		//var answers = $bQuestionnaire.bsurveyquestionnaire('getAnswers');
-		//surveyQueue.setCurrentId()
-		console.log($bQuestionnaire.bsurveyquestionnaire('getAnswers'));
+		var photoResponse = $bQuestionnaire.bsurveyquestionnaire('getAnswers');
+		if ($bPhoto.bsurveyphoto('isShowingError')) {
+			photoResponse.status = pat.PhotoResponseStatus.PHOTO_PROBLEM;
+		} else {
+			photoResponse.status = $bQuestionnaire.bsurveyquestionnaire('isComplete') ? pat.PhotoResponseStatus.COMPLETE : pat.PhotoResponseStatus.INCOMPLETE;
+		};
+		surveyQueue.setPhotoResponseFor(surveyQueue.getCurrentId(), photoResponse);
 	};
 	
 	// Submits questionnaire
@@ -100,8 +106,8 @@ $(function(){
 	// Queue
 	// -------------------------------------
 	//// Updating dashboard when queue is updated
-	surveyQueue.updated.add(function(queue) {
-		$bSurveyDashboard.bsurveydashboard("updateItems", queue);
+	surveyQueue.updated.add(function(queue, listOfIDs) {
+		$bSurveyDashboard.bsurveydashboard("updateItems", queue, listOfIDs);
 	});
 	
 	//// Selecting first incomplete element on first load
@@ -120,6 +126,9 @@ $(function(){
 	
 	//// Changing current selected item in dashboard when currentId is changed in the queue
 	surveyQueue.changedCurrentId.add(function(newId) {
+		if (!_.isNull(photoSurveyIdHistoryNewCandidate))
+			photoSurveyIdHistory.unshift(photoSurveyIdHistoryNewCandidate);
+		photoSurveyIdHistoryNewCandidate = newId;
 		$bSurveyDashboard.bsurveydashboard("setCurrentItemId", newId);
 		showPhotoResponse(surveyQueue.get(newId));
 	});
@@ -144,7 +153,27 @@ $(function(){
 		switch (key) {
 		case KEY_ENTER:
 			submitQuestionnaireIfCompleteOrForced(event);
-			break;
+			return false;
+		case KEY_BACKSPACE:
+			console.log("l", photoSurveyIdHistory.length);
+			photoSurveyIdHistoryNewCandidate = null;
+			if (photoSurveyIdHistory.length) {
+				saveAnswers();
+				var newId = photoSurveyIdHistory.shift();
+				surveyQueue.setCurrentId(newId);
+			};
+			return false;
+		case KEY_PLUS:
+		case KEY_EQUALS:
+		case KEY_EQUALS2:
+			$bQuestionnaire.bsurveyquestionnaire('zoomMapIn');
+			return false;
+		case KEY_MINUS:
+		case KEY_DASH:
+		case KEY_DASH2:
+		case KEY_UNDERSCORE:
+			$bQuestionnaire.bsurveyquestionnaire('zoomMapOut');
+			return false;
 		}
 	});
 	

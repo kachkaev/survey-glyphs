@@ -34,7 +34,7 @@ $.widget('ui.bsurveydashboard', {
 		w.$items.detach();
 
 		// Collecting all "ids" of items
-		var deletedIds = [];
+		var deletedIds = {};
 		w.$items.find(".b-survey-dashboard__item").each(function() {
 			deletedIds[$(this).data("id")] = true;
 		});
@@ -67,8 +67,10 @@ $.widget('ui.bsurveydashboard', {
 		
 		// Looking for items in dashboard but not in queue and deleting them (just in case)
 		$.each(deletedIds, function(id) {
-			w.itemsMap[v.id].remove();
-			delete w.itemsMap[v.id];
+			if (!w.itemsMap[id])
+				return;
+			w.itemsMap[id].remove();
+			delete w.itemsMap[id];
 		});
 		
 		w.$items.appendTo(w.$element);			

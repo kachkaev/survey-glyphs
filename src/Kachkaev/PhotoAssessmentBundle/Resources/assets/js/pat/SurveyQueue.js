@@ -153,6 +153,30 @@ pat.SurveyQueue.prototype.get = function (id) {
 	return this._queueMap[id].photoResponse;
 };
 
-pat.SurveyQueue.prototype.setAnswersFor = function (photoResponseId) {
+pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPhotoResponse) {
+	var existingPhotoResponse = this._queueMap[photoResponseId].photoResponse;
+	if (!existingPhotoResponse)
+		throw new Error("Wrong id given in SurveyQueue::setPhotoResponseFor " + photoResponseId);
 	
+	console.log("was", $.extend({}, existingPhotoResponse), newPhotoResponse);
+	newPhotoResponse.id = photoResponseId;
+	newPhotoResponse.photo = existingPhotoResponse.photo;
+	
+	//if (_.isEqual(newPhotoResponse, existingPhotoResponse))
+	//	return false;
+	
+	var changed = false;
+	$.each(newPhotoResponse, function(k, v) {
+		if (_.isFunction(v) || v === existingPhotoResponse[k])
+			return;
+		existingPhotoResponse[k] = v;
+		changed = true;
+	});
+	console.log("changed", changed);
+	console.log("now", existingPhotoResponse);
+	if (!changed)
+		return;
+	
+	//$.extend(existingPhotoResponse, newPhotoResponse);
+	this.updated.dispatch(this._queue, [photoResponseId]);
 };

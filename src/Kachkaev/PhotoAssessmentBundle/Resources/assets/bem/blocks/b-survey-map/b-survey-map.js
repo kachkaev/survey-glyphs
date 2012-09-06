@@ -17,7 +17,8 @@ $.widget('ui.bsurveymap', {
 
 	options: {
 		given_pos: null,
-		altered_pos: null
+		altered_pos: null,
+		zoom_level: 18
 	},
 
 	_init: function() {
@@ -28,7 +29,7 @@ $.widget('ui.bsurveymap', {
 		this.w = w;
 		
 	    var myOptions = {
-            zoom : 18,
+            zoom : this.options.zoom_level,
             center : new google.maps.LatLng(0,0),
             disableDefaultUI: true,
 			mapTypeId : google.maps.MapTypeId.SATELLITE,
@@ -174,6 +175,12 @@ $.widget('ui.bsurveymap', {
 	    google.maps.event.addListener(helperMarker, 'dblclick', function() {
 	    	w._self._setAlteredPos(w._self.options.altered_pos == null ? w._self.options.given_pos : null, true);
 	    });
+	    
+	    // Listening to zoom change
+	    google.maps.event.addListener(map, 'zoom_changed', function() {
+	        w._self._setOption("zoom", map.getZoom());
+	      });
+
 
 	},
 	
@@ -207,6 +214,18 @@ $.widget('ui.bsurveymap', {
 				this.w.mainMarker.setOptions({draggable: !value, clickable: !value});
 				this.w.helperMarker.setOptions({clickable: !value});
 				$.Widget.prototype._setOption.apply( this, arguments );
+				return;
+			case 'zoom_level':
+				try {
+					this.w.map.setOptions({
+						zoom: value
+					});
+				} catch (e) {
+					return;
+				}
+				if (this.w.map.getZoom() === value)
+					$.Widget.prototype._setOption.apply( this, arguments);
+				return;
 			default:
 				return;
 			
