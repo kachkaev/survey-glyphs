@@ -136,6 +136,7 @@ $(function(){
 	// Dashboard affects on the current id in the queue
 	// -------------------------------------
 	$bSurveyDashboard.bind("bsurveydashboardchangeitem", function(event, id) {
+//		saveAnswers();
 		surveyQueue.setCurrentId(id);
 	});
 	
@@ -155,7 +156,6 @@ $(function(){
 			submitQuestionnaireIfCompleteOrForced(event);
 			return false;
 		case KEY_BACKSPACE:
-			console.log("l", photoSurveyIdHistory.length);
 			photoSurveyIdHistoryNewCandidate = null;
 			if (photoSurveyIdHistory.length) {
 				saveAnswers();

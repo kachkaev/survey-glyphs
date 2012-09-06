@@ -2,6 +2,8 @@
 
 namespace Kachkaev\PhotoAssessmentBundle\Controller;
 
+use Symfony\Component\Routing\Router;
+
 use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
 
 use Symfony\Bridge\Doctrine\Security\User\EntityUserProvider;
@@ -26,6 +28,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+    	return $this->redirect($this->get('router')->generate("pat_default_survey"));
     }
     
 //     * @Route("/survey/{photoSource}", defaults={"photoId" = null}, name="pat_default_survey")

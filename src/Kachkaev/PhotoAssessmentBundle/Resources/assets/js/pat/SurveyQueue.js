@@ -49,7 +49,7 @@ namespace('pat');
 var apiBaseURL = "/app_dev.php/api/";
 
 pat.SurveyQueue = function() {
-	this._queue = {};
+	this._queue = [];
 	this._currentId = null;
 	this._queueMap = {}; // {index: x, photoResponse: {x}}
 	
@@ -99,6 +99,17 @@ pat.SurveyQueue.prototype.fetchQueue = function() {
 
 pat.SurveyQueue.prototype.getQueue = function() {
 	return this._queue;
+};
+
+pat.SurveyQueue.prototype.getUnansweredCount = function() {
+	var s = pat.PhotoResponseStatus.UNANSWERED;
+	var result = 0;
+	for (var i = this._queue.length - 1; i >=0; --i) {
+		if (this._queue[i].status == s) {
+			++result;
+		}
+	}
+	return result;
 };
 
 pat.SurveyQueue.prototype.getCurrentId = function() {
@@ -167,10 +178,11 @@ pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPh
 	
 	var changed = false;
 	$.each(newPhotoResponse, function(k, v) {
-		if (_.isFunction(v) || v === existingPhotoResponse[k])
+		if (_.isFunction(v) || v === existingPhotoResponse[k] || k.substr(0, 5) == "given")
 			return;
 		existingPhotoResponse[k] = v;
-		changed = true;
+		if (!(_.isNull(v) && _.isUndefined(existingPhotoResponse[k])))
+				changed = true;
 	});
 	console.log("changed", changed);
 	console.log("now", existingPhotoResponse);
@@ -179,4 +191,10 @@ pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPh
 	
 	//$.extend(existingPhotoResponse, newPhotoResponse);
 	this.updated.dispatch(this._queue, [photoResponseId]);
+	
+	// TODO do this after saving previous photo
+	var c = this.getUnansweredCount();
+	if (c > 0 && c < 5) {
+		this.fetchQueue();
+	};
 };
