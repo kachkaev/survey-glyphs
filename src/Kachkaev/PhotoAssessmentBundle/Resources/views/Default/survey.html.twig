@@ -31,9 +31,9 @@
 				<div class="b-survey-questionnaire__questiontext">Is the item a real photograph?</div>
 				<div data-q="qIsRealPhoto" class="b-survey-questionnaire__questionanswer">
 						<ul class="b-switch">
-						<li data-v="false" class="color_red">no</li>
+						<li data-v="0" class="color_red">no</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="true"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">yes</li>
 					</ul>
 				</div>
 			</li>
@@ -42,9 +42,9 @@
 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken outdoors?</div>
 				<div data-q="qIsOutdoors" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="false" class="color_red">no</li>
+						<li data-v="0" class="color_red">no</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="true"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">yes</li>
 					</ul>
 				</div>
 			</li>
@@ -53,9 +53,9 @@
 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during an event?</div>
 				<div data-q="qDuringEvent" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="true"  class="color_red">yes</li>
+						<li data-v="1"  class="color_red">yes</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="false" class="color_green">no</li>
+						<li data-v="0" class="color_green">no</li>
 					</ul>
 				</div>
 			</li>
@@ -76,9 +76,9 @@
 				<div class="b-survey-questionnaire__questiontext">Is the main subject of the photograph:<br/> — a person?</div>
 				<div data-q="qSubjectPerson" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="true"  class="color_red">yes</li>
+						<li data-v="1"  class="color_red">yes</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="false" class="color_green">no</li>
+						<li data-v="0" class="color_green">no</li>
 					</ul>
 				</div>
 			</li>
@@ -87,20 +87,21 @@
 				<div class="b-survey-questionnaire__questiontext"> — any other moving object?</div>
 				<div data-q="qSubjectMovingObject" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="true"  class="color_red">yes</li>
+						<li data-v="1"  class="color_red">yes</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="false" class="color_green">no</li>
+						<li data-v="0" class="color_green">no</li>
 					</ul>
 				</div>
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
+			<!-- Does the location seem to be correct? (Is the location of the photograph approximately correct?) -->
 				<div class="b-survey-questionnaire__questiontext">Is the photograph geotagged correctly?</div>
 				<div data-q="qIsLocationCorrect" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="false" class="color_yellow">no</li>
+						<li data-v="0" class="color_yellow">no</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="true"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">yes</li>
 					</ul>
 				</div>
 				<div class="b-survey-map"></div>
@@ -110,9 +111,9 @@
 				<div class="b-survey-questionnaire__questiontext">Does the photograph describe surrounding space?</div>
 				<div data-q="qDescribesSpace" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="false" class="color_red">no</li>
+						<li data-v="0" class="color_red">no</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="true"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">yes</li>
 					</ul>
 				</div>
 			</li>
@@ -121,9 +122,9 @@
 				<div class="b-survey-questionnaire__questiontext">Is the place on the photograph attractive for a walk?</div>
 				<div data-q="qSpaceAttractive" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch">
-						<li data-v="false" class="color_red">no</li>
+						<li data-v="0" class="color_red">no</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="true"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">yes</li>
 					</ul>
 				</div>
 			</li>
