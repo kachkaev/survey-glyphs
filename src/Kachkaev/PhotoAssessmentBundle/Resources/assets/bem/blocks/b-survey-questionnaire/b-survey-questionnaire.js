@@ -56,16 +56,16 @@ $.widget('ui.bsurveyquestionnaire', {
 		// List of question answers disability dependencies
 		w.disableDependentQuestions = {
 				qIsRealPhoto: {
-					"false": ["qIsOutdoors", "qDuringEvent", "qTimeOfDay", "qSubjectPerson", "qSubjectMovingObject", "qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
+					"0": ["qIsOutdoors", "qDuringEvent", "qTimeOfDay", "qSubjectPerson", "qSubjectMovingObject", "qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
 				},
 				qIsOutdoors: {
-					"false": ["qDuringEvent", "qTimeOfDay", "qSubjectMovingObject", "qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
+					"0": ["qDuringEvent", "qTimeOfDay", "qSubjectMovingObject", "qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
 				},
 				qSubjectPerson: {
-					"true": ["qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
+					"1": ["qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
 				},
 				qSubjectMovingObject: {
-					"true": ["qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
+					"1": ["qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
 				},
 		};
 		
@@ -128,13 +128,16 @@ $.widget('ui.bsurveyquestionnaire', {
 		w.mapbwitch.bind("bswitchchangevalue", function(event) {
 				var v = w.mapbwitch.bswitch("option", "value");
 				
+				console.log(v);
+				
 				if (w.updateQuestionsDisabilityIsTerminated)
 					return;
 				
-				if (v == null) {
-				} else if (v == false) {
+				if (v === null || v === -1) {
+//					w.map.bsurveymap('setGivenAndAlteredPos', w.savedGivenPos, null);
+				} else if (v === 0) {
 					w.map.bsurveymap('setGivenAndAlteredPos', w.savedGivenPos, w.savedAlteredPos);
-				} else {
+				} else if (v === 1) {
 					w.map.bsurveymap('setGivenAndAlteredPos', w.savedGivenPos, w.savedGivenPos);
 				}
 			});
@@ -143,12 +146,12 @@ $.widget('ui.bsurveyquestionnaire', {
 			if (w.ignoreChangeMapPos)
 				return;
 			
-			if (w.map.bsurveymap("option", "given_pos") == null)
+			if (w.map.bsurveymap("option", "given_pos") === null)
 				return;
 			
 			if (!w.map.bsurveymap("posIsAccurate")) {
 				w.savedAlteredPos = w.map.bsurveymap("option", "altered_pos");
-				w.mapbwitch.bswitch("setAnswerColor", false, w.savedAlteredPos == null ? "red" : "yellow");
+				w.mapbwitch.bswitch("setAnswerColor", 0, w.savedAlteredPos === null ? "red" : "yellow");
 			}
 			w.mapbwitch.bswitch('focus');
 			w.mapbwitch.bswitch("option", "value", w.map.bsurveymap("posIsAccurate"));

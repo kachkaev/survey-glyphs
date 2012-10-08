@@ -15,7 +15,7 @@ $.widget('ui.bswitch', {
 	options: {
 		value: null,
 	},
-
+	
 	_init: function() {
 		// Wrapping the element with div
 		this.element.wrapInner('<ul class="b-switch__options" />');
@@ -24,22 +24,67 @@ $.widget('ui.bswitch', {
 		var w = {
 				_self: this,
 				element: this.element,
+				gapSize: 3,
+				lis: null,
+				ui: null,
+				uiHandle: null,
+				uiBackground: null,
+				hasHardToSay: this.element.hasClass("b-switch_with-hard-to-say"),
+				sliderValueToSwitchValue: null,
+				switchValueToSliderValue: null,
 			};
 		
 		this.w = w; 
 		
+		w.sliderValueToSwitchValue = function(value) {
+			var $valueLI = w.lis.eq(value - 1);
+			if ($valueLI.size())
+				return $valueLI.data('v');
+			else
+				return -1;
+		};
+
+		w.switchValueToSliderValue = function(value) {
+			if (value == -1 && w.hasHardToSay)
+				return w.ui.slider('option', 'max');
+			
+			var result = null;
+			w.lis.each(function(i) {
+				if ($(this).data('v') === value) {
+					result = i + 1;
+					return false;
+				}
+			});
+			return result;
+		};
+
+		
 		// Saving reference to options (list items)
 		w.lis = this.element.find('li');
 		
-		var nAnswers = w.lis.size();
-
+		var nAnswers = w.lis.size() + (w.hasHardToSay? w.gapSize + 1 : 0);
+		
 		// FIXME Picking default value
 		w.lis.each(function(i) {
 			if ($(this).hasClass('default'))
 				currentAnswer = i + 1;
 		});
 
-		w.ui = this.element.prepend('<div class="b-switch__uiwrapright" /><div class="b-switch__ui" /><div class="b-switch__uiwrapleft" />').children().eq(1);
+		w.ui = this.element.prepend('<div class="b-switch__ear-right"><div class="b-switch__circle-rh b-switch__uiwrapright" /></div><div class="b-switch__ui" /><div class="b-switch__ear-left"><div class="b-switch__circle-lh b-switch__uiwrapleft" /><div class="b-switch_ear_left">').children().eq(1);
+		if (w.hasHardToSay) {
+			w.ui.prev().addClass('b-switch__ear-right_hts');
+			var hardToSayCircle = $('<div class="b-switch__hts"><div class="b-switch__circle-lh" /><div class="b-switch__circle-rh" /><div class="b-switch__hts-text">hard to say</div></div>');
+			var hardToSayGap = $('<div class="b-switch__hts-gap" />');
+			
+			hardToSayCircle.click(function() {
+				if (w._self.options.disabled)
+					return;
+				w.ui.slider('value', w.ui.slider("option", "max"));
+				w._self.focus();
+			});
+			w.ui.prev().append(hardToSayCircle).append(hardToSayGap);
+		}
+		
 		w.ui.width((nAnswers-1)*15); 
 		
 		w.ui.slider({
@@ -52,22 +97,22 @@ $.widget('ui.bswitch', {
 			}
 		});
 		w.uiHandle = w.ui.find('.ui-slider-handle');
+		w.uiBackground = $('<div class="ui-slider-background" />').appendTo(w.ui);
 		
 		// Making "ears" clickable
-		w.ui.prev().click(function(){
+		w.ui.prev().find(".b-switch__uiwrapright").click(function(){
 			if (w._self.options.disabled)
 				return;
-			w.ui.slider('value', w.ui.slider("option", "max"));
+			w.ui.slider('value', w.ui.slider("option", "max") - (hasHardToSay ? w.gapSize - 1 : 0));
 			w._self.focus();
 		});
-		w.ui.next().click(function(){
+		w.ui.next().find(".b-switch__uiwrapleft").click(function(){
 			if (w._self.options.disabled)
 				return;
 			w.ui.slider('value', w.ui.slider("option", "min"));
 			w._self.focus();
 		});
-		
-		
+				
 		// Making values clickable
 		w.lis.each(function(i){
 			$(this).click(function(){
@@ -80,13 +125,24 @@ $.widget('ui.bswitch', {
 		
 		// Slider colouring according to value
 		w.ui.bind( "slidechange", function(event, ui) {
-			var value = ui.value;
-			var $valueLI = w.lis.eq(value - 1);
-			w._self.options.value = $valueLI.data('v');
+			w._self.options.value = w.sliderValueToSwitchValue(ui.value);
 			w._self.stopBlink();
 			w._self._trigger("changevalue");
 
 			w._self._updateColor();
+		});
+		
+		w.ui.bind( "slide", function(event, ui) {
+			if (!w.hasHardToSay)
+				return;
+			
+			var value = ui.value;
+			var max = w.ui.slider("option", "max");
+			if (value > max - w.gapSize - 1) {
+				if (value != max) {
+					return false;
+				};
+			};
 		});
 		
 		// Disabling standard keydown method and replacing it with left-right actions only
@@ -106,6 +162,15 @@ $.widget('ui.bswitch', {
 			var newValue = w.ui.slider('value') + delta;
 			if (w.lis.eq(newValue - 1).hasClass('default'))
 				newValue += delta;
+			if (w.hasHardToSay) {
+				var max = w.ui.slider("option", "max");
+				if (newValue > max - w.gapSize - 1 && newValue != max) {
+					if (delta > 0)
+						newValue = max;
+					else
+						newValue = max - w.gapSize - 1;
+				}
+			}
 			w.ui.slider('value', newValue);
 		});
 	},
@@ -115,15 +180,9 @@ $.widget('ui.bswitch', {
 			case 'value':
 				if (this.options.value == value)
 					return;
-				var w = this.w;
-				this.w.lis.each(function(i) {
-					if ($(this).data('v') === value) {
-						w.ui.slider('value', i + 1);
-						w._self.stopBlink();
-						w._self._trigger("changevalue");
-						return false;
-					}
-				});
+				this.w.ui.slider('value', this.w.switchValueToSliderValue(value));
+				this.w._self.stopBlink();
+				this.w._self._trigger("changevalue");
 				break;
 			case 'disabled':
 				this.w.ui.slider('option', 'disabled', value);
