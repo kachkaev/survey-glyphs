@@ -23,7 +23,7 @@ $.widget('ui.bsurveyphoto', {
 		w.$infoPhoto = $('<img class="b-survey-photo__photo" />').appendTo(w.$info);
 		w.$infoTitle = $('<span class="b-survey-photo__title" />').appendTo(w.$info);
 		w.$infoTimestampanduser = $('<span class="b-survey-photo__timestampanduser" />').appendTo(w.$info);
-		w.$infoLogo = $('<span class="b-survey-photo__logo" />').appendTo(w.$info);
+		w.$infoLogo = $('<span class="b-survey-photo__logo" />');//.appendTo(w.$info);
 		
 		w.$loading = $('<div class="b-survey-photo__loading"/>').append($('<img/>', {src: preloaderImg}));
 		$.preload([preloaderImg]);
