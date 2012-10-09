@@ -2,6 +2,8 @@
 
 namespace Kachkaev\PhotoAssessmentBundle\Controller;
 
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -99,8 +101,54 @@ class SurveyApiController extends Controller
     /**
      * @Route("/api/submit_response", name="pat_api_submitresponse")
      */
-    public function submitReplyAction()
+    public function submitResponseAction()
     {
+    	$em = $this->get("doctrine.orm.entity_manager");
+    	$user = $this->get('security.context')->getToken()->getUser();
+    	$container = $this->get('service_container');
+    	
+    	$data = $this->getRequest()->request->get('response');
+    	
+    	if (!($user instanceof UserInterface))
+    		throw new AuthenticationException();
+    	
+    	// Finding PhotoResponse in the DB
+    	$photoResponse = $em->getRepository('PhotoAssessmentBundle:PhotoResponse')->findOneById($data['id']);
+    	if (!$photoResponse) {
+    		throw new AccessDeniedException("Response does not exist");
+    	}
+    		
+    	if ($photoResponse->getUser()->getId() != $user->getId()) {
+    		throw new AccessDeniedException("You are trying to submit response for someone else");
+    	}
+    	if ($photoResponse->getPhoto()->getId() != $data['photo']['id']) {
+    		throw new AccessDeniedException("Wrong photo id submitted in data");
+    	}
+    	
+    	// Reading answers
+    	foreach ($data as $k => $v) {
+    		if ($v === '')
+    			$data[$k] = null;
+    		if ($k[0] != 'q')
+    			continue;
+    		$photoResponse->set($k, $data[$k]);
+    	}
+    	foreach (['status', 'alteredLat', 'alteredLon', 'status'] as $k) {
+    		$photoResponse->set($k, $data[$k]);
+    	}
+    	
+    	$photoResponse->setSubmittedAt(new \DateTime());
+    		
+    	
+    	// Saving response
+    	$em->persist($photoResponse);
+    	$em->flush();
+    	
+    	$apiResponse = [
+    		"response" => ["status" => "ok"],
+    	];
+
+    	return new Response(json_encode($apiResponse));
     }
     
     function serializePhotoResponses($photoResponses) {

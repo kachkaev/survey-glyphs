@@ -173,6 +173,28 @@ pat.SurveyQueue.prototype.getNextIdWithStatuses = function(statuses) {
 	};
 };
 
+pat.SurveyQueue.prototype.getFirstIdWithStatuses = function(statuses, exceptCurrent) {
+	var _currentId = this._queue[0].id;
+	if (!this._queueMap[this._currentId]) {
+		_currentId = this._queue[this._queue.length - 1].id;
+	};
+	
+	var i = this._queueMap[_currentId].index + 1;
+	var startingI = i;
+	while (true) {
+		// last → first
+		if (i == this._queue.length)
+			i = 0;
+		var pr = this._queue[i];
+		if (!statuses || _.indexOf(statuses, pr.status) != -1 && (exceptCurrent && this._currentId != pr.id))	
+			return pr.id;
+		
+		++i;
+		if (startingI == i)
+			return null;
+	};
+};
+
 pat.SurveyQueue.prototype.getNextIncompleteId = function() {
 	var result;
 	result = this.getNextIdWithStatuses([pat.PhotoResponseStatus.UNANSWERED, pat.PhotoResponseStatus.INCOMPLETE]);
@@ -183,11 +205,22 @@ pat.SurveyQueue.prototype.getNextIncompleteId = function() {
 	return result;
 };
 
+pat.SurveyQueue.prototype.getFirstIncompleteId = function(exceptCurrent) {
+	var result;
+	result = this.getFirstIdWithStatuses([pat.PhotoResponseStatus.UNANSWERED, pat.PhotoResponseStatus.INCOMPLETE], exceptCurrent);
+	//if (!result)
+	//	result = this.getNextIdWithStatuses([pat.PhotoResponseStatus.INCOMPLETE]);
+	if (!result)
+		result = this.getFirstIdWithStatuses([pat.PhotoResponseStatus.PHOTO_PROBLEM], exceptCurrent);
+	return result;
+};
+
 pat.SurveyQueue.prototype.get = function (id) {
 	return this._queueMap[id].photoResponse;
 };
 
 pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPhotoResponse) {
+	var obj = this;
 	var existingPhotoResponse = this._queueMap[photoResponseId].photoResponse;
 	if (!existingPhotoResponse)
 		throw new Error("Wrong id given in SurveyQueue::setPhotoResponseFor " + photoResponseId);
@@ -195,9 +228,12 @@ pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPh
 	console.log("was", $.extend({}, existingPhotoResponse), newPhotoResponse);
 	newPhotoResponse.id = photoResponseId;
 	newPhotoResponse.photo = existingPhotoResponse.photo;
+	//var t = -1;
+	//newPhotoResponse.duration = (existingPhotoResponse.duration ? existingPhotoResponse.duration + t : t);
 	
-	//if (_.isEqual(newPhotoResponse, existingPhotoResponse))
-	//	return false;
+	console.log("comparing",newPhotoResponse, existingPhotoResponse, _.difference(newPhotoResponse, existingPhotoResponse), _.difference(existingPhotoResponse, newPhotoResponse));
+	if (_.isEqual(newPhotoResponse, existingPhotoResponse))
+		return false;
 	
 	var changed = false;
 	$.each(newPhotoResponse, function(k, v) {
@@ -208,12 +244,26 @@ pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPh
 				changed = true;
 	});
 	console.log("changed", changed);
-	console.log("now", existingPhotoResponse);
+	console.log("now", newPhotoResponse);
 	if (!changed)
 		return;
 	
 	//$.extend(existingPhotoResponse, newPhotoResponse);
-	this.updated.dispatch(this._queue, [photoResponseId]);
+	//;
+	
+	$.ajax({
+		url: pat.SurveyQueue._apiURLs['submit_response'],
+		data: {response: newPhotoResponse},
+		type: "POST",
+		success: function(data) {
+			obj.updated.dispatch(obj._queue, [photoResponseId]);
+		},
+		error: function() {
+			obj.updatedWithError.dispatch();
+		},
+	});
+	// 
+	
 	
 	// TODO do this after saving previous photo
 	//var c = this.getUnansweredCount();

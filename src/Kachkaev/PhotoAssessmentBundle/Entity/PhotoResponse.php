@@ -11,8 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class PhotoResponse extends AbstractStandardEntity {
 	protected $standardProperties = ["status", "duration", "submittedAt", "qIsRealPhoto",
-			"qIsOutdoors", "qDuringEvent", "qTimeOfDay", "qSubjectPerson",
-			"qSubjectMovingObject", "qIsLocationCorrect", "alteredLon", "alteredLat", "qDescribesSpace", "qSpaceAttractive"];
+			"qIsOutdoors", "qTimeOfDay"/*, "qTimeOfYear"*/, "qSubjectTemporal", "qSubjectPeople", "qIsLocationCorrect", "qIsByPedestrian", "qIsSpaceAttractive", "alteredLon", "alteredLat"];
 
 	protected $standardGetters = ["id", "user", "photo"];
 
@@ -38,31 +37,32 @@ class PhotoResponse extends AbstractStandardEntity {
 	 */
 	protected $status = 0;
 
-	/** @ORM\Column(type="boolean", nullable=true)
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
 	protected $qIsRealPhoto;
 
-	/** @ORM\Column(type="boolean", nullable=true)
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
 	protected $qIsOutdoors;
 
-	/** @ORM\Column(type="boolean", nullable=true)
-	 */
-	protected $qDuringEvent;
-	
 	/** @ORM\Column(type="integer", nullable=true)
 	 */
 	protected $qTimeOfDay;
 
-	/** @ORM\Column(type="boolean", nullable=true)
+	//** @ORM\Column(type="integer", nullable=true)
+	// */
+	//protected $qTimeOfYear;
+	
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
-	protected $qSubjectPerson;
+	protected $qSubjectTemporal;
+	
 
-	/** @ORM\Column(type="boolean", nullable=true)
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
-	protected $qSubjectMovingObject;
+	protected $qSubjectPeople;
 
-	/** @ORM\Column(type="boolean", nullable=true)
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
 	protected $qIsLocationCorrect;
 	
@@ -74,13 +74,13 @@ class PhotoResponse extends AbstractStandardEntity {
 	 */
 	protected $alteredLat;
 
-	/** @ORM\Column(type="boolean", nullable=true)
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
-	protected $qDescribesSpace;
+	protected $qIsByPedestrian;
 
-	/** @ORM\Column(type="boolean", nullable=true)
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
-	protected $qSpaceAttractive;
+	protected $qIsSpaceAttractive;
 
 	/** @ORM\Column(type="integer", nullable=true)
 	 */
@@ -101,6 +101,7 @@ class PhotoResponse extends AbstractStandardEntity {
 	}
 	
 	public function getSerializableProperties() {
-		return $this->standardProperties;
+		$result = array_diff($this->standardProperties, ['submittedAt', 'duration']);  
+		return $result;
 	}
 }

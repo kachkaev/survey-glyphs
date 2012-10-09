@@ -4,7 +4,7 @@
  * Update queue: $elem.bsurveydashboard('updateItems', queue, currentId);
  * 
  * Events:
- * changeitem(id) — when non-current item is clicked
+ * changeitem(idFrom, idTo) — when non-current item is clicked
  */
 $.widget('ui.bsurveydashboard', {
 
@@ -29,12 +29,13 @@ $.widget('ui.bsurveydashboard', {
 			var id = $this.data("id");
 			if ($this.hasClass("current"))
 				return;
+
 			if ($this.hasClass("unanswered")) {
-				var $prevUnanswered = $this.prevAll().filter(".unanswered");
-				if ($prevUnanswered.size()) {
-					str = "Please submit you answers on previous photographs to see the selected one.";
+				var $prevUnansweredOrIncomplete = $this.prevAll().filter(".unanswered, .incomplete");
+				if ($prevUnansweredOrIncomplete.size()) {
+					str = "Please submit full answers to previous photographs to see the selected one.";
 					w.$dashboardHint.stop(true, true).text(str).fadeIn(0).delay(2000).fadeOut(2000);
-					id = $prevUnanswered.last().data("id");
+					id = $prevUnansweredOrIncomplete.last().data("id");
 				};
 			}
 			w._self.setCurrentItemId(id);
@@ -64,6 +65,7 @@ $.widget('ui.bsurveydashboard', {
 			if (!$currentItem) {
 				$currentItem = $('<li class="b-survey-dashboard__item"></li>');
 				$currentItem.data("id", v.id);
+				$currentItem.attr("title", v.id); // FIXME remove after debugging
 				w.itemsMap[v.id] = $currentItem;
 			}
 			// Placing current item
@@ -73,7 +75,7 @@ $.widget('ui.bsurveydashboard', {
 				$currentItem.prependTo(w.$items);
 			
 			// Assigning classes to the item
-			$currentItem.removeClass('incomplete complete').addClass(pat.PhotoResponseStatus.valueToString(v.status, true));
+			$currentItem.removeClass('unanswered incomplete complete photo_problem').addClass(pat.PhotoResponseStatus.valueToString(v.status, true));
 			if (v.id == currentId)
 				$currentItem.addClass("current");
 
@@ -98,17 +100,21 @@ $.widget('ui.bsurveydashboard', {
 
 		if (newId == w.currentId)
 			return false;
-		
-		if (w.$currentItem)
+
+		if (w.$currentItem) {
 			w.$currentItem.removeClass('current');
+		}
+//		w.$items.children().removeClass('current');
+		
 		var $newCurrentItem = w.itemsMap[newId];
 		
 		if (!$newCurrentItem)
 			return false;
 		
+		var previousCurrentId = w.currentId;
 		$newCurrentItem.addClass('current');
 		w.currentId = newId;
 		w.$currentItem = $newCurrentItem;
-		w._self._trigger("changeitem", 0, newId);
+		w._self._trigger("changeitem", null, {idFrom: previousCurrentId, idTo:newId});
 	}
 });

@@ -36,7 +36,7 @@
 }
 
 .b-survey-dashboard__item.complete {
-	background-color: #afd3de;
+	background-color: #C0E0E8;
 	color: #50a5c1;
 	font-size: 13px;
 	line-height: 21px;
@@ -45,6 +45,17 @@
 }
 .b-survey-dashboard__item.complete:before {
 	content: "✓";
+}
+
+.b-survey-dashboard__item.photo_problem {
+	background-color: #F7D9D9;
+	color: #DD7984;
+	font-weight: bold;
+	font-size: 15px;
+	line-height: 20px;
+}
+.b-survey-dashboard__item.photo_problem:before {
+	content: "!";
 }
 
 .b-survey-dashboard__item.current {

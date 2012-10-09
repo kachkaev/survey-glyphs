@@ -12,6 +12,7 @@ $.widget('ui.bsurveyquestionnaire', {
 
 //	options: {
 //		answers: {},
+//		disabled: true
 //	},
 
 	_init: function() {
@@ -22,8 +23,11 @@ $.widget('ui.bsurveyquestionnaire', {
 			};
 		this.w = w;
 		
+		this.element.show();
+		
 		w.defaultAnswers = {
-				'qIsRealPhoto': true
+//				'qIsRealPhoto': true
+				disabled: true
 		};
 		
 		// Initializing switches
@@ -56,10 +60,10 @@ $.widget('ui.bsurveyquestionnaire', {
 		// List of question answers disability dependencies
 		w.disableDependentQuestions = {
 				qIsRealPhoto: {
-					"0": ["qIsOutdoors", "qTimeOfDay", "qTimeOfYear", "qIsByPedestrian", "qIsLocationCorrect", "qSubjectTemporal", "qSubjectPeople", "qIsSpaceAttractive"],
+					"0": ["qIsOutdoors", "qTimeOfDay", "qTimeOfYear", "qSubjectTemporal", "qSubjectPeople", "qIsLocationCorrect", "qIsByPedestrian", "qIsSpaceAttractive"],
 				},
 				qIsOutdoors: {
-					"0": ["qDuringEvent", "qTimeOfDay", "qTimeOfYear", "qIsByPedestrian",  "qIsLocationCorrect", "qSubjectTemporal", "qIsSpaceAttractive"],
+					"0": ["qDuringEvent", "qTimeOfDay", "qTimeOfYear", "qSubjectTemporal", "qIsLocationCorrect", "qIsByPedestrian", "qIsSpaceAttractive"],
 				},
 				qIsLocationCorrect: {
 					//"0": ["qIsByPedestrian", "qIsSpaceAttractive"],
@@ -248,6 +252,11 @@ $.widget('ui.bsurveyquestionnaire', {
 	_setOption: function (key, value) {
 		switch (key) {
 			case 'disabled':
+				if (value) {
+					this._resetQuestionsDisability();
+				} else {
+					this._updateQuestionsDisability();
+				}
 				break;
 			default:
 				return;
@@ -258,6 +267,7 @@ $.widget('ui.bsurveyquestionnaire', {
 	setAnswers: function(answers) {
 		if (!answers)
 			answers = this.w.defaultAnswers;
+		
 		answers = $.extend({
 			qIsLocationCorrect: null,
 			givenLon: null,
@@ -288,6 +298,10 @@ $.widget('ui.bsurveyquestionnaire', {
 		w.ignoreChangeMapPos = true;
 		w.map.bsurveymap('setGivenAndAlteredPos', givenPos, answers['qIsLocationCorrect'] !== false ? givenPos : alteredPos);
 		w.ignoreChangeMapPos = false;
+		
+		if (this.options.disabled)
+			return;
+		
 		w._self._updateQuestionsDisability();
 		
 		// Focusing on a first enabled switch with value = null
@@ -341,6 +355,17 @@ $.widget('ui.bsurveyquestionnaire', {
 	isComplete: function() {
 		return this._getFirstMissingAnswer() === null;
 	},
+
+	isUnanswered: function() {
+		var answers = this.getAnswers();
+		var result = true;
+		$.each(answers, function(k, v) {
+			if (v !== null)
+				result = false;
+			return false;
+		});
+		return result;
+	},
 	
 	blinkFirstMissingAnswer: function() {
 		var q = this._getFirstMissingAnswer();
@@ -378,6 +403,16 @@ $.widget('ui.bsurveyquestionnaire', {
 			return $answer.children(":first");
 		else
 			return $();
+	},
+	
+	_resetQuestionsDisability: function() {
+		var w = this.w;
+		w.switches.each(function() {
+			w.switches.bswitch('option', 'disabled', false);
+			var $bSwitch = $(this);
+			var $text = $(this).parent().prev();
+			$text.removeClass('b-survey-questionnaire__questiontext_disabled', $bSwitch.bswitch('option', 'disabled'));
+		});
 	},
 	
 	_updateQuestionsDisability: function() {
