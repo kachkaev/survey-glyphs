@@ -56,16 +56,21 @@ $.widget('ui.bsurveyquestionnaire', {
 		// List of question answers disability dependencies
 		w.disableDependentQuestions = {
 				qIsRealPhoto: {
-					"0": ["qIsOutdoors", "qDuringEvent", "qTimeOfDay", "qSubjectPerson", "qSubjectMovingObject", "qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
+					"0": ["qIsOutdoors", "qTimeOfDay", "qTimeOfYear", "qIsByPedestrian", "qIsLocationCorrect", "qSubjectTemporal", "qSubjectPeople", "qIsSpaceAttractive"],
 				},
 				qIsOutdoors: {
-					"0": ["qDuringEvent", "qTimeOfDay", "qSubjectMovingObject", "qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
+					"0": ["qDuringEvent", "qTimeOfDay", "qTimeOfYear", "qIsByPedestrian",  "qIsLocationCorrect", "qSubjectTemporal", "qIsSpaceAttractive"],
 				},
-				qSubjectPerson: {
-					"1": ["qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
+				qIsLocationCorrect: {
+					//"0": ["qIsByPedestrian", "qIsSpaceAttractive"],
 				},
-				qSubjectMovingObject: {
-					"1": ["qIsLocationCorrect", "qDescribesSpace", "qSpaceAttractive"],
+				qSubjectTemporal: {
+					//"null": ["qSubjectPeople"],
+					//"0": ["qSubjectPeople"],
+					//"1": ["qIsByPedestrian", "qIsSpaceAttractive"],
+				},
+				qSubjectPeople: {
+					//"1": ["qIsByPedestrian", "qIsSpaceAttractive"],
 				},
 		};
 		
