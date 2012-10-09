@@ -18,7 +18,7 @@ $.widget('ui.bsurveymap', {
 	options: {
 		given_pos: null,
 		altered_pos: null,
-		zoom_level: 18
+		zoom_level: 17
 	},
 
 	_init: function() {
