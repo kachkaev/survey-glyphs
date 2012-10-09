@@ -3,12 +3,16 @@
 	-moz-transition: background-color 0.4s;
 }
 
+.b-switch.color_blue {
+	background-color: rgba(140, 220, 245, 0.9);
+}
+
 .b-switch.color_darkblue {
 	background-color: rgba(0,0, 160, 0.7);
 }
 
 .b-switch.color_red {
-	background-color: rgba(255, 0, 0, .6);
+	background-color: rgba(255, 0, 0, .5);
 }
 
 .b-switch.color_gray {
@@ -20,7 +24,7 @@
 }
 
 .b-switch.color_yellow {
-	background-color: rgba(200, 200, 0, 0.5);
+	background-color: rgba(220, 220, 0, 0.5);
 }
 
 /****************
@@ -168,6 +172,7 @@
 	text-align: left;
 	overflow: visible;
 	padding-left:5px;
+	padding-right: 10px;
 	white-space: nowrap;
 }
 
