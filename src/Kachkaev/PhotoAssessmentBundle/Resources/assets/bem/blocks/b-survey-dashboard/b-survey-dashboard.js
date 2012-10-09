@@ -28,7 +28,7 @@ $.widget('ui.bsurveydashboard', {
 			var $this = $(this);
 			var id = $this.data("id");
 			if ($this.hasClass("current"))
-				return false;
+				return;
 			if ($this.hasClass("unanswered")) {
 				var $prevUnanswered = $this.prevAll().filter(".unanswered");
 				if ($prevUnanswered.size()) {
@@ -38,7 +38,7 @@ $.widget('ui.bsurveydashboard', {
 				};
 			}
 			w._self.setCurrentItemId(id);
-			return false;
+			return;
 		});
 	},
 

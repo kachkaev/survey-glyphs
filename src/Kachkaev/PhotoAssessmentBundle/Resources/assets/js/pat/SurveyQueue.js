@@ -21,6 +21,8 @@ getQueue()
 	}
 } ... ]
 
+extendQueue()
+
 getCurrentId()
 setCurrentId(id)
 
@@ -37,6 +39,7 @@ getCount()
 
 Events (signals):
 updated (queue)
+extended
 updatedWithError
 changedCurrentId
 
@@ -54,12 +57,14 @@ pat.SurveyQueue = function() {
 	this._queueMap = {}; // {index: x, photoResponse: {x}}
 	
 	this.updated = new signals.Signal();
+	this.extended = new signals.Signal();
 	this.updatedWithError = new signals.Signal();
 	this.changedCurrentId = new signals.Signal();
 };
 
 pat.SurveyQueue._apiURLs = {
 		get_queue: apiBaseURL+"get_queue",
+		extend_queue: apiBaseURL+"extend_queue",
 		submit_response: apiBaseURL+"submit_response",
 };
 
@@ -99,6 +104,24 @@ pat.SurveyQueue.prototype.fetchQueue = function() {
 
 pat.SurveyQueue.prototype.getQueue = function() {
 	return this._queue;
+};
+
+pat.SurveyQueue.prototype.extendQueue = function() {
+	var o = this;
+	$.ajax({
+		url: pat.SurveyQueue._apiURLs['extend_queue'],
+		type: "POST",
+		success: function(data) {
+			var count = data.count;
+			o.updated.addOnce(function() {
+				o.extended.dispatch(count);
+			});
+			o.fetchQueue();
+		},
+		error: function() {
+			obj.updatedWithError.dispatch();
+		},
+	});
 };
 
 pat.SurveyQueue.prototype.getUnansweredCount = function() {
@@ -193,8 +216,8 @@ pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPh
 	this.updated.dispatch(this._queue, [photoResponseId]);
 	
 	// TODO do this after saving previous photo
-	var c = this.getUnansweredCount();
-	if (c > 0 && c < 5) {
-		this.fetchQueue();
-	};
+	//var c = this.getUnansweredCount();
+	//if (c > 0 && c < 5) {
+	//	this.fetchQueue();
+	//};
 };

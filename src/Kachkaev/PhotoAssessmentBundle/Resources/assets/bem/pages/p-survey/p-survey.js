@@ -36,8 +36,17 @@ $(function(){
 	// Goes to the next photo
 	// -------------------------------------
 	var gotoNextPhoto = function() {
-		surveyQueue.setCurrentId(surveyQueue.getNextIncompleteId());
+		if (surveyQueue.getUnansweredCount() == 0) {
+			if (confirm('Thanks a lot for your help! Would you like to see some more photographs?')) {
+				surveyQueue.extendQueue();
+			}
+		} else {
+			surveyQueue.setCurrentId(surveyQueue.getNextIncompleteId());
+		}
 	};
+	surveyQueue.extended.add(function(){
+		surveyQueue.setCurrentId(surveyQueue.getNextId());
+	});
 
 	
 	// Loads photo response
