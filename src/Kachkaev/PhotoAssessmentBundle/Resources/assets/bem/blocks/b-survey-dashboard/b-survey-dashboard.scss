@@ -2,13 +2,14 @@
 	position: absolute;
 	width: 510px;
 	overflow: auto;
-	bottom: 78px;
+	bottom: 13px;
 	left: 20px;
 }
 
 .b-survey-dashboard__items {
 	overflow: auto;
-	max-height: 123px;
+	max-height: 113px;
+	margin-bottom: 67px;
 }
 
 .b-survey-dashboard__item {
@@ -53,3 +54,14 @@
 /*.b-survey-dashboard__item.current:before {
 	content: "•";
 }*/
+
+.b-survey-dashboard__hint {
+	position: absolute;
+	bottom: 0px;
+	color: #c44;
+	font-size: 12px;
+	padding-top: 5px;
+	height: 23px;
+	overflow: visible;
+	whitespace: nowrap;
+}

@@ -205,6 +205,8 @@ $.widget('ui.bsurveymap', {
 		    	this.w.updateMarkers(true);
 		    	return;
 			case 'disabled':
+				if (value == this.options.disabled)
+					return;
 				this.w.map.setOptions({
 					disableDoubleClickZoom: value,
 					scrollwheel: !value,

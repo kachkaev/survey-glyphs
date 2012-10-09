@@ -15,14 +15,30 @@ $.widget('ui.bsurveydashboard', {
 			};
 		this.w = w;
 		
+		w.$hint = w.$element.find(".b-survey-dashboard__hint");
 		w.$items = w.$element.find(".b-survey-dashboard__items");
 		w.itemsMap = {};
 		w.currentId = null;
 		w.$currentItem = null;
-		
+
+		w.$dashboardHint = $('.b-survey-dashboard__hint');
+
 		// Trigger changeitem when an item is clicked
 		$(".b-survey-dashboard__item").live("click", function(e) {
-			w._self.setCurrentItemId($(this).data("id"));
+			var $this = $(this);
+			var id = $this.data("id");
+			if ($this.hasClass("current"))
+				return false;
+			if ($this.hasClass("unanswered")) {
+				var $prevUnanswered = $this.prevAll().filter(".unanswered");
+				if ($prevUnanswered.size()) {
+					str = "Please submit you answers on previous photographs to see the selected one.";
+					w.$dashboardHint.stop(true, true).text(str).fadeIn(0).delay(2000).fadeOut(2000);
+					id = $prevUnanswered.last().data("id");
+				};
+			}
+			w._self.setCurrentItemId(id);
+			return false;
 		});
 	},
 
@@ -73,7 +89,7 @@ $.widget('ui.bsurveydashboard', {
 			delete w.itemsMap[id];
 		});
 		
-		w.$items.appendTo(w.$element);			
+		w.$items.prependTo(w.$element);			
 	},
 	
 	setCurrentItemId: function(newId) {
