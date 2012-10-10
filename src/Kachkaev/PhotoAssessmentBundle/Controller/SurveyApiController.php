@@ -76,7 +76,7 @@ class SurveyApiController extends Controller
     	$photoResponses = [];
 
     	// Getting $count random unanswered photos
-    	$idsStmt = $em->getConnection()->query("SELECT id FROM Photo WHERE status = 0 AND id NOT IN (SELECT photoId FROM Photoresponse WHERE userId = ".$user->getId().") ORDER BY RAND() LIMIT ".$count);
+    	$idsStmt = $em->getConnection()->query("SELECT id FROM Photo WHERE status = 0 AND id NOT IN (SELECT photoId FROM PhotoResponse WHERE userId = ".$user->getId().") ORDER BY RAND() LIMIT ".$count);
     	$idsStmt->execute();
     	$idsRes = $idsStmt->fetchAll();
     	
