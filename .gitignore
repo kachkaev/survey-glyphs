@@ -4,9 +4,6 @@
 /app/logs/*
 /app/config/parameters.yml
 /build/
-/vendor
-/composer.phar
-
 
 /-misc
 /nbproject*
