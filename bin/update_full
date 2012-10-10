@@ -1,0 +1,7 @@
+#!/bin/sh
+
+bin/update
+
+rm -r web/\$/css
+rm -r web/\$/js
+app/console assetic:dump --env=prod --no-debug
