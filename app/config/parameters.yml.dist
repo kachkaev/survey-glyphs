@@ -3,14 +3,16 @@ parameters:
     database_host: localhost
     database_port: null
     database_name: pr_data_survey
-    database_user: root
-    database_password: hh
+    database_user: 
+    database_password: 
     mailer_transport: smtp
     mailer_host: localhost
     mailer_user: null
     mailer_password: null
+
     locale: en
     secret: dd461dfe3d10c589f2ae3bccc445245b
+
     database_path: null
     remember_me_token: 589f2ae3bccc445245bdd461dfe3d10c58
     remember_me_cookie: remember_me
