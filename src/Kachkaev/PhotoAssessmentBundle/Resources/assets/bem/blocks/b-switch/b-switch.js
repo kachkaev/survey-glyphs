@@ -235,6 +235,9 @@ $.widget('ui.bswitch', {
 		var $valueLI = this.w.lis.eq(value - 1);
 		// Removing all classes starting with 'color_'
 		this.w.element[0].className = this.w.element[0].className.replace(/\bcolor_.*?\b/g, '');
-		this.w.element.addClass($valueLI.attr('class'));
+		if (this.w.hasHardToSay && value == this.w.ui.slider("option", "max"))
+			this.w.element.addClass('color_yellow');
+		else
+			this.w.element.addClass($valueLI.attr('class'));
 	}
 });

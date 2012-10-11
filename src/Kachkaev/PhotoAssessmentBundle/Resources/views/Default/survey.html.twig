@@ -31,8 +31,8 @@
 			<li class="b-survey-questionnaire__question b-survey-questionnaire__question_current">
 				<div class="b-survey-questionnaire__questiontext">Is the image a real photograph?</div>
 				<div data-q="qIsRealPhoto" class="b-survey-questionnaire__questionanswer">
-					<ul class="b-switch">
-						<li data-v="0" class="color_red">no</li>
+					<ul class="b-switch b-switch_with-hard-to-say">
+						<li data-v="0" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
 						<li data-v="1"  class="color_green">yes</li>
 					</ul>
@@ -43,7 +43,7 @@
 				<div class="b-survey-questionnaire__questiontext">Is it a photograph of something outdoors?</div>
 				<div data-q="qIsOutdoors" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_red">no</li>
+						<li data-v="0" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
 						<li data-v="1"  class="color_green">yes</li>
 					</ul>
@@ -54,7 +54,7 @@
 {# 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during an event?</div>#}
 {# 				<div data-q="qDuringEvent" class="b-survey-questionnaire__questionanswer">#}
 {# 					<ul class="b-switch b-switch_with-hard-to-say">#}
-{# 						<li data-v="1"  class="color_red">yes</li>#}
+{# 						<li data-v="1"  class="color_green">yes</li>#}
 {# 						<li data-v="null"  class="default"></li>#}
 {# 						<li data-v="0" class="color_green">no</li>#}
 {# 					</ul>#}
@@ -65,25 +65,26 @@
 				<div class="b-survey-questionnaire__questiontext">At what time of the day is the photograph taken?</div>
 				<div data-q="qTimeOfDay" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="2"     class="color_darkblue">night</li>
-						<li data-v="1"     class="color_gray">twilight</li>
+						<li data-v="2"     class="color_green">night</li>
+						<li data-v="1"     class="color_green">twilight</li>
 						<li data-v="null"  class="default"></li>
 						<li data-v="0"     class="color_green">day</li>
 					</ul>
 				</div>
 			</li>
 			
-			{#<li class="b-survey-questionnaire__question">
+{#			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">What’s the time of year?</div>
 				<div data-q="qTimeOfYear" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="2"     class="color_blue">winter</li>
-						<li data-v="1"     class="color_yellow">spring/fall</li>
+						<li data-v="1"     class="color_green">spring/fall</li>
 						<li data-v="null"  class="default"></li>
 						<li data-v="0"     class="color_green">smr.</li>
 					</ul>
 				</div>
 			</li>
+			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during a warm season?</div>
 				<div data-q="qTimeOfYear" class="b-survey-questionnaire__questionanswer">
@@ -97,12 +98,12 @@
 			#}
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">Is it a photograph of something temporal or moving?</div>
+				<div class="b-survey-questionnaire__questiontext">Is it a photograph of something temporary?</div>
 				<div data-q="qSubjectTemporal" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="0" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_red">yes</li>
+						<li data-v="1"  class="color_green">yes</li>
 					</ul>
 				</div>
 			</li>
@@ -114,7 +115,7 @@
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="0" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_red">yes</li>
+						<li data-v="1"  class="color_green">yes</li>
 					</ul>
 				</div>
 			</li>
@@ -124,7 +125,7 @@
 				<div class="b-survey-questionnaire__questiontext">Does the photograph seem to be geotagged correctly?</div>
 				<div data-q="qIsLocationCorrect" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_yellow">no</li>
+						<li data-v="0" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
 						<li data-v="1"  class="color_green">yes</li>
 					</ul>
@@ -136,7 +137,7 @@
 				<div class="b-survey-questionnaire__questiontext" title="Select ‘yes’ if the photograph could be taken from a street level by person who was walking.‘No’ applies to any photograph taken from above ground (e.g. buildings, observation points, airplanes, etc.) or from any place where walking is impossible.">Could the photograph be taken by a pedestrian?</div>
 				<div data-q="qIsByPedestrian" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_red">no</li>
+						<li data-v="0" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
 						<li data-v="1"  class="color_green">yes</li>
 					</ul>
@@ -147,7 +148,7 @@
 				<div class="b-survey-questionnaire__questiontext">Does the photograph describe surrounding space?</div>
 				<div data-q="qDescribesSpace" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_red">no</li>
+						<li data-v="0" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
 						<li data-v="1"  class="color_green">yes</li>
 					</ul>
@@ -155,10 +156,11 @@
 			</li>
 #}
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">Does the photograph render the area attractive for a walk?</div>
+{#				<div class="b-survey-questionnaire__questiontext">Does the photograph render the area attractive for a walk?</div>#}
+				<div class="b-survey-questionnaire__questiontext">Does the photograph suggest this is a nice place to walk?</div>
 				<div data-q="qIsSpaceAttractive" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_red">no</li>
+						<li data-v="0" class="color_green">no</li>
 						<li data-v="null"  class="default"></li>
 						<li data-v="1"  class="color_green">yes</li>
 					</ul>

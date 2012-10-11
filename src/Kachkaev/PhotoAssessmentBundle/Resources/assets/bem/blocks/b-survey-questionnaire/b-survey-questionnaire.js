@@ -160,7 +160,7 @@ $.widget('ui.bsurveyquestionnaire', {
 			
 			if (!w.map.bsurveymap("posIsAccurate")) {
 				w.savedAlteredPos = w.map.bsurveymap("option", "altered_pos");
-				w.mapbwitch.bswitch("setAnswerColor", 0, w.savedAlteredPos === null ? "red" : "yellow");
+				//w.mapbwitch.bswitch("setAnswerColor", 0, w.savedAlteredPos === null ? "red" : "yellow");
 			}
 			w.mapbwitch.bswitch('focus');
 			w.mapbwitch.bswitch("option", "value", w.map.bsurveymap("posIsAccurate"));

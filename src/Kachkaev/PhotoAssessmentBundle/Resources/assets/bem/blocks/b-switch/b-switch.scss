@@ -162,7 +162,6 @@
 	left: 51px;
 }
 .b-switch__hts-text {
-/* 	display: none; */
 	font-size: 11px;
 	opacity: 0.4;
 	cursor: pointer;
@@ -174,10 +173,17 @@
 	padding-left:5px;
 	padding-right: 10px;
 	white-space: nowrap;
+	cursor: pointer;
 }
 
 .b-switch__hts-text:hover {
 	opacity: 0.8;
+}
+
+.b-switch.ui-state-disabled .b-switch__hts-text,
+.b-switch.ui-state-disabled .b-switch__hts-text:hover {
+	opacity: 0.4;
+	cursor: default;
 }
 
 .b-switch__hts:hover .b-switch__hts-text, .b-switch__hts-text_visible{
