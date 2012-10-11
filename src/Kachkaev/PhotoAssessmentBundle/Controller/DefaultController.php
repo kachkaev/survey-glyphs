@@ -81,7 +81,7 @@ class DefaultController extends Controller
        	// Translation strings
     	$jsTranslations = [];   	
     	$translator = $this->get('translator');	
-    	foreach (['answer.hts'] as $v) {
+    	foreach (['answer.hts', 'hint.questionnaire_incomplete', 'hint.dashboard.access_denied'] as $v) {
     		$jsTranslations[$v] = $translator->trans($v);
     	}
     		

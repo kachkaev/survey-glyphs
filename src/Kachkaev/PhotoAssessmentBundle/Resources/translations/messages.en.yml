@@ -1,7 +1,8 @@
+title: Photo Content Assessment
 pat_default_index.h1: Photo Content Assessment
 
 participant.title: You are anonimously authenticated as this person and submit data under this name. No personal data is being collected.
-participant: Участник %n%
+participant: Participant %n%
 
 answer.yes: yes
 answer.no: no
@@ -9,7 +10,6 @@ answer.hts: hard to say
 answer.day: day
 answer.night: night
 answer.twilight: twilight
-answer.hts: twilight
 
 question.IsRealPhoto: Is the image a real photograph?
 question.IsRealPhoto.hint: ""
@@ -36,3 +36,6 @@ question.IsSpaceAttractive: Does the photograph suggest this is a nice place to 
 question.IsSpaceAttractive.hint: ""
 
 button.next: Next
+
+hint.questionnaire_incomplete: Questinnaire is incomplete. Please answer all questions to continue.
+hint.dashboard.access_denied: Please submit full answers to previous photographs to see the selected one.

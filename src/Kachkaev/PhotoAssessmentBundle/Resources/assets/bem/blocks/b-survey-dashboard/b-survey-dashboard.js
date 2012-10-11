@@ -33,8 +33,7 @@ $.widget('ui.bsurveydashboard', {
 			if ($this.hasClass("unanswered")) {
 				var $prevUnansweredOrIncomplete = $this.prevAll().filter(".unanswered, .incomplete");
 				if ($prevUnansweredOrIncomplete.size()) {
-					str = "Please submit full answers to previous photographs to see the selected one.";
-					w.$dashboardHint.stop(true, true).text(str).fadeIn(0).delay(2000).fadeOut(2000);
+					w.$dashboardHint.stop(true, true).text(lang.str['hint.dashboard.access_denied']).fadeIn(0).delay(2000).fadeOut(2000);
 					id = $prevUnansweredOrIncomplete.last().data("id");
 				};
 			}

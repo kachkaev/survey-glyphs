@@ -38,6 +38,7 @@ $(function(){
 	// -------------------------------------
 	var gotoNextPhoto = function() {
 		if (surveyQueue.getUnansweredCount() == 0) {
+			// FIXME replace confirm with silent thing
 			if (confirm('Thanks a lot for your help! Would you like to see some more photographs?')) {
 				surveyQueue.extendQueue();
 			}
@@ -83,8 +84,7 @@ $(function(){
 			submitQuestionnaire();
 		else {
 			//str = "Questinnaire is incomplete. Hold shift pressed to force submitting it.";
-			str = "Questinnaire is incomplete. Please answer all questions to continue.";
-			$questionnaireHint.stop(true, true).text(str).fadeIn(0).delay(2000).fadeOut(2000);
+			$questionnaireHint.stop(true, true).text(lang.str['hint.questionnaire_incomplete']).fadeIn(0).delay(2000).fadeOut(2000);
 			$bQuestionnaire.bsurveyquestionnaire('blinkFirstMissingAnswer');
 		}
 	};

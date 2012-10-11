@@ -1,7 +1,8 @@
-pat_default_index.h1: Photo Content Assessment
+title: Оценка содержимого фотографий
+pat_default_index.h1: Оценка содержимого фотографий
 
 participant.title: You are anonimously authenticated as this person and submit data under this name. No personal data is being collected.
-participant: Participant %n%
+participant: Участник %n%
 
 answer.yes: да
 answer.no: нет
@@ -34,4 +35,7 @@ question.IsByPedestrian.hint: Select ‘yes’ if the photograph could be taken 
 question.IsSpaceAttractive: Выбрали ли вы окрестность для прогулки?
 question.IsSpaceAttractive.hint: ""
 
-button.next: Next
+button.next: Далее
+
+hint.questionnaire_incomplete: Пожалуйста, ответьте на все вопросы.
+hint.dashboard.access_denied: Пожалуйста, сначала ответьте на все вопросы для предыдущих фотографий.
