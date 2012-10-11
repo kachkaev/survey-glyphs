@@ -1,7 +1,7 @@
 pat_default_index.h1: Photo Content Assessment
 
 participant.title: You are anonimously authenticated as this person and submit data under this name. No personal data is being collected.
-participant: Участник n
+participant: Participant %n%
 
 answer.yes: да
 answer.no: нет
