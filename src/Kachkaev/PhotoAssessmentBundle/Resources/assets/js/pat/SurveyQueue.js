@@ -49,7 +49,7 @@ changedCurrentId
 
 namespace('pat');
 
-var apiBaseURL = (document.URL.indexOf('app_dev.php') != -1) ? "/app_dev.php/api/" : "/api/";
+var apiBaseURL = (document.URL.indexOf('p_app_dev.php') != -1) ? "/p_app_dev.php/api/" : "/api/";
 
 pat.SurveyQueue = function() {
 	this._queue = [];

@@ -1,10 +1,38 @@
 <IfModule mod_rewrite.c>
-    RewriteEngine On
+	RewriteEngine On
 
-    #<IfModule mod_vhost_alias.c>
-    #    RewriteBase /
-    #</IfModule>
+	############
+	#redirecting from www.* to domain without www
+	############
+	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+	RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+	
+	############
+	#redirecting from https to http
+	############
+	RewriteCond %{SERVER_PORT} ^443$
+	RewriteCond %{HTTP_HOST} ^(.*)$ [NC]
+	RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+	
+	############
+	#Removing multiple slashes
+	############
+	RewriteCond %{REQUEST_URI} ^(.*)//(.*)$
+	RewriteRule . %1/%2 [R=301,L]
+	
+	############
+	#inde.xxx → /
+	############
+	RewriteCond %{REQUEST_URI} ^/index\.([a-zA-Z]+)$
+	RewriteRule ^(.*)$ / [R=301,L]
 
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*)$ app.php [QSA,L]
+	############
+	#deny all files and folders that start with a dot
+	############
+	RewriteCond %{ENV:REDIRECT_STATUS} ^$
+	RewriteCond %{REQUEST_URI} ^(.*/)?\.(.*)
+	RewriteRule ^(.*)$ - [F]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ p_app.php [QSA,L]
 </IfModule>
