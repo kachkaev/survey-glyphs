@@ -1,0 +1,38 @@
+pat_default_index.h1: Photo Content Assessment
+
+participant.title: You are anonimously authenticated as this person and submit data under this name. No personal data is being collected.
+participant: Участник %n%
+
+answer.yes: yes
+answer.no: no
+answer.hts: hard to say
+answer.day: day
+answer.night: night
+answer.twilight: twilight
+answer.hts: twilight
+
+question.IsRealPhoto: Is the image a real photograph?
+question.IsRealPhoto.hint: ""
+
+question.IsOutdoors: Is it a photograph of something outdoors?
+question.IsOutdoors.hint: ""
+
+question.TimeOfDay: At what time of the day is the photograph taken?
+question.TimeOfDay.hint: ""
+
+question.SubjectTemporary: Is it a photograph of something temporary?
+question.SubjectTemporary.hint: ""
+
+question.SubjectPeople: Are people the main subject of the photograph?
+question.SubjectPeople.hint: ""
+
+question.IsLocationCorrect: Does the photograph seem to be geotagged correctly?
+question.IsLocationCorrect.hint: ""
+
+question.IsByPedestrian: Could the photograph be taken by a pedestrian?
+question.IsByPedestrian.hint: Select ‘yes’ if the photograph could be taken from a street level by person who was walking.‘No’ applies to any photograph taken from above ground (e.g. buildings, observation points, airplanes, etc.) or from any place where walking is impossible.
+
+question.IsSpaceAttractive: Does the photograph suggest this is a nice place to walk?
+question.IsSpaceAttractive: ""
+
+button.next: Next

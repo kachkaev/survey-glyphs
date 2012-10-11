@@ -2,6 +2,8 @@
 
 namespace Kachkaev\PhotoAssessmentBundle\Controller;
 
+use Symfony\Component\Translation\IdentityTranslator;
+
 use Symfony\Component\Routing\Router;
 
 use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
@@ -70,12 +72,24 @@ class DefaultController extends Controller
     				'httponly' => true,
     				'lifetime' => 315360000, // 10 years
     				'always_remember_me' => true,
-    				'remember_me_parameter' => '_remember_me'
+    				'remember_me_parameter' => '_remember_me',
     				)
     		);
     		$rememberMeService->loginSuccess($this->container->get('request'), $response, $token);
     	}
-	    return $this->render("PhotoAssessmentBundle:Default:survey.html.twig", array(), $response);
+    	
+       	// Translation strings
+    	$jsTranslations = [];   	
+    	$translator = $this->get('translator');	
+    	foreach (['answer.hts'] as $v) {
+    		$jsTranslations[$v] = $translator->trans($v);
+    	}
+    		
+    	$parameters = [
+    		'jsTranslationStrings' => json_encode($jsTranslations),
+    	];
+    	
+	    return $this->render("PhotoAssessmentBundle:Default:survey.html.twig", $parameters, $response);
     }
     
 }

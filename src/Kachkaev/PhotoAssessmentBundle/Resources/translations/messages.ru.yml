@@ -1,0 +1,37 @@
+pat_default_index.h1: Photo Content Assessment
+
+participant.title: You are anonimously authenticated as this person and submit data under this name. No personal data is being collected.
+participant: Участник n
+
+answer.yes: да
+answer.no: нет
+answer.hts: не понятно
+answer.day: день
+answer.night: ночь
+answer.twilight: сумерки
+
+question.IsRealPhoto: Является ли изображение фотографией?
+question.IsRealPhoto.hint: ""
+
+question.IsOutdoors: Это фотография чего-то вне помещения (на улице)?
+question.IsOutdoors.hint: ""
+
+question.TimeOfDay: В какое время дня сделана фотография?
+question.TimeOfDay.hint: ""
+
+question.SubjectTemporary: Это фотография чего-то временного?
+question.SubjectTemporary.hint: ""
+
+question.SubjectPeople: Являются ли люди основным объектом фотографии?
+question.SubjectPeople.hint: ""
+
+question.IsLocationCorrect: Можно ли считать, что место указано правильно?
+question.IsLocationCorrect.hint: ""
+
+question.IsByPedestrian: Могла ли эта фотография быть сделана пешеходом?
+question.IsByPedestrian.hint: Select ‘yes’ if the photograph could be taken from a street level by person who was walking.‘No’ applies to any photograph taken from above ground (e.g. buildings, observation points, airplanes, etc.) or from any place where walking is impossible.
+
+question.IsSpaceAttractive: Выбрали ли вы окрестность для прогулки?
+question.IsSpaceAttractive.hint: ""
+
+button.next: Next

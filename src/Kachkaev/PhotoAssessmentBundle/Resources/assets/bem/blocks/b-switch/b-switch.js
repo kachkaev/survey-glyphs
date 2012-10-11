@@ -73,7 +73,7 @@ $.widget('ui.bswitch', {
 		w.ui = this.element.prepend('<div class="b-switch__ear-right"><div class="b-switch__circle-rh b-switch__uiwrapright" /></div><div class="b-switch__ui" /><div class="b-switch__ear-left"><div class="b-switch__circle-lh b-switch__uiwrapleft" /><div class="b-switch_ear_left">').children().eq(1);
 		if (w.hasHardToSay) {
 			w.ui.prev().addClass('b-switch__ear-right_hts');
-			var hardToSayCircle = $('<div class="b-switch__hts"><div class="b-switch__circle-lh" /><div class="b-switch__circle-rh" /><div class="b-switch__hts-text">hard to say</div></div>');
+			var hardToSayCircle = $('<div class="b-switch__hts"><div class="b-switch__circle-lh" /><div class="b-switch__circle-rh" /><div class="b-switch__hts-text">' + lang.str['answer.hts'] + '</div></div>');
 			var hardToSayGap = $('<div class="b-switch__hts-gap" />');
 			
 			hardToSayCircle.click(function() {

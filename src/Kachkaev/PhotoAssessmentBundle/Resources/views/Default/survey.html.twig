@@ -1,3 +1,4 @@
+{% spaceless %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,8 +15,8 @@
 </head>	
 <body class="p-survey">
 	<div class="p-survey-header">
-		<div class="b-userbox"><span class="b-userbox__name" title="You are anonimously authenticated as this person and submit data under this name. No personal data is being collected.">{{ app.user.name }}</span></div>
-		<h1>{#<a href="{{ path("pat_default_index") }}">#}Photo Content Assessment{#</a>#}</h1>
+		<div class="b-userbox"><span class="b-userbox__name" title="{{ "participant.title" | trans }}">{{ "participant" | trans({n: app.user.id}) }}</span></div>
+		<h1><a href="{{ path("pat_default_index") }}">{{ 'pat_default_index.h1' | trans }}</a></h1>
 	</div>
 	<div class="p-survey__leftcol">
 		<div class="b-survey-photo"></div>
@@ -29,23 +30,23 @@
 	<div class="p-survey__rightcol">
 		<ul class="b-survey-questionnaire" style="display:none">
 			<li class="b-survey-questionnaire__question b-survey-questionnaire__question_current">
-				<div class="b-survey-questionnaire__questiontext">Is the image a real photograph?</div>
+				<div class="b-survey-questionnaire__questiontext" title="{{ "question.IsRealPhoto.hint" | trans }}">{{ "question.IsRealPhoto" | trans }}</div>
 				<div data-q="qIsRealPhoto" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">no</li>
+						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">Is it a photograph of something outdoors?</div>
+				<div class="b-survey-questionnaire__questiontext" title="{{ "question.IsOutdoors.hint" | trans }}">{{ "question.IsOutdoors" | trans }}</div>
 				<div data-q="qIsOutdoors" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">no</li>
+						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
 			</li>
@@ -54,21 +55,21 @@
 {# 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during an event?</div>#}
 {# 				<div data-q="qDuringEvent" class="b-survey-questionnaire__questionanswer">#}
 {# 					<ul class="b-switch b-switch_with-hard-to-say">#}
-{# 						<li data-v="1"  class="color_green">yes</li>#}
+{# 						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>#}
 {# 						<li data-v="null"  class="default"></li>#}
-{# 						<li data-v="0" class="color_green">no</li>#}
+{# 						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>#}
 {# 					</ul>#}
 {# 				</div>#}
 {# 			</li>#}
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">At what time of the day is the photograph taken?</div>
+				<div class="b-survey-questionnaire__questiontext" title="{{ "question.TimeOfDay.hint" | trans }}">{{ "question.TimeOfDay" | trans }}</div>
 				<div data-q="qTimeOfDay" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="2"     class="color_green">night</li>
-						<li data-v="1"     class="color_green">twilight</li>
+						<li data-v="2"     class="color_green">{{ "answer.night" | trans }}</li>
+						<li data-v="1"     class="color_green">{{ "answer.twilight" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="0"     class="color_green">day</li>
+						<li data-v="0"     class="color_green">{{ "answer.day" | trans }}</li>
 					</ul>
 				</div>
 			</li>
@@ -89,57 +90,56 @@
 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during a warm season?</div>
 				<div data-q="qTimeOfYear" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="2"     class="color_blue">no</li>
+						<li data-v="2"     class="color_blue">{{ "answer.no" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="0"     class="color_green">yes</li>
+						<li data-v="0"     class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
 			</li>
 			#}
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">Is it a photograph of something temporary?</div>
+				<div class="b-survey-questionnaire__questiontext" title="{{ "question.SubjectTemporary.hint" | trans }}">{{ "question.SubjectTemporary" | trans }}</div>
 				<div data-q="qSubjectTemporal" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">no</li>
+						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
 			</li>
 
 			<li class="b-survey-questionnaire__question">
 {# 				<div class="b-survey-questionnaire__questiontext">Is it a photograph of people?</div>#}
-				<div class="b-survey-questionnaire__questiontext">Are people the main subject of the photograph?</div>
+				<div class="b-survey-questionnaire__questiontext" title="{{ "question.SubjectPeople.hint" | trans }}">{{ "question.SubjectPeople" | trans }}</div>
 				<div data-q="qSubjectPeople" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">no</li>
+						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
-			<!-- Does the location seem to be correct? (Is the location of the photograph approximately correct?) -->
-				<div class="b-survey-questionnaire__questiontext">Does the photograph seem to be geotagged correctly?</div>
+				<div class="b-survey-questionnaire__questiontext" title="{{ "question.IsLocationCorrect.hint" | trans }}">{{ "question.IsLocationCorrect" | trans }}</div>
 				<div data-q="qIsLocationCorrect" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">no</li>
+						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
 				<div class="b-survey-map"></div>
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext" title="Select ‘yes’ if the photograph could be taken from a street level by person who was walking.‘No’ applies to any photograph taken from above ground (e.g. buildings, observation points, airplanes, etc.) or from any place where walking is impossible.">Could the photograph be taken by a pedestrian?</div>
+				<div class="b-survey-questionnaire__questiontext" title="{{ "question.IsByPedestrian.hint" | trans }}">{{ "question.IsByPedestrian" | trans }}</div>
 				<div data-q="qIsByPedestrian" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">no</li>
+						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
 			</li>
@@ -148,21 +148,20 @@
 				<div class="b-survey-questionnaire__questiontext">Does the photograph describe surrounding space?</div>
 				<div data-q="qDescribesSpace" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">no</li>
+						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
 			</li>
 #}
 			<li class="b-survey-questionnaire__question">
-{#				<div class="b-survey-questionnaire__questiontext">Does the photograph render the area attractive for a walk?</div>#}
-				<div class="b-survey-questionnaire__questiontext">Does the photograph suggest this is a nice place to walk?</div>
+				<div class="b-survey-questionnaire__questiontext" title="{{ "question.IsSpaceAttractive.hint" | trans }}">{{ "question.IsSpaceAttractive" | trans }}</div>
 				<div data-q="qIsSpaceAttractive" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">no</li>
+						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
 						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_green">yes</li>
+						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
 			</li>
@@ -171,7 +170,7 @@
 		<div class="b-survey-controls">
 			<div class="b-survey-controls__buttons">
 	{#			<a class="i-button-prev b-button b-button_color-white b-button_size-medium" href="#">Previous</a>
-#}				<a class="i-button-next b-button b-button_color-blue b-button_size-medium" href="#">Next</a>
+#}				<a class="i-button-next b-button b-button_color-blue b-button_size-medium" href="#">{{ "button.next" | trans }}</a>
 			</div>
 			<div class="b-survey-controls__hint"></div>
 		</div>
@@ -207,6 +206,9 @@
     
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;language={{ app.request.locale }}"></script>
     <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&hl={{ app.request.locale }}"></script>
+    <script type="text/javascript">lang = { str: {{ jsTranslationStrings | raw }} };
+    </script>
 
 </body>
 </html>
+{% endspaceless %}

@@ -28,4 +28,5 @@ return array(
     'CG\\' => $vendorDir . '/jms/cg/src/',
     'Assetic' => $vendorDir . '/kriswallsmith/assetic/src/',
     '' => $baseDir . '/src/',
+    'Lunetics\\LocaleBundle' => $vendorDir . '/lunetics/locale-bundle/',
 );
