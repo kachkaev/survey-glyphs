@@ -33,6 +33,6 @@ question.IsByPedestrian: Could the photograph be taken by a pedestrian?
 question.IsByPedestrian.hint: Select ‘yes’ if the photograph could be taken from a street level by person who was walking.‘No’ applies to any photograph taken from above ground (e.g. buildings, observation points, airplanes, etc.) or from any place where walking is impossible.
 
 question.IsSpaceAttractive: Does the photograph suggest this is a nice place to walk?
-question.IsSpaceAttractive: ""
+question.IsSpaceAttractive.hint: ""
 
 button.next: Next
