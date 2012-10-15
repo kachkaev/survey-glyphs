@@ -21,7 +21,7 @@ $.widget('ui.bsurveyphoto', {
 		
 		w.$info = $('<a class="b-survey-photo__info" target="_blank"/>');
 		w.$infoPhoto = $('<img class="b-survey-photo__photo" />').appendTo(w.$info);
-		w.$infoTitle = $('<span class="b-survey-photo__title" />').appendTo(w.$info);
+		w.$infoTitle = $('<span class="b-survey-photo__title" />');//.appendTo(w.$info);
 		w.$infoTimestampanduser = $('<span class="b-survey-photo__timestampanduser" />').appendTo(w.$info);
 		w.$infoLogo = $('<span class="b-survey-photo__logo" />');//.appendTo(w.$info);
 		
@@ -49,7 +49,7 @@ $.widget('ui.bsurveyphoto', {
 			w.$infoPhoto.attr('src', '');
 			w.$infoPhoto.attr('src', info.imgSrc);
 			w.$infoTitle.text('').text(info.title);
-			w.$infoTimestampanduser.text('').text((info.timestamp ? info.timestamp + " " : "") + "© " + info.user);
+			w.$infoTimestampanduser.text('').text(/*(info.timestamp ? info.timestamp + " " : "") + */"© " + info.user);
 			w.$info.attr('href', info.permalink);
 			w.$infoLogo.removeClass("flickr panoramio geograph picasa").addClass(info.source);
 			w.$element.empty();

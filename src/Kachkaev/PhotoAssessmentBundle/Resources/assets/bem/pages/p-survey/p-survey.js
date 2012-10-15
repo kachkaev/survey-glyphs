@@ -25,6 +25,7 @@ $(function(){
 	//// info providers
 	var photoInfoProviders = {
 			flickr: new pat.photoInfoProvider.FlickrPhotoInfoProvider(),
+			geograph: new pat.photoInfoProvider.GeographPhotoInfoProvider(),
 			panoramio: new pat.photoInfoProvider.PanoramioPhotoInfoProvider()
 		};
 	//// History of opened photo responses
