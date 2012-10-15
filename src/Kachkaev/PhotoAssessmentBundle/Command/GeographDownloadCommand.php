@@ -28,13 +28,13 @@ class GeographDownloadCommand extends ContainerAwareCommand
     	if (!file_exists($dir))
     		mkdir($dir, 0777, true);
     	
-    	$idsStmt = $this->getContainer()->get('doctrine.orm.entity_manager')->getConnection()->query("SELECT id FROM Photo WHERE status = 0 AND source = 'geograph'");
+    	$idsStmt = $this->getContainer()->get('doctrine.orm.entity_manager')->getConnection()->query("SELECT photoId FROM Photo WHERE status = 0 AND source = 'geograph'");
     	$idsStmt->execute();
     	$idsRes = $idsStmt->fetchAll();
     	
     	$sequence = 0;
     	foreach ($idsRes as $idRes) {
-    		$id = $idRes['id'];
+    		$id = $idRes['photoId'];
     		++$sequence;
     		
     		if ($sequence % 10 == 0)
@@ -49,7 +49,7 @@ class GeographDownloadCommand extends ContainerAwareCommand
     		preg_match("/http\:\/\/[a-z0-9]+\.geograph\.org\.uk\/(geophotos|photos)\/([\d]+\/)+${id}_[a-z0-9]{8}\.jpg/", $page, $imageUrlMatch);
     		
     		if (!sizeof($imageUrlMatch))
-    			throw new Exception("Could not find photo for id = $id");
+    			throw new \Exception("Could not find photo for id = $id");
     		
     		copy($imageUrlMatch[0], $distFilename);
     	}

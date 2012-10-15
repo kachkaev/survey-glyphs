@@ -7,13 +7,16 @@ pat.photoInfoProvider.GeographPhotoInfoProvider = function() {
 pat.photoInfoProvider.GeographPhotoInfoProvider.prototype = new pat.photoInfoProvider.AbstractPhotoInfoProvider();
 
 pat.photoInfoProvider.GeographPhotoInfoProvider.prototype._doLoad = function(params, callback) {
+	console.log("++++", params);
 	var info = {
 			source: "geograph",
-			id: params.id,
+			id: params.photoId,
 			user: params.userName,
-			permalink: "http://www.geograph.org.uk/photo/" + params.id,
+			permalink: "http://www.geograph.org.uk/photo/" + params.photoId,
 			status: 0,
-			imgSrc: this._baseURL + params.id + ".jpg",
+			imgSrc: this._baseURL + params.photoId + ".jpg",
+			lon: params.lon,
+			lat: params.lat
 	};
 	
 	if (_.isFunction(callback))

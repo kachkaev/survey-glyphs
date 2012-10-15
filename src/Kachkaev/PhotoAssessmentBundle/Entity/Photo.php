@@ -38,11 +38,11 @@ class Photo extends AbstractStandardEntity {
 	 */
 	protected $userName;
 	
-	/** @ORM\Column(type="decimal")
+	/** @ORM\Column(type="float")
 	 */
 	protected $lon;
 	
-	/** @ORM\Column(type="decimal")
+	/** @ORM\Column(type="float")
 	 */
 	protected $lat;
 
@@ -65,6 +65,6 @@ class Photo extends AbstractStandardEntity {
 	}
 
 	public function getSerializableProperties() {
-		return array("id", "source", "photoId", "userId", "userName");
+		return array("id", "source", "photoId", "userId", "userName", "lon", "lat");
 	}
 }
