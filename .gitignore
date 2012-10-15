@@ -1,4 +1,5 @@
 /web/bundles/
+/web/content/
 /app/cache/*
 /app/logs/*
 /app/config/parameters.yml
