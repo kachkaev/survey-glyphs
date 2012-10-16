@@ -38,7 +38,8 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(param
 			info.status = 1;
 		}
 		if (_.isFunction(callback))
-			callback.call(this, info);
+			setTimeout(function() { callback.call(this, info); }, 2000);
+//			callback.call(this, info);
 	};
 	
 	$.ajax({
