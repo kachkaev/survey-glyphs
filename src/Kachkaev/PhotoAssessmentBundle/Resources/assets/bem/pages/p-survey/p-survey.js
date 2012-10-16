@@ -56,18 +56,20 @@ $(function(){
 	// -------------------------------------
 	var saveAnswers = function() {
 		console.log('saveanswers called');
-		var photoResponse = $bQuestionnaire.bsurveyquestionnaire('getAnswers');
-		if ($bPhoto.bsurveyphoto('isShowingError')) {
-			photoResponse.status = pat.PhotoResponseStatus.PHOTO_PROBLEM;
-		} else {
-			if ($bQuestionnaire.bsurveyquestionnaire('isComplete'))
-				photoResponse.status = pat.PhotoResponseStatus.COMPLETE;
-			else {
-				photoResponse.status = $bQuestionnaire.bsurveyquestionnaire('isUnanswered') ? pat.PhotoResponseStatus.UNANSWERED : pat.PhotoResponseStatus.INCOMPLETE;
-			}
-		};
-		console.log("saveanswers:2 ", surveyQueue.getCurrentId());
-		surveyQueue.setPhotoResponseFor(surveyQueue.getCurrentId(), photoResponse);
+		if (!$bQuestionnaire.bsurveyquestionnaire('option', 'disabled')) {
+			var photoResponse = $bQuestionnaire.bsurveyquestionnaire('getAnswers');
+			if ($bPhoto.bsurveyphoto('isShowingError')) {
+				photoResponse.status = pat.PhotoResponseStatus.PHOTO_PROBLEM;
+			} else {
+				if ($bQuestionnaire.bsurveyquestionnaire('isComplete'))
+					photoResponse.status = pat.PhotoResponseStatus.COMPLETE;
+				else {
+					photoResponse.status = $bQuestionnaire.bsurveyquestionnaire('isUnanswered') ? pat.PhotoResponseStatus.UNANSWERED : pat.PhotoResponseStatus.INCOMPLETE;
+				}
+			};
+			console.log("saveanswers:2 ", surveyQueue.getCurrentId());
+			surveyQueue.setPhotoResponseFor(surveyQueue.getCurrentId(), photoResponse);
+		}
 	};
 	
 	// Submits questionnaire
@@ -81,6 +83,8 @@ $(function(){
 	// Submits questionnaire only if complete or forced
 	// -------------------------------------
 	var submitQuestionnaireIfCompleteOrError = function(event) {
+		if ($bQuestionnaire.bsurveyquestionnaire('option', 'disabled'))
+			return;
 		if (/*event.shiftKey || */ $bPhoto.bsurveyphoto('isShowingError') || $bQuestionnaire.bsurveyquestionnaire('isComplete'))
 			submitQuestionnaire();
 		else {
@@ -193,13 +197,14 @@ $(function(){
 			submitQuestionnaireIfCompleteOrError(event);
 			return false;
 		case KEY_BACKSPACE:
-			photoSurveyIdHistoryNewCandidate = null;
-			if (photoSurveyIdHistory.length) {
-				saveAnswers();
-				var newId = photoSurveyIdHistory.shift();
-				surveyQueue.setCurrentId(newId);
-			};
 			return false;
+//			photoSurveyIdHistoryNewCandidate = null;
+//			if (photoSurveyIdHistory.length) {
+//				saveAnswers();
+//				var newId = photoSurveyIdHistory.shift();
+//				surveyQueue.setCurrentId(newId);
+//			};
+//			return false;
 		case KEY_PLUS:
 		case KEY_EQUALS:
 		case KEY_EQUALS2:

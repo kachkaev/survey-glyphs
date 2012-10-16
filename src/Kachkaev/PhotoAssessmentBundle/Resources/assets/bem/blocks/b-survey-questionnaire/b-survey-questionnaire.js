@@ -349,7 +349,6 @@ $.widget('ui.bsurveyquestionnaire', {
 	},
 	
 	focus: function() {
-		console.log('focus called')
 		var q = this._getFirstMissingAnswer();
 		if (!q)
 			this.w.switches.eq(0).bswitch('focus');
@@ -411,7 +410,6 @@ $.widget('ui.bsurveyquestionnaire', {
 	},
 	
 	_resetQuestionsDisability: function() {
-		console.log("_resetQuestionsDisability");
 		var w = this.w;
 		w.switches.each(function() {
 			var $bSwitch = $(this);
@@ -422,7 +420,6 @@ $.widget('ui.bsurveyquestionnaire', {
 	},
 	
 	_updateQuestionsDisability: function() {
-		console.log("_updateQuestionsDisability");
 		var w = this.w;
 		if (w.updateQuestionsDisabilityIsTerminated)
 			return;
