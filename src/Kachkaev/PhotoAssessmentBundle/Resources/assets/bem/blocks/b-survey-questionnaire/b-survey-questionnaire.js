@@ -349,7 +349,12 @@ $.widget('ui.bsurveyquestionnaire', {
 	},
 	
 	focus: function() {
-		this.w.uiHandle.focus();		
+		console.log('focus called')
+		var q = this._getFirstMissingAnswer();
+		if (!q)
+			this.w.switches.eq(0).bswitch('focus');
+		else
+			this.w.answersMap[q].children(":first").bswitch('focus');
 	},
 	
 	isComplete: function() {
@@ -406,16 +411,18 @@ $.widget('ui.bsurveyquestionnaire', {
 	},
 	
 	_resetQuestionsDisability: function() {
+		console.log("_resetQuestionsDisability");
 		var w = this.w;
 		w.switches.each(function() {
-			w.switches.bswitch('option', 'disabled', false);
 			var $bSwitch = $(this);
+			$bSwitch.bswitch('option', 'disabled', true);
 			var $text = $(this).parent().prev();
-			$text.removeClass('b-survey-questionnaire__questiontext_disabled', $bSwitch.bswitch('option', 'disabled'));
+			$text.addClass('b-survey-questionnaire__questiontext_disabled');
 		});
 	},
 	
 	_updateQuestionsDisability: function() {
+		console.log("_updateQuestionsDisability");
 		var w = this.w;
 		if (w.updateQuestionsDisabilityIsTerminated)
 			return;

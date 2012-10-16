@@ -113,6 +113,7 @@ $(function(){
 					photoResponse.status = pat.PhotoResponseStatus.UNANSWERED;
 				}
 				$bQuestionnaire.bsurveyquestionnaire('option', 'disabled', false);
+				$bQuestionnaire.bsurveyquestionnaire('focus');
 			} else {
 				if (photoResponse.status != pat.PhotoResponseStatus.PHOTO_PROBLEM) {
 					$(document).oneTime(3000, function() {
