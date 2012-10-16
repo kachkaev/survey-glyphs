@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+    <title>{{ 'title' | trans }}</title>
 	{#    	'@PhotoAssessmentBundle/Resources/assets/scss/outlines.scss' #}
 	{% stylesheets output='css/survey.css' filter="" combine=true
 		'@PhotoAssessmentBundle/Resources/assets/scss/reset.scss'
@@ -11,7 +11,6 @@
 		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.scss'
 	    %}
 	    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="all" />
-	    <title>{{ 'title' | trans }}</title>
 	{% endstylesheets %}
 </head>	
 <body class="p-survey">
