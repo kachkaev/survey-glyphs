@@ -135,6 +135,16 @@ pat.SurveyQueue.prototype.getUnansweredCount = function() {
 	return result;
 };
 
+pat.SurveyQueue.prototype.getUnansweredOrIncompleteCount = function() {
+	var result = 0;
+	for (var i = this._queue.length - 1; i >=0; --i) {
+		if (this._queue[i].status == pat.PhotoResponseStatus.UNANSWERED || this._queue[i].status == pat.PhotoResponseStatus.INCOMPLETE) {
+			++result;
+		}
+	}
+	return result;
+};
+
 pat.SurveyQueue.prototype.getCurrentId = function() {
 	return this._currentId;
 };

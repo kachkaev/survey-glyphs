@@ -81,12 +81,23 @@ class DefaultController extends Controller
        	// Translation strings
     	$jsTranslations = [];   	
     	$translator = $this->get('translator');	
-    	foreach (['answer.hts', 'hint.questionnaire_incomplete', 'hint.dashboard.access_denied'] as $v) {
+    	foreach (['answer.hts',
+    			'hint.questionnaire_incomplete',
+    			'hint.dashboard.access_denied',
+    			'hint.dashboard.queue_extended_0',
+    			'hint.dashboard.queue_extended_1',
+    			'hint.dashboard.queue_extended_2',
+    			'hint.dashboard.queue_extended_3',
+    			'hint.dashboard.queue_extended_4',
+    			'hint.dashboard.queue_extended_5',
+    			'hint.dashboard.queue_extended_6',
+    			] as $v) {
     		$jsTranslations[$v] = $translator->trans($v);
     	}
     		
     	$parameters = [
     		'jsTranslationStrings' => json_encode($jsTranslations),
+    		'initialQueueSize' => $this->container->getParameter('pat.queue_initial_size')
     	];
     	
 	    return $this->render("PhotoAssessmentBundle:Default:survey.html.twig", $parameters, $response);

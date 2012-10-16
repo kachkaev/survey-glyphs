@@ -1,4 +1,4 @@
 parameters:
-    pat.queue_initial_size: 50
-    pat.queue_extension_size: 50
+    pat.queue_initial_size: 4
+    pat.queue_extension_size: 2
     pat.geograph_dir: %kernel.root_dir%/../web/content/geograph

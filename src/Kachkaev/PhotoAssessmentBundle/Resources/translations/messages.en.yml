@@ -39,3 +39,10 @@ button.next: Next
 
 hint.questionnaire_incomplete: Questinnaire is incomplete. Please answer all questions to continue.
 hint.dashboard.access_denied: Please submit full answers to previous photographs to see the selected one.
+hint.dashboard.queue_extended_0: Thank you for your contribution! You are free to assess more photographs.
+hint.dashboard.queue_extended_1: Great! How about a bit more?
+hint.dashboard.queue_extended_2: Awesome! Here’re a few more pictures.
+hint.dashboard.queue_extended_3: Wow, thanks! A little more?
+hint.dashboard.queue_extended_4: You’re a star! Keep on!
+hint.dashboard.queue_extended_5: Your contribution is inestimable!
+hint.dashboard.queue_extended_6: You’re a guinness of photo content assessment!!!

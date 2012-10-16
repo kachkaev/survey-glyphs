@@ -6,6 +6,8 @@
  * Events:
  * changeitem(idFrom, idTo) — when non-current item is clicked
  */
+extensionPhrasesCount = 6;
+  
 $.widget('ui.bsurveydashboard', {
 
 	_init: function() {
@@ -20,6 +22,8 @@ $.widget('ui.bsurveydashboard', {
 		w.itemsMap = {};
 		w.currentId = null;
 		w.$currentItem = null;
+		w.oldItemCount = 0;
+		w.extensionPhraseId = 0;
 
 		w.$dashboardHint = $('.b-survey-dashboard__hint');
 
@@ -33,7 +37,7 @@ $.widget('ui.bsurveydashboard', {
 			if ($this.hasClass("unanswered")) {
 				var $prevUnansweredOrIncomplete = $this.prevAll().filter(".unanswered, .incomplete");
 				if ($prevUnansweredOrIncomplete.size()) {
-					w.$dashboardHint.stop(true, true).text(lang.str['hint.dashboard.access_denied']).fadeIn(0).delay(2000).fadeOut(2000);
+					w.$dashboardHint.stop(true, true).removeClass('info').addClass('error').text(lang.str['hint.dashboard.access_denied']).fadeIn(0).delay(2000).fadeOut(2000);
 					id = $prevUnansweredOrIncomplete.last().data("id");
 				};
 			}
@@ -64,7 +68,6 @@ $.widget('ui.bsurveydashboard', {
 			if (!$currentItem) {
 				$currentItem = $('<li class="b-survey-dashboard__item"></li>');
 				$currentItem.data("id", v.id);
-				$currentItem.attr("title", v.id); // FIXME remove after debugging
 				w.itemsMap[v.id] = $currentItem;
 			}
 			// Placing current item
@@ -90,7 +93,17 @@ $.widget('ui.bsurveydashboard', {
 			delete w.itemsMap[id];
 		});
 		
-		w.$items.prependTo(w.$element);			
+		w.$items.prependTo(w.$element);
+		
+		if (w.oldItemCount != 0 && w.oldItemCount < w.$items.children().size()) {
+			var i = 0;
+			if (w.oldItemCount > initialQueueSize) {
+				++w.extensionPhraseId;
+				i = (w.extensionPhraseId % extensionPhrasesCount) + 1;
+			}
+			w.$dashboardHint.stop(true, true).removeClass('error').addClass('info').text(lang.str['hint.dashboard.queue_extended_' + i]).fadeIn(0).delay(2000).fadeOut(2000);
+		}
+		w.oldItemCount = w.$items.children().size();
 	},
 	
 	setCurrentItemId: function(newId) {

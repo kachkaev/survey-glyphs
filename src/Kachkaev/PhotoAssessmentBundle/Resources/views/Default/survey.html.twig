@@ -206,7 +206,7 @@
     
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;language={{ app.request.locale }}"></script>
     <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&hl={{ app.request.locale }}"></script>
-    <script type="text/javascript">lang = { str: {{ jsTranslationStrings | raw }} };
+    <script type="text/javascript">initialQueueSize = {{ initialQueueSize }}; lang = { str: {{ jsTranslationStrings | raw }} };
     </script>
 
 </body>

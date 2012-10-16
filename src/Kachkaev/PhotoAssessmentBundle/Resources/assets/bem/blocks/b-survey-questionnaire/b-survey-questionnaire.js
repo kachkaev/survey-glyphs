@@ -137,8 +137,6 @@ $.widget('ui.bsurveyquestionnaire', {
 		w.mapbwitch.bind("bswitchchangevalue", function(event) {
 				var v = w.mapbwitch.bswitch("option", "value");
 				
-				console.log(v);
-				
 				if (w.updateQuestionsDisabilityIsTerminated)
 					return;
 				

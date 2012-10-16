@@ -39,3 +39,10 @@ button.next: Далее
 
 hint.questionnaire_incomplete: Пожалуйста, ответьте на все вопросы.
 hint.dashboard.access_denied: Пожалуйста, сначала ответьте на все вопросы для предыдущих фотографий.
+hint.dashboard.queue_extended_0: Большое спасибо за помощь! Вы можете продолжать, пока не надоест.
+hint.dashboard.queue_extended_1: Круто, спасибо! Может быть, ещё?
+hint.dashboard.queue_extended_2: Класс! Вот ещё немного фотографий.
+hint.dashboard.queue_extended_3: Супер, спасибо! Продолжим?
+hint.dashboard.queue_extended_4: Вы просто звезда оценки фотографий! Так держать!
+hint.dashboard.queue_extended_5: Ваш вклад неоценим! А ведь интересно, да?
+hint.dashboard.queue_extended_6: Это просто нереально!!!

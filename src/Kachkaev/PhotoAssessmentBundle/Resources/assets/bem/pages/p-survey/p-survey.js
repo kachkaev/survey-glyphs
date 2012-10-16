@@ -35,27 +35,37 @@ $(function(){
 	// Functions
 	// =====================================
 
+	// Preloads info for next photo
+	// -------------------------------------
+	var preloadNextPhoto = function() {
+		var nextIncompleteId = surveyQueue.getNextIncompleteId();
+		if (nextIncompleteId !== null) {
+			var nextPhotoResponseInQueue = surveyQueue.get(nextIncompleteId);
+			photoInfoProviders[nextPhotoResponseInQueue.photo.source].load(nextPhotoResponseInQueue.photo, function(info) {
+				if (info.imgSrc)
+					$.preload(info.imgSrc);
+			});
+		}
+	};
+
 	// Goes to the next photo
 	// -------------------------------------
 	var gotoNextPhoto = function() {
-		if (surveyQueue.getUnansweredCount() == 0) {
-			// FIXME replace confirm with silent thing
-			if (confirm('Thanks a lot for your help! Would you like to see some more photographs?')) {
-				surveyQueue.extendQueue();
-			}
+		if (surveyQueue.getUnansweredOrIncompleteCount() <= 2) {
+			$bSurveyDashboard.bsurveydashboard("setCurrentItemId", surveyQueue.getFirstIncompleteId(true));
+			surveyQueue.extendQueue();
 		} else {
 			$bSurveyDashboard.bsurveydashboard("setCurrentItemId", surveyQueue.getFirstIncompleteId(true));
 		}
 	};
 	surveyQueue.extended.add(function(){
-		surveyQueue.setCurrentId(surveyQueue.getFirstIncompleteId(true));
+		preloadNextPhoto();
 	});
 
 	
 	// Saves answers
 	// -------------------------------------
 	var saveAnswers = function() {
-		console.log('saveanswers called');
 		if (!$bQuestionnaire.bsurveyquestionnaire('option', 'disabled')) {
 			var photoResponse = $bQuestionnaire.bsurveyquestionnaire('getAnswers');
 			if ($bPhoto.bsurveyphoto('isShowingError')) {
@@ -67,7 +77,6 @@ $(function(){
 					photoResponse.status = $bQuestionnaire.bsurveyquestionnaire('isUnanswered') ? pat.PhotoResponseStatus.UNANSWERED : pat.PhotoResponseStatus.INCOMPLETE;
 				}
 			};
-			console.log("saveanswers:2 ", surveyQueue.getCurrentId());
 			surveyQueue.setPhotoResponseFor(surveyQueue.getCurrentId(), photoResponse);
 		}
 	};
@@ -75,8 +84,6 @@ $(function(){
 	// Submits questionnaire
 	// -------------------------------------
 	var submitQuestionnaire = function() {
-		//console.log("saveanswers:1 ", surveyQueue.getCurrentId());
-		//saveAnswers();
 		gotoNextPhoto();
 	};
 
@@ -94,6 +101,7 @@ $(function(){
 		}
 	};
 	
+
 	// Loads photo response
 	// -------------------------------------
 	var showPhotoResponse = function(photoResponse) {
@@ -126,16 +134,8 @@ $(function(){
 				}
 			}
 		});
-
-		// Preloading info for next photo
-		var nextIncompleteId = surveyQueue.getNextIncompleteId();
-		if (nextIncompleteId !== null) {
-			var nextPhotoResponseInQueue = surveyQueue.get(nextIncompleteId);
-			photoInfoProviders[nextPhotoResponseInQueue.photo.source].load(nextPhotoResponseInQueue.photo, function(info) {
-				if (info.imgSrc)
-					$.preload(info.imgSrc);
-			});
-		}
+		
+		preloadNextPhoto();
 	};
 
 	// =====================================
@@ -175,7 +175,6 @@ $(function(){
 	// Dashboard affects on the current id in the queue
 	// -------------------------------------
 	$bSurveyDashboard.bind("bsurveydashboardchangeitem", function(event, ids) {
-		console.log("bsurveydashboardchangeitem", ids);
 		if (ids["idFrom"] !== null)
 			saveAnswers();
 		surveyQueue.setCurrentId(ids["idTo"]);
