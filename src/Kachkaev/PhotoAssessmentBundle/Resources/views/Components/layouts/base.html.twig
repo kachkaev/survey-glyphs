@@ -1,0 +1,78 @@
+{% spaceless %}
+<!DOCTYPE html>
+{#<!--[if lt IE 7 ]> <html lang="en" class="nojs ie ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="nojs ie ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="nojs ie ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="nojs ie ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+#}<html lang="{{app.request.locale}}"{% block html_modif %} class="{% block html_class %}nojs{% endblock %}"{% endblock %}> <!--<![endif]-->
+<head>
+{% block head %}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>
+    {%- block head_title -%}
+    {%- endblock -%}
+    </title>
+{#    <meta name="keywords" content="
+    {%- block head_keywords -%}
+    {%- endblock -%}
+    "/> 
+    <meta name="description" content="
+    {%- block head_description -%}
+    {%- endblock -%}
+    "/> #}
+{#    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="<apple-touch-icon></apple-touch-icon>" href="/favicon-mobile.png" /> #}
+{% block assets_css %}
+	{% stylesheets output='css/survey.css' filter="" combine=true
+		'@PhotoAssessmentBundle/Resources/assets/scss/reset.scss'
+		'@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.modif.css'
+		'@PhotoAssessmentBundle/Resources/assets/bem/pages/p-survey/*.scss'
+		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.scss'
+	    %}
+	    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="all" />
+	{% endstylesheets %}
+{% endblock %}
+
+{% block page_css %}{% endblock %}
+{% block assets_tmpl %}{% endblock %}
+{% block page_tmpl %}{% endblock %}
+{% endblock head %}</head>
+
+<body{% block body_modif %}{% endblock %}>{% block body %}{% endblock -%}
+
+{% block assets_js %}
+	{% javascripts output='js/vendors.js' filter="" combine=true
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.dump.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.timers.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.tmpl.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.scrollintoview.modif.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.preload.js'
+    
+    '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.string.js'
+
+    '@PhotoAssessmentBundle/Resources/assets/vendor/namespace.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/keycodes.js'
+    '@PhotoAssessmentBundle/Resources/assets/vendor/signals.js'
+    %}
+    	<script type="text/javascript" src="{{ asset_url }}"></script>
+    {%- endjavascripts -%}
+
+	{% javascripts output='js/all.js' filter=""
+		'@PhotoAssessmentBundle/Resources/assets/js/pat/*.js'
+		'@PhotoAssessmentBundle/Resources/assets/js/pat/photoInfoProvider/*.js'
+		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
+		'@PhotoAssessmentBundle/Resources/assets/bem/pages/*/*.js'
+		%}
+	    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block page_js %}{% endblock %}
+{#% include 'CountersBundle:Components/includes:counters.html.twig' %#}
+</body>
+</html>
+{% endspaceless %}

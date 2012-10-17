@@ -1,19 +1,10 @@
-{% spaceless %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ 'title' | trans }}</title>
-	{#    	'@PhotoAssessmentBundle/Resources/assets/scss/outlines.scss' #}
-	{% stylesheets output='css/survey.css' filter="" combine=true
-		'@PhotoAssessmentBundle/Resources/assets/scss/reset.scss'
-		'@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.modif.css'
-		'@PhotoAssessmentBundle/Resources/assets/bem/pages/p-survey/*.scss'
-		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.scss'
-	    %}
-	    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="all" />
-	{% endstylesheets %}
-</head>	
-<body class="p-survey">
+{%  extends 'PhotoAssessmentBundle:Components/layouts:base.html.twig' %}
+
+{% block title %}{{ 'title' | trans }}{% endblock %}
+
+{% block body_modif %} class="p-survey"{% endblock %}
+
+{% block body %}
 	<div class="p-survey-header">
 		<div class="b-userbox"><span class="b-userbox__name" title="{{ "participant.title" | trans }}">{{ "participant" | trans({'%n%': app.user.id}) }}</span></div>
 		<h1><a href="{{ path("pat_default_index") }}">{{ 'pat_default_index.h1' | trans }}</a></h1>
@@ -51,17 +42,6 @@
 				</div>
 			</li>
 
-{# 			<li class="b-survey-questionnaire__question">#}
-{# 				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during an event?</div>#}
-{# 				<div data-q="qDuringEvent" class="b-survey-questionnaire__questionanswer">#}
-{# 					<ul class="b-switch b-switch_with-hard-to-say">#}
-{# 						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>#}
-{# 						<li data-v="null"  class="default"></li>#}
-{# 						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>#}
-{# 					</ul>#}
-{# 				</div>#}
-{# 			</li>#}
-			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext" title="{{ "question.TimeOfDay.hint" | trans }}">{{ "question.TimeOfDay" | trans }}</div>
 				<div data-q="qTimeOfDay" class="b-survey-questionnaire__questionanswer">
@@ -73,30 +53,6 @@
 					</ul>
 				</div>
 			</li>
-			
-{#			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">What’s the time of year?</div>
-				<div data-q="qTimeOfYear" class="b-survey-questionnaire__questionanswer">
-					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="2"     class="color_blue">winter</li>
-						<li data-v="1"     class="color_green">spring/fall</li>
-						<li data-v="null"  class="default"></li>
-						<li data-v="0"     class="color_green">smr.</li>
-					</ul>
-				</div>
-			</li>
-			
-			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">Is the photograph taken during a warm season?</div>
-				<div data-q="qTimeOfYear" class="b-survey-questionnaire__questionanswer">
-					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="2"     class="color_blue">{{ "answer.no" | trans }}</li>
-						<li data-v="null"  class="default"></li>
-						<li data-v="0"     class="color_green">{{ "answer.yes" | trans }}</li>
-					</ul>
-				</div>
-			</li>
-			#}
 			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext" title="{{ "question.SubjectTemporary.hint" | trans }}">{{ "question.SubjectTemporary" | trans }}</div>
@@ -110,7 +66,6 @@
 			</li>
 
 			<li class="b-survey-questionnaire__question">
-{# 				<div class="b-survey-questionnaire__questiontext">Is it a photograph of people?</div>#}
 				<div class="b-survey-questionnaire__questiontext" title="{{ "question.SubjectPeople.hint" | trans }}">{{ "question.SubjectPeople" | trans }}</div>
 				<div data-q="qSubjectPeople" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
@@ -144,17 +99,6 @@
 				</div>
 			</li>
 			
-{#			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">Does the photograph describe surrounding space?</div>
-				<div data-q="qDescribesSpace" class="b-survey-questionnaire__questionanswer">
-					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
-						<li data-v="null"  class="default"></li>
-						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
-					</ul>
-				</div>
-			</li>
-#}
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext" title="{{ "question.IsSpaceAttractive.hint" | trans }}">{{ "question.IsSpaceAttractive" | trans }}</div>
 				<div data-q="qIsSpaceAttractive" class="b-survey-questionnaire__questionanswer">
@@ -175,40 +119,12 @@
 			<div class="b-survey-controls__hint"></div>
 		</div>
 	</div>
+{% endblock body %}
 
-	{% javascripts output='js/vendors.js' filter="" combine=true
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.dump.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.timers.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.tmpl.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.scrollintoview.modif.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.preload.js'
-    
-    '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.string.js'
-
-    '@PhotoAssessmentBundle/Resources/assets/vendor/namespace.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/keycodes.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/signals.js'
-    %}
-    	<script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-	{% javascripts output='js/survey.js' filter=""
-		'@PhotoAssessmentBundle/Resources/assets/js/pat/*.js'
-		'@PhotoAssessmentBundle/Resources/assets/js/pat/photoInfoProvider/*.js'
-		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
-		'@PhotoAssessmentBundle/Resources/assets/bem/pages/p-survey/p-survey.js'
-		%}
-	    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+{% block assets_js %}
+	{{ parent() }}
     
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;language={{ app.request.locale }}"></script>
     <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&hl={{ app.request.locale }}"></script>
-    <script type="text/javascript">initialQueueSize = {{ initialQueueSize }}; lang = { str: {{ jsTranslationStrings | raw }} };
-    </script>
-
-</body>
-</html>
-{% endspaceless %}
+    <script type="text/javascript">initialQueueSize = {{ initialQueueSize }}; lang = { str: {{ jsTranslationStrings | raw }} };</script>
+{% endblock assets_js %}
