@@ -1,0 +1,5 @@
+parameters:
+    kachkaev_counters.disabled: false
+    
+    kachkaev_counters.google_analytics.id: null
+    kachkaev_counters.yandex_metrika.id: null

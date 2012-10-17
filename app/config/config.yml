@@ -59,6 +59,11 @@ lunetics_locale:
     - router
     - browser
 
+kachkaev_counters:
+    disabled: %kernel.debug%
+    google_analytics:
+      id: UA-19190359-3
+    yandex_metrika: ~
 
 # Swiftmailer Configuration
 #swiftmailer:

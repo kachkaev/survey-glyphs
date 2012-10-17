@@ -71,9 +71,8 @@
 	    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
-
 {% block page_js %}{% endblock %}
-{#% include 'CountersBundle:Components/includes:counters.html.twig' %#}
+{% include 'KachkaevCountersBundle::counters.html.twig' %}
 </body>
 </html>
 {% endspaceless %}
