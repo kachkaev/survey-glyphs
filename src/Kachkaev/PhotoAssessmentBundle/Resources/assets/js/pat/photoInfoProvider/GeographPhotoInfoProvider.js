@@ -7,7 +7,6 @@ pat.photoInfoProvider.GeographPhotoInfoProvider = function() {
 pat.photoInfoProvider.GeographPhotoInfoProvider.prototype = new pat.photoInfoProvider.AbstractPhotoInfoProvider();
 
 pat.photoInfoProvider.GeographPhotoInfoProvider.prototype._doLoad = function(params, callback) {
-	console.log("++++", params);
 	var info = {
 			source: "geograph",
 			id: params.photoId,
