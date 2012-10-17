@@ -2,6 +2,6 @@
 
 bin/update
 
-rm -r web/\$/css
-rm -r web/\$/js
+rm -r web/static/css
+rm -r web/static/js
 app/console assetic:dump --env=prod --no-debug
