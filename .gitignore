@@ -1,5 +1,7 @@
 /web/bundles/
 /web/content/
+/web/static/css
+/web/static/js
 /app/cache/*
 /app/logs/*
 /app/config/parameters.yml

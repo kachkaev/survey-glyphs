@@ -24,7 +24,7 @@
 {#    <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="<apple-touch-icon></apple-touch-icon>" href="/favicon-mobile.png" /> #}
 {% block assets_css %}
-	{% stylesheets output='css/survey.css' filter="" combine=true
+	{% stylesheets output='static/css/survey.css' filter="" combine=true
 		'@PhotoAssessmentBundle/Resources/assets/scss/reset.scss'
 		'@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.modif.css'
 		'@PhotoAssessmentBundle/Resources/assets/bem/pages/p-survey/*.scss'
@@ -42,7 +42,7 @@
 <body{% block body_modif %}{% endblock %}>{% block body %}{% endblock -%}
 
 {% block assets_js %}
-	{% javascripts output='js/vendors.js' filter="" combine=true
+	{% javascripts output='static/js/vendor.js' filter="" combine=true
     '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.js'
     '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.dump.js'
     '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.timers.js'
@@ -61,7 +61,7 @@
     	<script type="text/javascript" src="{{ asset_url }}"></script>
     {%- endjavascripts -%}
 
-	{% javascripts output='js/all.js' filter=""
+	{% javascripts output='static/js/commons.js' filter=""
 		'@PhotoAssessmentBundle/Resources/assets/js/pat/*.js'
 		'@PhotoAssessmentBundle/Resources/assets/js/pat/photoInfoProvider/*.js'
 		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
