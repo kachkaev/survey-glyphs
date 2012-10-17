@@ -51,6 +51,7 @@ $.widget('ui.bsurveydashboard', {
 	updateItems: function(queue, currentId) {
 		var w = this.w;
 
+		var scrollOffset = w.$items.scrollTop();
 		w.$items.detach();
 
 		// Collecting all "ids" of items
@@ -104,6 +105,7 @@ $.widget('ui.bsurveydashboard', {
 			w.$dashboardHint.stop(true, true).removeClass('error').addClass('info').text(lang.str['hint.dashboard.queue_extended_' + i]).fadeIn(0).delay(2000).fadeOut(2000);
 		}
 		w.oldItemCount = w.$items.children().size();
+		w.$items.scrollTop(scrollOffset);
 	},
 	
 	setCurrentItemId: function(newId) {
@@ -128,5 +130,8 @@ $.widget('ui.bsurveydashboard', {
 		w.currentId = newId;
 		w.$currentItem = $newCurrentItem;
 		w._self._trigger("changeitem", null, {idFrom: previousCurrentId, idTo:newId});
+		//alert("!");
+//		$('.b-survey-dashboard__item.current').scrollintoview({
+		w.$currentItem.scrollintoview();
 	}
 });
