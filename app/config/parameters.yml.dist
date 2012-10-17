@@ -5,13 +5,10 @@ parameters:
     database_name: pr_data_survey
     database_user: 
     database_password: 
-    mailer_transport: smtp
-    mailer_host: localhost
-    mailer_user: null
-    mailer_password: null
 
     locale: en
     secret: dd461dfe3d10c589f2ae3bccc445245b
+    assets_version: v0
 
     database_path: null
     remember_me_token: 589f2ae3bccc445245bdd461dfe3d10c58
