@@ -1,5 +1,6 @@
 $(function(){
-
+	if (!$(document.body).hasClass("p-survey"))
+		return;
 	// =====================================
 	// Objects with UI
 	// =====================================

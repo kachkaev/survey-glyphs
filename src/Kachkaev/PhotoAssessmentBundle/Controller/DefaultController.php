@@ -32,6 +32,19 @@ class DefaultController extends Controller
     {
     	return $this->redirect($this->get('router')->generate("pat_default_survey"));
     }
+
+    /**
+     * @Route("/index-test/", name="pat_default_indextest")
+     * @Template(vars={""})
+     */
+    public function indexTestAction()
+    {
+    	$parameters = [
+    		'userIsReturning' => false,
+    		'user' => null,
+    	];
+	    return $this->render("PhotoAssessmentBundle:Default:index.html.twig", $parameters);
+    }
     
 //     * @Route("/survey/{photoSource}", defaults={"photoId" = null}, name="pat_default_survey")
 //     * @Route("/survey/{photoSource}/{photoId}", name="pat_default_survey_photo")
