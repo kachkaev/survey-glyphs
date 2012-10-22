@@ -20,7 +20,9 @@
 .b-survey-questionnaire__questiontext {
 	line-height: 16px;
 	float: left;
+	cursor: help;
 }
+
 .b-survey-questionnaire__questiontext_disabled {
 	opacity: 0.4;
 }

@@ -50,28 +50,33 @@ answer.night: night
 answer.twilight: twilight
 
 question.IsRealPhoto: Is the image a real photograph?
-question.IsRealPhoto.hint: ""
+question.IsRealPhoto.hint: Select ‘no’ if the image is not a photograph (a drawing, a diagram or any other artwork). ‘Yes’ applies to all photographs, even if they are photoshopped or put into a frame.
 
 question.IsOutdoors: Is it a photograph of something outdoors?
-question.IsOutdoors.hint: ""
+question.IsOutdoors.hint: Select ‘no’ if it is a photograph is of something inside of a building, e. g. taken in a café, museum, railway station, etc. ‘Yes’ applies to photographs of streets, parks, any other types of open spaces, even if they are shot from windows of buildings, cars, aircrafts, etc.
 
 question.TimeOfDay: At what time of the day is the photograph taken?
-question.TimeOfDay.hint: ""
+question.TimeOfDay.hint: Simply choose the answer that you find the most suitable. The question does not apply to indoor photographs.
 
 question.SubjectTemporary: Is it a photograph of something temporary?
-question.SubjectTemporary.hint: ""
+question.SubjectTemporary.hint: Select ‘yes’ if it is a photograph of an event (a parade, a concert, a marathon, etc.) or of an object that is likely to be quickly removed from where it is taken (a temporary artwork, a parked sport car, etc.). But you can select ‘no’ not only if it is a photograph of something completely still, but also if its content is likely to be found around frequently and constantly (squirrels and swans in parks, ferries on a river, etc.).
 
 question.SubjectPeople: Are people the main subject of the photograph?
-question.SubjectPeople.hint: ""
+question.SubjectPeople.hint: Select ‘yes’ if the main object in the photograph is a human (or several people), e.g. if it is a portrait, a group party photograph, etc. But this should not apply if someone got into the view by a chance, for instance, just walking around − please select ‘no’ in that case.
 
 question.IsLocationCorrect: Does the photograph seem to be geotagged correctly?
-question.IsLocationCorrect.hint: ""
+question.IsLocationCorrect.hint: |
+  Select ‘no’ if you find the place where the photograph is tagged completely inappropriate, for instance, when you see a picture of a park placed in the middle of a building or vice versa. You are not asked to be an expert of London streets to make judgment, but if you know where the photograph was shot exactly, feel free to move the pin.
+  
+  The point on the map should refer to a spot where a photographer was standing, not to an object that is shown. For instance, if you see a photograph of Big Ben taken from 500 meters away, which is placed just on top of the tower, the answer is ‘no’.
+  
+  By the way, the map can be zoomed pressing ‘+’ and ‘−’ on your keyboard.
 
 question.IsByPedestrian: Could the photograph be taken by a pedestrian?
-question.IsByPedestrian.hint: Select ‘yes’ if the photograph could be taken from a street level by person who was walking.‘No’ applies to any photograph taken from above ground (e.g. buildings, observation points, airplanes, etc.) or from any place where walking is impossible.
+question.IsByPedestrian.hint: Select ‘yes’ if the photograph could be taken from a street level by person who was walking. ‘No’ applies to any photograph taken from above ground (e.g. buildings, observation points, airplanes, etc.) or from any place where walking is impossible.
 
 question.IsSpaceAttractive: Does the photograph suggest this is a nice place to walk?
-question.IsSpaceAttractive.hint: ""
+question.IsSpaceAttractive.hint: Select ‘yes’ if you find an area shown in the photograph attractive for having a leisure walk. Please make judgment of the environment itself, but not of the professionalism of the photographer.
 
 button.next: Next
 
