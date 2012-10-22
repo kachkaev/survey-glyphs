@@ -83,6 +83,15 @@ $.widget('ui.bsurveyquestionnaire', {
 			w._self._updateQuestionsDisability();
 		});
 		
+		// Applying tooltips to questions
+		w.questions.find('.b-survey-questionnaire__questiontext').tooltip({
+			position: {
+				my: "left-10 top",
+				at: "left bottom",
+			},
+			tooltipClass: "b-survey-questionnaire__questiontip"
+		});
+		
 		// Saving reference to last focused switch
 		w.lastFocusedSwitch = null;
 		w.switches.bind("bswitchfocus", function(event) {
