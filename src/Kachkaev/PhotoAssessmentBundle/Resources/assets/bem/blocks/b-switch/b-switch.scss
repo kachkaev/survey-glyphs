@@ -151,6 +151,7 @@
 .b-switch__circle-rh {
 	background-position: -91px 0px;
 }
+
 .b-switch__hts {
 	background: #fff;
 	position: absolute;
@@ -161,6 +162,11 @@
 	top: 0;
 	left: 51px;
 }
+.b-switch.ui-state-disabled .b-switch__hts{
+	margin-top: -1px;
+	border-top: 1px solid #fff;
+}
+
 .b-switch__hts-text {
 	font-size: 11px;
 	opacity: 0.4;
