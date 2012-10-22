@@ -12,10 +12,11 @@
 .p-survey__leftcol {
 	width: 500px;
 	float:left;
+	position: relative;
 }
 
 .p-survey__rightcol {
-	padding-left: 520px;
+	margin-left: 520px;
 	border-top: 1px solid rgba(255,255,255,0);
 	position: relative;
 }
