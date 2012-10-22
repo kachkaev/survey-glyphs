@@ -1,0 +1,16 @@
+.b-footer {
+	padding: 18px 0;
+	font-size: 11px;
+	text-align: center;
+	opacity: 0.4;
+	margin-bottom: -18px;
+
+	transition:opacity .5s linear;
+	-webkit-transition:opacity .5s linear;
+	-moz-transition:opacity .5s linear;
+	-o-transition:opacity .5s linear;
+}
+
+.b-footer:hover {
+	opacity: 1;
+}

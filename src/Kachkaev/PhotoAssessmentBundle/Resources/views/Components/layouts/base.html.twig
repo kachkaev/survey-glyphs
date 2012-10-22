@@ -71,8 +71,11 @@
 	    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
-{% block page_js %}{% endblock %}
+{% block page_js %}
+	<script type="text/javascript" src="//yandex.st/share/share.js" charset="utf-8"></script>
+{% endblock %}
 {% include 'KachkaevCountersBundle::counters.html.twig' %}
+<div class="b-footer">{#<table><tr><td><a href="mailto:alexander.kachkaev.1@city.ac.uk?subject={{ 'title' | trans }}">{{ 'footer.contact_author' | trans }}</a></td><td>#}<div class="yashare-auto-init" data-yashareL10n="{{ app.request.locale }}" data-yashareType="none" data-yashareQuickServices="facebook,twitter,gplus,vkontakte" data-yashareLink="{{ url("pat_default_index") }}"></div>{#}</td></tr></table>#}</div> 
 </body>
 </html>
 {% endspaceless %}

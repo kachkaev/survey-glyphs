@@ -85,11 +85,16 @@ $.widget('ui.bsurveyquestionnaire', {
 		
 		// Applying tooltips to questions
 		w.questions.find('.b-survey-questionnaire__questiontext').tooltip({
+			items: "div",
 			position: {
-				my: "left-10 top",
+				my: "left-10px top",
 				at: "left bottom",
 			},
-			tooltipClass: "b-survey-questionnaire__questiontip"
+			tooltipClass: "b-survey-questionnaire__questionhint_active",
+			content: function() {
+				var $obj = $(this);
+				return $obj.next().html();
+			}
 		});
 		
 		// Saving reference to last focused switch

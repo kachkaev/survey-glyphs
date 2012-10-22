@@ -1,5 +1,11 @@
 {%  extends 'PhotoAssessmentBundle:Components/layouts:base.html.twig' %}
 
+{% block head %}
+{{ parent() }}
+	<meta property="og:image" content="http://photoassessment.org/static/i/og_image.jpg" />
+	<meta property="og:title" content="{{ 'og.title' | trans }}" />
+	<meta property="og:description" content=" {{ 'og.description' | trans }}" />
+{%  endblock head %}
 {% block head_title %}{{ 'title' | trans }}{% endblock %}
 
 {% block body_modif %} class="p-index"{% endblock %}

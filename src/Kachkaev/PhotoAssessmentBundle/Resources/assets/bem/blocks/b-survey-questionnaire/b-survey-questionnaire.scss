@@ -34,10 +34,13 @@
 	position: relative;
 }
 
-.b-survey-questionnaire__questiontip{
+.b-survey-questionnaire__questionhint{
+	display: none;	
+}
+.b-survey-questionnaire__questionhint_active{
 	background: #fffcd2 !important;
 	color: #999;
-	width: 300px;
+	width: 320px;
 	font-size: 14px !important;
 	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
 	border: 1px solid #999 !important;

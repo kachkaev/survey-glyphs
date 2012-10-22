@@ -1,6 +1,10 @@
 title: Photo Content Assessment
 pat_default_index.h1: Photo Content Assessment
 
+og.title: Photo Content Assessment
+og.description: ""
+footer.contact_author: email author
+
 index.questions: Would you like to see some photographs of London? Are you curious about how many different things can be happening in this city? Have a spare minute? If your answers are ‘yes’, then this website is made just for you!
 index.startbutton_newuser: Start the questionnaire!
 index.startbutton_returninguser: Start the questionnaire!

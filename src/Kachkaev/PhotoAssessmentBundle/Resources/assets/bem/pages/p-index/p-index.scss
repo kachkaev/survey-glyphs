@@ -1,7 +1,7 @@
 .p-index {
 	margin: 0px auto 18px;
 	width: 800px;
-	padding: 0 20px 18px 20px;
+	padding: 0 20px 0 20px;
 	position: relative;
 	
 	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
@@ -119,6 +119,8 @@
 
 .p-index__details{
 	margin-top: 36px;
+	overflow: hidden;
+	margin-bottom: -18px;
 }
 
 .p-index__details-header{

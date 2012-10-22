@@ -1,5 +1,5 @@
 .p-survey {
-	margin: 0px auto 18px;
+	margin: 0px auto 0px;
 	width: 960px;
 	padding: 0 120px 18px 20px;
 	position: relative;
@@ -16,7 +16,8 @@
 
 .p-survey__rightcol {
 	padding-left: 520px;
-	border-top: 1px solid #fff;
+	border-top: 1px solid rgba(255,255,255,0);
+	position: relative;
 }
 
 .p-survey-header{
