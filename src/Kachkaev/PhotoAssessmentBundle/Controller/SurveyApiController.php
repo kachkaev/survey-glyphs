@@ -43,7 +43,16 @@ class SurveyApiController extends Controller
     	
     	// Queue automatically extends for the first time
     	if (!sizeof($photoResponses)) {
-    		$this->extendQueueAction($container->getParameter('pat.queue_initial_size'));
+    		$photosToAdd = $container->getParameter('pat.queue_initial_size');
+    		$firstPhotoId = $container->getParameter('pat.queue_first_photo_id');
+    		if ($firstPhotoId !== null) {
+	    		$photoref = $em->getReference('PhotoAssessmentBundle:Photo', $firstPhotoId);
+	    		$photoResponse = new PhotoResponse($photoref, $user);
+	    		$em->persist($photoResponse);
+    			--$photosToAdd;
+    		}
+    		
+    		$this->extendQueueAction($photosToAdd);
     		return $this->getQueueAction();
     	}
     	
