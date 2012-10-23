@@ -56,11 +56,22 @@ pat.SurveyQueue = function() {
 	this._currentId = null;
 	this._queueMap = {}; // {index: x, photoResponse: {x}}
 	this._timeIdChanged = 0;
+	this._timeWindowBlured = null;
 	
 	this.updated = new signals.Signal();
 	this.extended = new signals.Signal();
 	this.updatedWithError = new signals.Signal();
 	this.changedCurrentId = new signals.Signal();
+	
+	var obj = this;
+	$(window).blur(function() {
+		obj._timeWindowBlured = Math.round(new Date().getTime() / 1000);
+	});
+	$(window).focus(function() {
+		if (!obj._timeWindowBlured)
+			return;
+		obj._timeIdChanged += Math.round(new Date().getTime() / 1000) - obj._timeWindowBlured;
+	});
 };
 
 pat.SurveyQueue._apiURLs = {
@@ -155,6 +166,7 @@ pat.SurveyQueue.prototype.setCurrentId = function(newId) {
 		return false;
 	
 	this._timeIdChanged = Math.round(new Date().getTime() / 1000); 
+	this._timeWindowBlured = null;
 	this._currentId = newId;
 	this.changedCurrentId.dispatch(newId);
 };
