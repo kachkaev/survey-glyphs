@@ -55,6 +55,7 @@ pat.SurveyQueue = function() {
 	this._queue = [];
 	this._currentId = null;
 	this._queueMap = {}; // {index: x, photoResponse: {x}}
+	this._timeIdChanged = 0;
 	
 	this.updated = new signals.Signal();
 	this.extended = new signals.Signal();
@@ -153,6 +154,7 @@ pat.SurveyQueue.prototype.setCurrentId = function(newId) {
 	if (this._currentId == newId || !this._queueMap[newId])
 		return false;
 	
+	this._timeIdChanged = Math.round(new Date().getTime() / 1000); 
 	this._currentId = newId;
 	this.changedCurrentId.dispatch(newId);
 };
@@ -258,6 +260,7 @@ pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPh
 	if (!changed)
 		return;
 	
+	newPhotoResponse.duration = (Math.round(new Date().getTime() / 1000)) - this._timeIdChanged;
 	//$.extend(existingPhotoResponse, newPhotoResponse);
 	//;
 	

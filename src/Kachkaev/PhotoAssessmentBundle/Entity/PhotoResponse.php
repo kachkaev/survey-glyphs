@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  */
 class PhotoResponse extends AbstractStandardEntity {
-	protected $standardProperties = ["status", "duration", "submittedAt", "qIsRealPhoto",
+	protected $standardProperties = ["status", "duration", "submittedAt", "submissionCount", "qIsRealPhoto",
 			"qIsOutdoors", "qTimeOfDay"/*, "qTimeOfYear"*/, "qSubjectTemporal", "qSubjectPeople", "qIsLocationCorrect", "qIsByPedestrian", "qIsSpaceAttractive", "alteredLon", "alteredLat"];
 
 	protected $standardGetters = ["id", "user", "photo"];
@@ -86,6 +86,10 @@ class PhotoResponse extends AbstractStandardEntity {
 	 */
 	protected $duration;
 
+	/** @ORM\Column(type="integer", nullable=true)
+	 */
+	protected $submissionCount = 0;
+	
 	/** @ORM\Column(type="datetime", nullable=true)
 	 */
 	protected $submittedAt;
@@ -101,7 +105,7 @@ class PhotoResponse extends AbstractStandardEntity {
 	}
 	
 	public function getSerializableProperties() {
-		$result = array_diff($this->standardProperties, ['submittedAt', 'duration']);  
+		$result = array_diff($this->standardProperties, ['submittedAt', 'duration', 'submissionCount']);  
 		return $result;
 	}
 }
