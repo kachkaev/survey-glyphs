@@ -65,6 +65,17 @@ kachkaev_counters:
       id: UA-19190359-3
     yandex_metrika: ~
 
+kachkaev_dropbox_backup:
+    database:
+        name: %database_name%
+        user: %database_user%
+        password: %database_password%
+    dropbox:
+        user: %dropbox_user%
+        password: %dropbox_password%
+        directory: pat-db/
+        fileprefix: db_
+
 # Swiftmailer Configuration
 #swiftmailer:
 #    transport: %mailer_transport%

@@ -1,0 +1,5 @@
+parameters:
+    kachkaev_dropbox_backup.dropbox_user: null
+    kachkaev_dropbox_backup.dropbox_password: null
+    kachkaev_dropbox_backup.dropbox_directory: ''
+    kachkaev_dropbox_backup.dropbox_fileprefix: 'db_'

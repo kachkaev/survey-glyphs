@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new Lunetics\LocaleBundle\LuneticsLocaleBundle(),
             new Kachkaev\PhotoAssessmentBundle\PhotoAssessmentBundle(),
             new Kachkaev\CountersBundle\KachkaevCountersBundle(),
+            new Kachkaev\DropboxBackupBundle\KachkaevDropboxBackupBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -13,3 +13,6 @@ parameters:
     database_path: null
     remember_me_token: 589f2ae3bccc445245bdd461dfe3d10c58
     remember_me_cookie: remember_me
+    
+    dropbox_user:
+    dropbox_password: 
