@@ -102,7 +102,7 @@ $.widget('ui.bsurveydashboard', {
 				++w.extensionPhraseId;
 				i = (w.extensionPhraseId % extensionPhrasesCount) + 1;
 			}
-			w.$dashboardHint.stop(true, true).removeClass('error').addClass('info').text(lang.str['hint.dashboard.queue_extended_' + i]).fadeIn(0).delay(2000).fadeOut(2000);
+			w.$dashboardHint.stop(true, true).removeClass('error').addClass('info').text(lang.str['hint.dashboard.queue_extended_' + i]).fadeIn(0).delay(20000).fadeOut(2000);
 		}
 		w.oldItemCount = w.$items.children().size();
 		w.$items.scrollTop(scrollOffset);
