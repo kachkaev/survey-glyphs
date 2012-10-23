@@ -160,8 +160,10 @@ $(function(){
 	
 	///// Error handling: API failure
 	surveyQueue.updatedWithError.add(function() {
-		//TODO Show proper error message
 		console.log("Oh no, API returned an error!");
+		if (confirm(lang.str["message.error_api"])) {
+			document.location.reload();
+		}
 	});
 	
 	//// Changing current selected item in dashboard when currentId is changed in the queue

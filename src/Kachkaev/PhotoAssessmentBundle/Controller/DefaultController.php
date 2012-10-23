@@ -104,6 +104,7 @@ class DefaultController extends Controller
     			'hint.dashboard.queue_extended_4',
     			'hint.dashboard.queue_extended_5',
     			'hint.dashboard.queue_extended_6',
+    			'message.error_api'
     			] as $v) {
     		$jsTranslations[$v] = $translator->trans($v);
     	}

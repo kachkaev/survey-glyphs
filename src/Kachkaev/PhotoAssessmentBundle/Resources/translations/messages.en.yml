@@ -93,3 +93,5 @@ hint.dashboard.queue_extended_3: Wow, thanks! A little more?
 hint.dashboard.queue_extended_4: You’re a star! Keep on!
 hint.dashboard.queue_extended_5: Your contribution is inestimable!
 hint.dashboard.queue_extended_6: You’re a guinness of photo content assessment!!!
+
+message.error_api: Oops! Something went terribly wrong while exchanging data with the server, sorry for that. We recommend you to refresh the page, please press OK to do that.
