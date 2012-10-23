@@ -19,7 +19,7 @@
 		<p class="p-index__questions">{{ 'index.questions' | trans }}</p>
 
 		<div class="p-index__startbutton-container">
-			<a class="p-index__startbutton" href="{{ path("pat_default_survey") }}">{{ (userIsReturning ? 'index.startbutton_newuser' : 'index.startbutton_returninguser' ) | trans }}</a>
+			<a class="p-index__startbutton" href="{{ path("pat_default_survey") }}">{{ (userIsReturning ? 'index.startbutton_returninguser' : 'index.startbutton_newuser' ) | trans }}</a>
 			<div class="p-index__startbutton-agreement">{{ 'index.startbutton-agreement' | trans }}</div>
 			<div class="p-index__startbutton-tip">{{ 'index.startbutton-tip' | trans }}</div>
 		</div>
@@ -33,7 +33,7 @@
 			<a target="_blank" href="http://www.geograph.org.uk">{{- 'index.description_1_6' | trans -}}</a>
 			{{- 'index.description_1_7' | trans -}}
 		</p>
-		<p class="p-index__description">{{- 'index.description_2' | trans -}}</p>
+		<p class="p-index__description">{{- (userIsReturning ? 'index.description_2_returninguser' : 'index.description_2') | trans -}}</p>
 		
 		<div class="p-index__details">
 			<h2 class="p-index__details-header">{{- 'index.details-header' | trans -}}</h2>

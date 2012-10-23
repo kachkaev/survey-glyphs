@@ -8,7 +8,7 @@ footer.contact_author: email author
 
 index.questions: Would you like to see some photographs of London? Are you curious about how many different things can be happening in this city? Have a spare minute? If your answers are ‘yes’, then this website is made just for you!
 index.startbutton_newuser: Start the questionnaire!
-index.startbutton_returninguser: Start the questionnaire!
+index.startbutton_returninguser: Return to questionnaire
 
 index.startbutton-agreement: By pressing this button you agree that you don’t mind to anonymously share your answers.
 index.startbutton-tip: 'Tip: Use arrow keys to give answers and navigate across the questions; press Enter to submit the result − you’ll be much faster.'
@@ -21,6 +21,7 @@ index.description_1_5: ' and '
 index.description_1_6: Geograph
 index.description_1_7: '. You are free to spend as much time as you want, so don’t hesitate to join even you only have a minute − you’ll have a chance to continue at any time if you wish. The data that’s being collected is completely anonymous (the only thing we will record about you is an id, which is just a meaningless number), so there is nothing to worry about.'
 index.description_2: Ready to start? Go ahead and press that big blue button!  ↗
+index.description_2_returninguser: Ready to continue? Go ahead and press that big blue button!  ↗
 
 index.details-header: Some details (if you want to know a bit more)
 

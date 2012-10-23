@@ -31,7 +31,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
     	$parameters = [
-    		'userIsReturning' => false,
+    		'userIsReturning' => ($this->get('security.context')->getToken()->getUser() instanceof UserInterface),
     		'user' => null,
     	];
 	    return $this->render("PhotoAssessmentBundle:Default:index.html.twig", $parameters);
