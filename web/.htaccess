@@ -2,10 +2,11 @@
 	RewriteEngine On
 
 	############
-	#redirecting from www.* to domain without www
+	#redirecting from non-www domain to domain with www
 	############
-	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-	RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+	RewriteCond %{HTTP_HOST} !^(www\.)
+	RewriteCond %{HTTP_HOST} [a-z]+
+	RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 	
 	############
 	#redirecting from https to http
