@@ -17,12 +17,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 
-class DropboxBackupCommand extends ContainerAwareCommand
+class DatabaseCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
-            ->setName('dropboxbackup')
+            ->setName('dropboxbackup:database')
             ->setDescription('Backups database to dropbox')
         ;
     }
