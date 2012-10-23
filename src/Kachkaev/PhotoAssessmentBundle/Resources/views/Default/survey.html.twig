@@ -53,7 +53,7 @@
 			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">{{ "question.SubjectTemporary" | trans }}</div>
-				<div class="b-survey-questionnaire__questionhint">{{ "question.SubjectTemporary.hint" | trans }}</div>
+				<div class="b-survey-questionnaire__questionhint">{{ "question.SubjectTemporary.hint" | trans | nl2br | replace("\n", " ") | raw }}</div>
 				<div data-q="qSubjectTemporal" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
