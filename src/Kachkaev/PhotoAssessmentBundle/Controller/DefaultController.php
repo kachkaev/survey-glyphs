@@ -30,15 +30,6 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-    	return $this->redirect($this->get('router')->generate("pat_default_survey"));
-    }
-
-    /**
-     * @Route("/index-test/", name="pat_default_indextest")
-     * @Template(vars={""})
-     */
-    public function indexTestAction()
-    {
     	$parameters = [
     		'userIsReturning' => false,
     		'user' => null,
