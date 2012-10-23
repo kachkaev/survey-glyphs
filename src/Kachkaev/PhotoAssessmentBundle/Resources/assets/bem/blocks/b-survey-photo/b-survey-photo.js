@@ -49,7 +49,7 @@ $.widget('ui.bsurveyphoto', {
 			w.$infoPhoto.attr('src', '');
 			w.$infoPhoto.attr('src', info.imgSrc);
 			w.$infoTitle.text('').text(info.title);
-			w.$infoTimestampanduser.text('').text(/*(info.timestamp ? info.timestamp + " " : "") + */"© " + info.user);
+			w.$infoTimestampanduser.text('').text(/*(info.timestamp ? info.timestamp + " " : "") + */"© " + info.user + ' (' + _.capitalize(info.source) + ')');
 			w.$info.attr('href', info.permalink);
 			w.$infoLogo.removeClass("flickr panoramio geograph picasa").addClass(info.source);
 			w.$element.empty();
