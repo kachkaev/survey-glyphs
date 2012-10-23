@@ -349,7 +349,7 @@ $.widget('ui.bsurveyquestionnaire', {
 			answers['givenLat'] = givenPos[1];
 		}
 		var alteredPos = w.map.bsurveymap('option', 'altered_pos');
-		if (!alteredPos) {
+		if (!alteredPos || answers["qIsLocationCorrect"] != "0") {
 			answers['alteredLon'] = null;
 			answers['alteredLat'] = null;
 		} else {
