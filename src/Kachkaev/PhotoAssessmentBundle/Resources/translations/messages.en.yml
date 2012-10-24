@@ -6,26 +6,26 @@ og.description: ""
 share.title: I participated in photo content assessment. Take part too, it’s fun!
 footer.contact_author: email author
 
-index.questions: Would you like to see some photographs of London? Are you curious about how many different things can be happening in this city? Have a spare minute? If your answers are ‘yes’, then this website is made just for you!
+index.questions: Would you like to see some photographs of London? Are you curious about how many different things can be happening in this city? Have a spare minute?
 index.startbutton_newuser: Start the questionnaire!
 index.startbutton_returninguser: Return to questionnaire
 
 index.startbutton-agreement: By pressing this button you agree that you don’t mind to anonymously share your answers.
-index.startbutton-tip: 'Tip: Use arrow keys to give answers and navigate across the questions; press Enter to submit the result − you’ll be much faster.'
+index.startbutton-tip: 'Tip: You can use arrow keys to give answers and navigate across the questions; press Enter to submit the result − you’ll be much faster.'
 
-index.description_1_1: 'You are asked to take part in the research that is trying to investigate how data on photo-sharing websites can be used for the purpose of pedestrian routing. You can contribute by answering questions about randomly selected photographs shared on '
+index.description_1_1: 'You are asked to take part in the research on how data from photo-sharing websites can be used for pedestrian routing. You can contribute by answering questions about photographs shared on '
 index.description_1_2: Flickr
 index.description_1_3: ', '
 index.description_1_4: Panoramio
 index.description_1_5: ' and '
 index.description_1_6: Geograph
-index.description_1_7: '. You are free to spend as much time as you want, so don’t hesitate to join even you only have a minute − you’ll have a chance to continue at any time if you wish. The data that’s being collected is completely anonymous (the only thing we will record about you is an id, which is just a meaningless number), so there is nothing to worry about.'
+index.description_1_7: '. You are free to spend as much time as you want, so don’t hesitate to participate even you only have a minute − you’ll have a chance to continue at any time if you wish. All collected data are completely anonymous (the only thing we will record about you is an unique id), so there is nothing to worry about.'
 index.description_2: Ready to start? Go ahead and press that big blue button!  ↗
 index.description_2_returninguser: Ready to continue? Go ahead and press that big blue button!  ↗
 
 index.details-header: Some details (if you want to know a bit more)
 
-index.details_1_1: 'The research is carried by '
+index.details_1_1: 'This research is carried out by '
 index.details_1_2: Alexander Kachkaev
 index.details_1_3: ', PhD student at School of Informatics, '
 index.details_1_4: City University London
@@ -41,7 +41,7 @@ index.details_1_11: .
 index.details_2_1: 'The sample of photographs consists of 900 randomly picked images (300 for each mentioned photo-sharing website) geotagged in Central London. Photographs from Flickr and Panoramio are being retrieved by means of service APIs and are copyrighted by their owners. All photographs from Geograph are distributed under '
 index.details_2_2: CC BY-SA 2.0
 index.details_2_2_title: Creative Commons Attribution-ShareAlike 2.0 Generic (CC BY-SA 2.0) 
-index.details_2_3: ' and are stored on the questionnaire server to avoid hotlinking.'
+index.details_2_3: '.'
 
 index.details_3_1: The research has been approved by the University Research Ethics committee, School of Informatics City University London.
 
