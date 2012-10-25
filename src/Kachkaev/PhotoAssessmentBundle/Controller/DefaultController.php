@@ -46,13 +46,15 @@ class DefaultController extends Controller
      */
     public function surveyAction()
     {
-    	$response = new Response();
+    	$translator = $this->get('translator');	
     	
+    	$response = new Response();
     	
     	// If user is not authorised, authorising
     	$user = $this->get('security.context')->getToken()->getUser();
     	if (!($user instanceof UserInterface)) {
     		$user = new User();
+    		$user->setLanguage(substr($translator->getLocale(), 0, 2));
     		$em = $this->get("doctrine.orm.entity_manager");
     		$em->persist($user);
     		$em->flush();
@@ -84,7 +86,6 @@ class DefaultController extends Controller
     	
        	// Translation strings
     	$jsTranslations = [];   	
-    	$translator = $this->get('translator');	
     	foreach (['answer.hts',
     			'hint.questionnaire_incomplete',
     			'hint.dashboard.access_denied',

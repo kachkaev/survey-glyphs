@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  */
 class User extends AbstractStandardEntity implements UserInterface {
-	protected $standardProperties = array("source", "id", "status");
+	protected $standardProperties = array("source", "id", "status", "language");
 	protected $standardGetters = array("responses");
 
 	/** @ORM\Column(type="integer")
@@ -28,7 +28,11 @@ class User extends AbstractStandardEntity implements UserInterface {
 	 */
 	protected $status = 0;
 
-    public function __construct()
+	/** @ORM\Column(type="string", nullable=true)
+	 */
+	protected $language;
+	
+	public function __construct()
     {
         parent::__construct();
         $this->responses = new \Doctrine\Common\Collections\ArrayCollection();
