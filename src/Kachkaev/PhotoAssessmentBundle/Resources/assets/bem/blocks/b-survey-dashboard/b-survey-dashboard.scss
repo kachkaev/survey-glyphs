@@ -5,10 +5,25 @@
 	left: -520px;
 }
 
+.b-survey-dashboard_nomap {
+	left: 0;
+	position: relative;
+	margin: 38px -16px 0 20px;
+	width: auto;
+	bottom: auto;
+}
+
 .b-survey-dashboard__items {
 	overflow: auto;
+	padding-bottom: 40px;
 	max-height: 105px;
 	margin-bottom: 67px;
+}
+
+.b-survey-dashboard_nomap .b-survey-dashboard__items {
+	padding-bottom: 0px;
+	max-height: 85px;
+	margin-bottom: 30px;
 }
 
 .b-survey-dashboard__item {
@@ -75,6 +90,11 @@
 	height: 23px;
 	overflow: visible;
 	whitespace: nowrap;
+}
+
+.b-survey-dashboard_nomap .b-survey-dashboard__hint {
+	position: relative;
+	margin-top: -30px;
 }
 
 .b-survey-dashboard__hint.info {

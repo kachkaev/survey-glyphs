@@ -102,7 +102,8 @@ class DefaultController extends Controller
     		
     	$parameters = [
     		'jsTranslationStrings' => json_encode($jsTranslations),
-    		'initialQueueSize' => $this->container->getParameter('pat.queue_initial_size')
+    		'initialQueueSize' => $this->container->getParameter('pat.queue_initial_size'),
+    		'askLocation' => $this->container->getParameter('pat.ask_location')
     	];
     	
 	    return $this->render("PhotoAssessmentBundle:Default:survey.html.twig", $parameters, $response);

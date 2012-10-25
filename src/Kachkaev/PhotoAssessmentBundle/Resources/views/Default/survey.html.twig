@@ -10,7 +10,7 @@
 		<h1><a href="{{ path("pat_default_index") }}">{{ 'pat_default_index.h1' | trans }}</a></h1>
 	</div>
 	<div class="p-survey__leftcol">
-		<div class="b-survey-photo"></div>
+		<div class="b-survey-photo{{ askLocation ? '' :' b-survey-photo_nomap' }}"></div>
 	</div>
 	<div class="p-survey__rightcol">
 		<ul class="b-survey-questionnaire" style="display:none">
@@ -74,7 +74,7 @@
 					</ul>
 				</div>
 			</li>
-			
+{% if askLocation %}			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">{{ "question.IsLocationCorrect" | trans }}</div>
 				<div class="b-survey-questionnaire__questionhint">{{ "question.IsLocationCorrect.hint" | trans | nl2br | replace("\n", " ") | raw }}</div>
@@ -87,7 +87,7 @@
 				</div>
 				<div class="b-survey-map"></div>
 			</li>
-			
+{% endif %}			
 			<li class="b-survey-questionnaire__question">
 				<div class="b-survey-questionnaire__questiontext">{{ "question.IsByPedestrian" | trans }}</div>
 				<div class="b-survey-questionnaire__questionhint">{{ "question.IsByPedestrian.hint" | trans }}</div>
@@ -121,7 +121,7 @@
 			<div class="b-survey-controls__hint"></div>
 		</div>
 		
-		<div class="b-survey-dashboard">
+		<div class="b-survey-dashboard{{ askLocation ? '' : ' b-survey-dashboard_nomap' }}">
 			<ul class="b-survey-dashboard__items">
 			</ul>
 			<div class="b-survey-dashboard__hint"></div>
@@ -131,8 +131,9 @@
 
 {% block assets_js %}
 	{{ parent() }}
-    
+{%- if askLocation -%}    
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;language={{ app.request.locale }}"></script>
+{%- endif -%}
     <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl={{ app.request.locale }}"></script>
     <script type="text/javascript">initialQueueSize = {{ initialQueueSize }}; lang = { str: {{ jsTranslationStrings | raw }} };</script>
 {% endblock assets_js %}
