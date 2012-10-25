@@ -162,7 +162,6 @@ $(function(){
 	
 	///// Error handling: API failure
 	surveyQueue.updatedWithError.add(function() {
-		console.log("Oh no, API returned an error!");
 		if (confirm(lang.str["message.error_api"])) {
 			document.location.reload();
 		}

@@ -249,13 +249,13 @@ pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPh
 	if (!existingPhotoResponse)
 		throw new Error("Wrong id given in SurveyQueue::setPhotoResponseFor " + photoResponseId);
 	
-	console.log("was", $.extend({}, existingPhotoResponse), newPhotoResponse);
+	//console.log("was", $.extend({}, existingPhotoResponse), newPhotoResponse);
 	newPhotoResponse.id = photoResponseId;
 	newPhotoResponse.photo = existingPhotoResponse.photo;
 	//var t = -1;
 	//newPhotoResponse.duration = (existingPhotoResponse.duration ? existingPhotoResponse.duration + t : t);
 	
-	console.log("comparing",newPhotoResponse, existingPhotoResponse, _.difference(newPhotoResponse, existingPhotoResponse), _.difference(existingPhotoResponse, newPhotoResponse));
+	//console.log("comparing",newPhotoResponse, existingPhotoResponse, _.difference(newPhotoResponse, existingPhotoResponse), _.difference(existingPhotoResponse, newPhotoResponse));
 	if (_.isEqual(newPhotoResponse, existingPhotoResponse))
 		return false;
 	
@@ -267,8 +267,8 @@ pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPh
 		if (!(_.isNull(v) && _.isUndefined(existingPhotoResponse[k])))
 				changed = true;
 	});
-	console.log("changed", changed);
-	console.log("now", newPhotoResponse);
+	//console.log("changed", changed);
+	//console.log("now", newPhotoResponse);
 	if (!changed)
 		return;
 	
