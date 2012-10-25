@@ -41,6 +41,10 @@
 	opacity: 0.4;
 }
 
+.b-survey-questionnaire__question:hover .b-survey-questionnaire__questiontext_disabled {
+	border-bottom-color: rgba(255,255,255,0) !important;
+}
+
 .b-survey-questionnaire__questionanswer {
 	float: right;
 	height: 18px;
