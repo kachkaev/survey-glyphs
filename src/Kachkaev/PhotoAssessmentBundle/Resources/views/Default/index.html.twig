@@ -39,7 +39,7 @@
 			<h2 class="p-index__details-header">{{- 'index.details-header' | trans -}}</h2>
 			<p class="p-index__details-left">
 			{{- 'index.details_1_1' | trans -}}
-			<a target="_blank" href="http://en.kachkaev.ru/">{{- 'index.details_1_2' | trans -}}</a>
+			<a target="_blank" href="http://{{ app.request.locale != 'ru' ? 'en.' : '' }}kachkaev.ru/">{{- 'index.details_1_2' | trans -}}</a>
 			{{- 'index.details_1_3' | trans -}}
 			<a target="_blank" href="http://www.city.ac.uk/">{{- 'index.details_1_4' | trans -}}</a>
 			{{- 'index.details_1_5' | trans -}}
@@ -47,7 +47,7 @@
 			{{- 'index.details_1_7' | trans -}}
 			<a target="_blank" href="http://creativecommons.org/licenses/by/2.0/" title="{{- 'index.details_1_8_title' | trans -}}">{{- 'index.details_1_8' | trans -}}</a>
 			{{- 'index.details_1_9' | trans -}}
-			<a target="_blank" href="#">{{- 'index.details_1_10' | trans -}}</a>
+			<a target="_blank" href="https://github.com/kachkaev/photoassessment">{{- 'index.details_1_10' | trans -}}</a>
 			{{- 'index.details_1_11' | trans -}}
 			</p>
 			<p class="p-index__details-right">
