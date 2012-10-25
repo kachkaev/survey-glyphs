@@ -77,7 +77,7 @@ pat.SurveyQueue = function() {
 pat.SurveyQueue._apiURLs = {
 		get_queue: apiBaseURL+"get_queue",
 		extend_queue: apiBaseURL+"extend_queue",
-		submit_response: apiBaseURL+"submit_response",
+		submit_response: apiBaseURL+"submit_response"
 };
 
 pat.SurveyQueue.prototype.fetchQueue = function() {
@@ -110,7 +110,7 @@ pat.SurveyQueue.prototype.fetchQueue = function() {
 		},
 		error: function() {
 			obj.updatedWithError.dispatch();
-		},
+		}
 	});
 };
 
@@ -132,7 +132,7 @@ pat.SurveyQueue.prototype.extendQueue = function() {
 		},
 		error: function() {
 			obj.updatedWithError.dispatch();
-		},
+		}
 	});
 };
 
@@ -285,7 +285,7 @@ pat.SurveyQueue.prototype.setPhotoResponseFor = function (photoResponseId, newPh
 		},
 		error: function() {
 			obj.updatedWithError.dispatch();
-		},
+		}
 	});
 	// 
 	

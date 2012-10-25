@@ -29,7 +29,7 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(pa
 	photoLoaded = function() {
 		var photo = currentWidget.getPhoto();
 		var info = {
-				source: "panoramio",
+				source: "panoramio"
 		};
 		
 		panoramio.events.unlisten(currentWidget, panoramio.events.EventType.PHOTO_CHANGED, photoLoaded);

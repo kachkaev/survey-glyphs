@@ -13,7 +13,7 @@ $.widget('ui.bsurveydashboard', {
 	_init: function() {
 		var w = {
 				_self: this,
-				$element: this.element,
+				$element: this.element
 			};
 		this.w = w;
 		

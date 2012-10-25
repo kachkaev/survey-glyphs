@@ -48,6 +48,6 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(param
 		},
 		error: function() {
 			responseToInfo();
-		},
+		}
 	});
 };

@@ -24,7 +24,7 @@ $.widget('ui.bsurveymap', {
 	_init: function() {
 		var w = {
 				_self: this,
-				element: this.element,
+				element: this.element
 			};
 		this.w = w;
 		
@@ -92,14 +92,14 @@ $.widget('ui.bsurveymap', {
 	    	position: null,
 	    	map: map,
 	    	draggable: true,
-	    	zIndex: 2,
+	    	zIndex: 2
 	    });
 	    //// Helper marker is only visible when altered position is not equal to given one.
 	    var helperMarker = new google.maps.Marker({
 	    	icon: iconHelper,
 	        position: null,
 	        map: map,
-	        zIndex: 1,
+	        zIndex: 1
 	      });
 	    w.helperMarker = helperMarker;
 	    w.mainMarker = mainMarker;
@@ -211,7 +211,7 @@ $.widget('ui.bsurveymap', {
 					disableDoubleClickZoom: value,
 					scrollwheel: !value,
 					zoomControl: !value,
-					draggable: !value,
+					draggable: !value
 				});
 				this.w.mainMarker.setOptions({draggable: !value, clickable: !value});
 				this.w.helperMarker.setOptions({clickable: !value});

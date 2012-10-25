@@ -13,7 +13,7 @@ $.widget('ui.bsurveyphoto', {
 		
 		var w = {
 				_self: this,
-				$element: this.element,
+				$element: this.element
 			};
 		this.w = w;
 		

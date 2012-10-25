@@ -13,7 +13,7 @@
 $.widget('ui.bswitch', {
 
 	options: {
-		value: null,
+		value: null
 	},
 	
 	_init: function() {
@@ -31,7 +31,7 @@ $.widget('ui.bswitch', {
 				uiBackground: null,
 				hasHardToSay: this.element.hasClass("b-switch_with-hard-to-say"),
 				sliderValueToSwitchValue: null,
-				switchValueToSliderValue: null,
+				switchValueToSliderValue: null
 			};
 		
 		this.w = w; 

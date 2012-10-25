@@ -14,7 +14,7 @@ $.widget('ui.bsurveyquestionnaire', {
 		
 		var w = {
 				_self: this,
-				element: this.element,
+				element: this.element
 			};
 		this.w = w;
 		
@@ -53,22 +53,22 @@ $.widget('ui.bsurveyquestionnaire', {
 		// List of question answers disability dependencies
 		w.disableDependentQuestions = {
 				qIsRealPhoto: {
-					"0": ["qIsOutdoors", "qTimeOfDay", "qTimeOfYear", "qSubjectTemporal", "qSubjectPeople", "qIsLocationCorrect", "qIsByPedestrian", "qIsSpaceAttractive"],
+					"0": ["qIsOutdoors", "qTimeOfDay", "qTimeOfYear", "qSubjectTemporal", "qSubjectPeople", "qIsLocationCorrect", "qIsByPedestrian", "qIsSpaceAttractive"]
 				},
 				qIsOutdoors: {
-					"0": ["qDuringEvent", "qTimeOfDay", "qTimeOfYear", "qSubjectTemporal", "qIsLocationCorrect", "qIsByPedestrian", "qIsSpaceAttractive"],
+					"0": ["qDuringEvent", "qTimeOfDay", "qTimeOfYear", "qSubjectTemporal", "qIsLocationCorrect", "qIsByPedestrian", "qIsSpaceAttractive"]
 				},
 				qIsLocationCorrect: {
-					//"0": ["qIsByPedestrian", "qIsSpaceAttractive"],
+					//"0": ["qIsByPedestrian", "qIsSpaceAttractive"]
 				},
 				qSubjectTemporal: {
 					//"null": ["qSubjectPeople"],
 					//"0": ["qSubjectPeople"],
-					//"1": ["qIsByPedestrian", "qIsSpaceAttractive"],
+					//"1": ["qIsByPedestrian", "qIsSpaceAttractive"]
 				},
 				qSubjectPeople: {
-					//"1": ["qIsByPedestrian", "qIsSpaceAttractive"],
-				},
+					//"1": ["qIsByPedestrian", "qIsSpaceAttractive"]
+				}
 		};
 		
 		// Change of the value in a switch toggles other switches' enabled state
@@ -81,7 +81,7 @@ $.widget('ui.bsurveyquestionnaire', {
 			items: "div",
 			position: {
 				my: "left-10px top",
-				at: "left bottom-1",
+				at: "left bottom-1"
 			},
 			tooltipClass: "b-survey-questionnaire__questionhint_active",
 			content: function() {
