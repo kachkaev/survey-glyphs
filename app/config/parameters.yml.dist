@@ -19,3 +19,5 @@ parameters:
     dropbox_password: 
         
     ipinfodb_key: d31f03ca17c12c6dfd6de17c1d3ce41ee2e97a5bff83aeb7a63a60736
+    
+    java_bin:           /usr/local/openjdk7/jre/bin/java
