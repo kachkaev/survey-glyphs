@@ -54,7 +54,21 @@ class DefaultController extends Controller
     	$user = $this->get('security.context')->getToken()->getUser();
     	if (!($user instanceof UserInterface)) {
     		$user = new User();
+    		// Recording interface language that is used by a new person
     		$user->setLanguage(substr($translator->getLocale(), 0, 2));
+    		
+    		// Detecting location using http://www.ipinfodb.com/ip_location_api.php
+    		$timeout = ini_get('default_socket_timeout');
+    		ini_set('default_socket_timeout', 3);
+    		try {
+    			$location = explode(';', file_get_contents('http://api.ipinfodb.com/v3/ip-city/?key='.$this->container->getParameter('ipinfodb_key').'&ip='.$this->getRequest()->getClientIp()));
+    			if ($location['4'] && $location['4'] != '-')
+    				$user->setLocation($location['4'] . ( $location['5'] && $location['5'] != '-' ? ' | ' . $location['5'] : '') . ($location['6'] && $location['6'] != '-' ? ' | ' . $location['6'] : ''));
+    		} catch (\Exception $e) {
+    			
+    		};
+    		ini_set('default_socket_timeout', $timeout);
+    		
     		$em = $this->get("doctrine.orm.entity_manager");
     		$em->persist($user);
     		$em->flush();

@@ -6,6 +6,7 @@ parameters:
     database_user: 
     database_password: 
 
+	# these are not the tokens that are used on the production server ;-)
     locale: en
     secret: dd461dfe3d10c589f2ae3bccc445245b
     assets_version: v0
@@ -16,3 +17,5 @@ parameters:
     
     dropbox_user:
     dropbox_password: 
+        
+    ipinfodb_key: d31f03ca17c12c6dfd6de17c1d3ce41ee2e97a5bff83aeb7a63a60736
