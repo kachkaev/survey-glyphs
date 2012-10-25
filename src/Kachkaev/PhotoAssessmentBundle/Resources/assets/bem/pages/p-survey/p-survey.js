@@ -11,6 +11,8 @@ $(function(){
 	$bQuestionnaire.bsurveyquestionnaire('option', 'disabled', true);
 	//// Box with photo
 	var $bPhoto = $('.b-survey-photo').bsurveyphoto();
+	// Controls
+	var $bSurveyControls = $('.b-survey-controls').show();
 	//// "Next"
 	var $iButtonNext = $('.i-button-next');
 	
