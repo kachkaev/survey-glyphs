@@ -15,8 +15,6 @@
 	<div class="p-survey__rightcol">
 		<ul class="b-survey-questionnaire" style="display:none">
 			<li class="b-survey-questionnaire__question b-survey-questionnaire__question_current">
-				<div class="b-survey-questionnaire__questiontext">{{ "question.IsRealPhoto" | trans }}</div>
-				<div class="b-survey-questionnaire__questionhint">{{ "question.IsRealPhoto.hint" | trans }}</div>
 				<div data-q="qIsRealPhoto" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
@@ -24,11 +22,11 @@
 						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
+				<div class="b-survey-questionnaire__questiontext">{{ "question.IsRealPhoto" | trans }}</div>
+				<div class="b-survey-questionnaire__questionhint">{{ "question.IsRealPhoto.hint" | trans }}</div>
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">{{ "question.IsOutdoors" | trans }}</div>
-				<div class="b-survey-questionnaire__questionhint">{{ "question.IsOutdoors.hint" | trans }}</div>
 				<div data-q="qIsOutdoors" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
@@ -36,11 +34,11 @@
 						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
+				<div class="b-survey-questionnaire__questiontext">{{ "question.IsOutdoors" | trans }}</div>
+				<div class="b-survey-questionnaire__questionhint">{{ "question.IsOutdoors.hint" | trans }}</div>
 			</li>
 
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">{{ "question.TimeOfDay" | trans }}</div>
-				<div class="b-survey-questionnaire__questionhint">{{ "question.TimeOfDay.hint" | trans }}</div>
 				<div data-q="qTimeOfDay" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="2"     class="color_green">{{ "answer.night" | trans }}</li>
@@ -49,11 +47,11 @@
 						<li data-v="0"     class="color_green">{{ "answer.day" | trans }}</li>
 					</ul>
 				</div>
+				<div class="b-survey-questionnaire__questiontext">{{ "question.TimeOfDay" | trans }}</div>
+				<div class="b-survey-questionnaire__questionhint">{{ "question.TimeOfDay.hint" | trans }}</div>
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">{{ "question.SubjectTemporary" | trans }}</div>
-				<div class="b-survey-questionnaire__questionhint">{{ "question.SubjectTemporary.hint" | trans | nl2br | replace("\n", " ") | raw }}</div>
 				<div data-q="qSubjectTemporal" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
@@ -61,11 +59,11 @@
 						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
+				<div class="b-survey-questionnaire__questiontext">{{ "question.SubjectTemporary" | trans }}</div>
+				<div class="b-survey-questionnaire__questionhint">{{ "question.SubjectTemporary.hint" | trans | nl2br | replace("\n", " ") | raw }}</div>
 			</li>
 
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">{{ "question.SubjectPeople" | trans }}</div>
-				<div class="b-survey-questionnaire__questionhint">{{ "question.SubjectPeople.hint" | trans }}</div>
 				<div data-q="qSubjectPeople" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
@@ -73,11 +71,11 @@
 						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
+				<div class="b-survey-questionnaire__questiontext">{{ "question.SubjectPeople" | trans }}</div>
+				<div class="b-survey-questionnaire__questionhint">{{ "question.SubjectPeople.hint" | trans }}</div>
 			</li>
 {% if askLocation %}			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">{{ "question.IsLocationCorrect" | trans }}</div>
-				<div class="b-survey-questionnaire__questionhint">{{ "question.IsLocationCorrect.hint" | trans | nl2br | replace("\n", " ") | raw }}</div>
 				<div data-q="qIsLocationCorrect" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
@@ -85,12 +83,12 @@
 						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
+				<div class="b-survey-questionnaire__questiontext">{{ "question.IsLocationCorrect" | trans }}</div>
+				<div class="b-survey-questionnaire__questionhint">{{ "question.IsLocationCorrect.hint" | trans | nl2br | replace("\n", " ") | raw }}</div>
 				<div class="b-survey-map"></div>
 			</li>
 {% endif %}			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">{{ "question.IsByPedestrian" | trans }}</div>
-				<div class="b-survey-questionnaire__questionhint">{{ "question.IsByPedestrian.hint" | trans }}</div>
 				<div data-q="qIsByPedestrian" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
 						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
@@ -98,18 +96,20 @@
 						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
+				<div class="b-survey-questionnaire__questiontext">{{ "question.IsByPedestrian" | trans }}</div>
+				<div class="b-survey-questionnaire__questionhint">{{ "question.IsByPedestrian.hint" | trans }}</div>
 			</li>
 			
 			<li class="b-survey-questionnaire__question">
-				<div class="b-survey-questionnaire__questiontext">{{ "question.IsSpaceAttractive" | trans }}</div>
-				<div class="b-survey-questionnaire__questionhint">{{ "question.IsSpaceAttractive.hint" | trans }}</div>
 				<div data-q="qIsSpaceAttractive" class="b-survey-questionnaire__questionanswer">
 					<ul class="b-switch b-switch_with-hard-to-say">
-						<li data-v="0" class="color_green">{{ "answer.no" | trans }}</li>
+						<li data-v="0" class="color_green">{{ "answer.no" | trans  }}</li>
 						<li data-v="null"  class="default"></li>
 						<li data-v="1"  class="color_green">{{ "answer.yes" | trans }}</li>
 					</ul>
 				</div>
+				<div class="b-survey-questionnaire__questiontext">{{ "question.IsSpaceAttractive" | trans }}</div>
+				<div class="b-survey-questionnaire__questionhint">{{ "question.IsSpaceAttractive.hint" | trans }}</div>
 			</li>
 			
 		</ul>

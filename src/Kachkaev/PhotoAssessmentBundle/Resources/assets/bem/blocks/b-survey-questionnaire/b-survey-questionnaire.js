@@ -10,11 +10,6 @@
  */
 $.widget('ui.bsurveyquestionnaire', {
 
-//	options: {
-//		answers: {},
-//		disabled: true
-//	},
-
 	_init: function() {
 		
 		var w = {
@@ -26,7 +21,6 @@ $.widget('ui.bsurveyquestionnaire', {
 		this.element.show();
 		
 		w.defaultAnswers = {
-//				'qIsRealPhoto': true
 				disabled: true
 		};
 		
@@ -35,8 +29,7 @@ $.widget('ui.bsurveyquestionnaire', {
 		w.switches.bswitch();
 		w.switches.eq(0).bswitch('focus');
 		
-		
-		// Initializing google map
+		// Initializing google map (if it is enabled)
 		w.map = this.element.find('.b-survey-map');
 		w.map.bsurveymap();
 		
@@ -88,7 +81,7 @@ $.widget('ui.bsurveyquestionnaire', {
 			items: "div",
 			position: {
 				my: "left-10px top",
-				at: "left bottom",
+				at: "left bottom-1",
 			},
 			tooltipClass: "b-survey-questionnaire__questionhint_active",
 			content: function() {
@@ -426,7 +419,7 @@ $.widget('ui.bsurveyquestionnaire', {
 		w.switches.each(function() {
 			var $bSwitch = $(this);
 			$bSwitch.bswitch('option', 'disabled', true);
-			var $text = $(this).parent().prev();
+			var $text = $(this).parent().next();
 			$text.addClass('b-survey-questionnaire__questiontext_disabled');
 		});
 	},
@@ -463,7 +456,7 @@ $.widget('ui.bsurveyquestionnaire', {
 		// Updating question text (fading it or not)
 		w.switches.each(function() {
 			var $bSwitch = $(this);
-			var $text = $(this).parent().prev();
+			var $text = $(this).parent().next();
 			$text.toggleClass('b-survey-questionnaire__questiontext_disabled', $bSwitch.bswitch('option', 'disabled'));
 		});
 	}

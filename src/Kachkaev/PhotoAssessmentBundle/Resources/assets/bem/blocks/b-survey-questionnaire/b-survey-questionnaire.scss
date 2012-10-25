@@ -16,11 +16,25 @@
 .b-survey-questionnaire__question_current {
 /*	background: url("/static/i/b-survey-questionnaire__question_current.png") no-repeat 0 0; */
 }
+.b-survey-questionnaire .b-switch {
+	float: right;
+	margin-left: 10px;
+}
 
 .b-survey-questionnaire__questiontext {
-	line-height: 16px;
-	float: left;
+	display: inline;
 	cursor: help;
+	line-height: 16px;
+	border-bottom: 1px dotted rgba(255,255,255,0);
+
+	transition:border .5s linear;
+	-webkit-transition:border .5s linear;
+	-moz-transition:border .5s linear;
+	-o-transition:border .5s linear;
+}
+
+.b-survey-questionnaire__question:hover .b-survey-questionnaire__questiontext {
+	border-bottom-color: #aaa;
 }
 
 .b-survey-questionnaire__questiontext_disabled {
