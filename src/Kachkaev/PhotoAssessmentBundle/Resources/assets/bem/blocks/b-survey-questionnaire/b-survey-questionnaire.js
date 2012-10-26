@@ -191,7 +191,7 @@ $.widget('ui.bsurveyquestionnaire', {
 		});
 
 		$(document).bind("click", function () {
-			if (!$(document.activeElement).hasClass('ui-slider-handle'))
+			if (!$(document.activeElement).hasClass('ui-slider-handle') && !w._self.options.disabled)
 				w.lastFocusedSwitch.bswitch('focus');
 		});
 		

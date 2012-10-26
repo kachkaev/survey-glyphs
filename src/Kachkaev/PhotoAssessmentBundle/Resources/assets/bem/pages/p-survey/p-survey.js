@@ -69,7 +69,7 @@ $(function(){
 	// Saves answers
 	// -------------------------------------
 	var saveAnswers = function() {
-		if (!$bQuestionnaire.bsurveyquestionnaire('option', 'disabled')) {
+		if (!$bQuestionnaire.bsurveyquestionnaire('option', 'disabled') || $bPhoto.bsurveyphoto('isShowingError')) {
 			var photoResponse = $bQuestionnaire.bsurveyquestionnaire('getAnswers');
 			if ($bPhoto.bsurveyphoto('isShowingError')) {
 				photoResponse.status = pat.PhotoResponseStatus.PHOTO_PROBLEM;
@@ -93,7 +93,7 @@ $(function(){
 	// Submits questionnaire only if complete or forced
 	// -------------------------------------
 	var submitQuestionnaireIfCompleteOrError = function(event) {
-		if ($bQuestionnaire.bsurveyquestionnaire('option', 'disabled'))
+		if ($bQuestionnaire.bsurveyquestionnaire('option', 'disabled') && !$bPhoto.bsurveyphoto('isShowingError'))
 			return;
 		if (/*event.shiftKey || */ $bPhoto.bsurveyphoto('isShowingError') || $bQuestionnaire.bsurveyquestionnaire('isComplete'))
 			submitQuestionnaire();
@@ -130,11 +130,11 @@ $(function(){
 				$bQuestionnaire.bsurveyquestionnaire('option', 'disabled', false);
 				$bQuestionnaire.bsurveyquestionnaire('focus');
 			} else {
-				if (photoResponse.status != pat.PhotoResponseStatus.PHOTO_PROBLEM) {
-					$(document).oneTime(3000, function() {
-						saveAnswers();
-					});
-				}
+				var tempId = photoResponse.id;
+				$(document).oneTime(5000, function() {
+					if (surveyQueue.getCurrentId() == tempId)
+						submitQuestionnaire();
+				});
 			}
 		});
 		
