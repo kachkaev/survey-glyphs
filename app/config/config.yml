@@ -75,6 +75,8 @@ kachkaev_dropbox_backup:
         password: %dropbox_password%
         directory: pat-db/
         fileprefix: db_
+        
+#kachkaev_assets_version: ~
 
 # Swiftmailer Configuration
 #swiftmailer:
