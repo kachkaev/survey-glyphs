@@ -2,4 +2,4 @@
 
 git pull
 rm -r app/cache/prod
-app/console cache:clear --env=prod --no-debug
+app/console cache:clear --env=prod

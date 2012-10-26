@@ -1,7 +1,9 @@
 #!/bin/sh
 
+app/console assets_version:increment
+
 bin/update
 
 rm -r web/static/css
 rm -r web/static/js
-app/console assetic:dump --env=prod --no-debug
+app/console assetic:dump --env=prod
