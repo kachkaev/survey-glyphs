@@ -124,13 +124,13 @@ $(function(){
 			answers.givenLat = info.lat;
 			$bQuestionnaire.bsurveyquestionnaire('setAnswers', answers);
 			if (!$bPhoto.bsurveyphoto('isShowingError')) {
-				if (photoResponse.status == pat.PhotoResponseStatus.PHOTO_PROBLEM) {
-					photoResponse.status = pat.PhotoResponseStatus.UNANSWERED;
+				if (answers.status == pat.PhotoResponseStatus.PHOTO_PROBLEM) {
+					answers.status = pat.PhotoResponseStatus.UNANSWERED;
 				}
 				$bQuestionnaire.bsurveyquestionnaire('option', 'disabled', false);
 				$bQuestionnaire.bsurveyquestionnaire('focus');
 			} else {
-				var tempId = photoResponse.id;
+				var tempId = answers.id;
 				$(document).oneTime(5000, function() {
 					if (surveyQueue.getCurrentId() == tempId)
 						submitQuestionnaire();
