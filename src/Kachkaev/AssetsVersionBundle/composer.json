@@ -1,7 +1,7 @@
 {
     "name": "kachkaev/assets-version-bundle",
     "type": "symfony-bundle",
-    "description": "Allows autoincrementing assets version in parameters.yml.",
+    "description": "Automates the process of updating assets version in Symfony2 projects",
     "keywords": ["assets", "assetic", "version", "autoincrement", "config", "console"],
     "homepage": "http://github.com/kachkaev/KachkaevAssetsVersionBundle",
     "license": "MIT",
@@ -9,7 +9,8 @@
     "authors": [
         {
             "name": "Alexander Kachkaev",
-            "email": "alexander@kachkaev.ru"
+            "email": "alexander@kachkaev.ru",
+            "homepage": "http://en.kachkaev.ru/"
         },
 		{
             "name": "Contributors",
@@ -23,10 +24,13 @@
     },
 
     "require-dev": {
+        "symfony/filesystem": ">=2.1,<2.3-dev",
+        "symfony/finder": ">=2.1,<2.3-dev"
     },
 
     "suggest": {
-        "symfony/assetic-bundle": "Integrates Assetic into Symfony2"
+        "symfony/twig-bundle": ">=2.1.0,<2.3-dev",
+        "symfony/assetic-bundle": ">=2.1.0,<2.3-dev"
     },
 
     "autoload": {
@@ -35,5 +39,11 @@
         }
     },
 
-    "target-dir": "Kachkaev/AssetsVersionBundle"
+    "target-dir": "Kachkaev/AssetsVersionBundle",
+
+	"extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
 }
