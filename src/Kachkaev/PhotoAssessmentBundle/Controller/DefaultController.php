@@ -5,17 +5,8 @@ namespace Kachkaev\PhotoAssessmentBundle\Controller;
 use Symfony\Component\Translation\IdentityTranslator;
 
 use Symfony\Component\Routing\Router;
-
-use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
-
-use Symfony\Bridge\Doctrine\Security\User\EntityUserProvider;
-
 use Symfony\Component\HttpFoundation\Response;
-
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-
 use Kachkaev\PhotoAssessmentBundle\Entity\User;
-
 use Symfony\Component\Security\Core\User\UserInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -50,8 +41,9 @@ class DefaultController extends Controller
     	
     	$response = new Response();
     	
-    	// If user is not authorised, authorising
     	$user = $this->get('security.context')->getToken()->getUser();
+
+    	// If user is not authorised, authorising
     	if (!($user instanceof UserInterface)) {
     		$user = new User();
     		// Recording interface language that is used by a new person
@@ -73,29 +65,7 @@ class DefaultController extends Controller
     		$em->persist($user);
     		$em->flush();
     		
-    		$token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-    		$this->get('security.context')->setToken($token);
-    		
-    		// write cookie for persistent session storing
-    		$providerKey = 'main'; // defined in security.yml
-    		$securityKey = $this->container->getParameter('remember_me_token'); // defined in security.yml
-    		
-    		//ManagerRe
-    		
-    		$userProvider = new EntityUserProvider($this->container->get('doctrine'), 'Kachkaev\PhotoAssessmentBundle\Entity\User');
-    		
-    		$rememberMeService = new TokenBasedRememberMeServices(array($userProvider), $securityKey, $providerKey, array(
-    				'path' => '/',
-    				'name' => $this->container->getParameter('remember_me_cookie'),
-    				'domain' => null,
-    				'secure' => false,
-    				'httponly' => true,
-    				'lifetime' => 315360000, // 10 years
-    				'always_remember_me' => true,
-    				'remember_me_parameter' => '_remember_me',
-    				)
-    		);
-    		$rememberMeService->loginSuccess($this->container->get('request'), $response, $token);
+    		$this->get('pat.helper.user_rememberer')->rememberUser($user, $this->get('request'), $response);
     	}
     	
        	// Translation strings
@@ -124,4 +94,18 @@ class DefaultController extends Controller
 	    return $this->render("PhotoAssessmentBundle:Default:survey.html.twig", $parameters, $response);
     }
     
+    protected function checkUserChangeBackdoor() {
+        // If switch user backdoor is used, changing user
+        $backdoorUserId = $this->getRequest()->query->get('u');
+        $backdoorSecret = $this->getRequest()->query->get('s');
+        
+        if (!$backdoorUserId || $backdoorSecret)
+            return;
+        
+        if ($backdoorSecret !== $this->container->getParameter('backdoor_secret')) {
+            return new Response("Wrong value for backdoor_secret");
+        }
+        
+        
+    }
 }

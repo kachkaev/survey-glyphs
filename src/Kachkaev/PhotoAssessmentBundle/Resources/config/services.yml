@@ -1,0 +1,17 @@
+services:
+    pat.helper.user_rememberer:
+        class: Kachkaev\PhotoAssessmentBundle\Helper\UserRememberer
+        arguments: [@service_container]
+ 
+    pat.listener.backdoor.switchuser:
+        class: Kachkaev\PhotoAssessmentBundle\Listener\SwitchUserBackdoorListener
+        arguments: [@doctrine.orm.entity_manager, @pat.helper.user_rememberer, %backdoor_secret%]
+        tags:
+            -  { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    pat.listener.backdoor.logout:
+        class: Kachkaev\PhotoAssessmentBundle\Listener\LogoutBackdoorListener
+        arguments: [@pat.helper.user_rememberer, @router, %backdoor_secret%]
+        tags:
+            -  { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
