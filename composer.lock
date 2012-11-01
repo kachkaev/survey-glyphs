@@ -1,5 +1,5 @@
 {
-    "hash": "687054479cc857224a5f45214754a0b3",
+    "hash": "72d7668f2d38b1dbbfd0a98dd948af05",
     "packages": [
         {
             "name": "doctrine/common",
@@ -279,7 +279,6 @@
             "suggest": {
                 "symfony/console": "to run the migration from the console"
             },
-            "time": "1350643044",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -306,7 +305,8 @@
             "keywords": [
                 "database",
                 "migrations"
-            ]
+            ],
+            "time": "1350643044"
         },
         {
             "name": "doctrine/orm",
@@ -668,7 +668,6 @@
             "suggest": {
                 "symfony/framework-bundle": "2.*"
             },
-            "time": "1350639143",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
@@ -700,7 +699,8 @@
                 "serialization",
                 "deserialization",
                 "jaxb"
-            ]
+            ],
+            "time": "1350639143"
         },
         {
             "name": "kachkaev/assets-version-bundle",
@@ -835,34 +835,27 @@
         },
         {
             "name": "lunetics/locale-bundle",
-            "version": "dev-master",
+            "version": "2.1.x-dev",
             "target-dir": "Lunetics/LocaleBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lunetics/LocaleBundle",
-                "reference": "f1862cc405a2f39977c783f8d54a911611ff5ba5"
+                "reference": "ea68c1e530060cadc9623873c4b31a349223a136"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/lunetics/LocaleBundle/zipball/f1862cc405a2f39977c783f8d54a911611ff5ba5",
-                "reference": "f1862cc405a2f39977c783f8d54a911611ff5ba5",
+                "url": "https://github.com/lunetics/LocaleBundle/zipball/ea68c1e530060cadc9623873c4b31a349223a136",
+                "reference": "ea68c1e530060cadc9623873c4b31a349223a136",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
-                "symfony/framework-bundle": ">=2.1,<2.3-dev",
-                "symfony/yaml": ">=2.1,<2.3-dev",
-                "symfony/locale": ">=2.1,<2.3-dev",
-                "symfony/validator": ">=2.1,<2.3-dev"
-            },
-            "require-dev": {
-                "twig/twig": "1.*",
+                "symfony/framework-bundle": "2.1.*",
+                "symfony/yaml": "2.1.*",
+                "symfony/locale": "2.1.*",
                 "ext-intl": "*"
             },
-            "suggest": {
-                "ext-intl": "Needed for displaying the countryname in the locale language"
-            },
-            "time": "1351301241",
+            "time": "1348979180",
             "type": "symfony-bundle",
             "installation-source": "source",
             "autoload": {
@@ -1511,7 +1504,6 @@
     "stability-flags": {
         "doctrine/doctrine-migrations-bundle": 20,
         "jms/serializer-bundle": 20,
-        "kachkaev/assets-version-bundle": 20,
-        "lunetics/locale-bundle": 20
+        "kachkaev/assets-version-bundle": 20
     }
 }

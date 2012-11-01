@@ -21,7 +21,7 @@
         "jms/di-extra-bundle": "1.1.*",
         "jms/serializer-bundle": "dev-master",
         "kachkaev/assets-version-bundle": "dev-master",
-        "lunetics/locale-bundle": "dev-master"
+        "lunetics/locale-bundle": "2.1.*"
     },
     "scripts": {
         "post-install-cmd": [
