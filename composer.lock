@@ -1,5 +1,5 @@
 {
-    "hash": "72d7668f2d38b1dbbfd0a98dd948af05",
+    "hash": "9bb75bf8fb041cfc0b844d5b5cb0951c",
     "packages": [
         {
             "name": "doctrine/common",
@@ -279,6 +279,7 @@
             "suggest": {
                 "symfony/console": "to run the migration from the console"
             },
+            "time": "1350643044",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -305,8 +306,7 @@
             "keywords": [
                 "database",
                 "migrations"
-            ],
-            "time": "1350643044"
+            ]
         },
         {
             "name": "doctrine/orm",
@@ -668,6 +668,7 @@
             "suggest": {
                 "symfony/framework-bundle": "2.*"
             },
+            "time": "1350639143",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
@@ -699,8 +700,7 @@
                 "serialization",
                 "deserialization",
                 "jaxb"
-            ],
-            "time": "1350639143"
+            ]
         },
         {
             "name": "kachkaev/assets-version-bundle",
@@ -765,6 +765,62 @@
                 "config",
                 "assetic",
                 "autoincrement"
+            ]
+        },
+        {
+            "name": "kachkaev/dropbox-backup-bundle",
+            "version": "dev-master",
+            "target-dir": "Kachkaev/DropboxBackupBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kachkaev/KachkaevDropboxBackupBundle",
+                "reference": "166b48c02d641d6e01099ad339be958afb046d6f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/kachkaev/KachkaevDropboxBackupBundle/zipball/166b48c02d641d6e01099ad339be958afb046d6f",
+                "reference": "166b48c02d641d6e01099ad339be958afb046d6f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": ">=2.0,<2.3-dev",
+                "doctrine/doctrine-bundle": "1.0.*"
+            },
+            "time": "1351869029",
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Kachkaev\\DropboxBackupBundle": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Kachkaev",
+                    "email": "alexander@kachkaev.ru",
+                    "homepage": "http://en.kachkaev.ru/"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/kachkaev/KachkaevDropboxBackupBundle/contributors"
+                }
+            ],
+            "description": "Allows backing up your mysql database to dropbox using symfony console",
+            "homepage": "http://github.com/kachkaev/KachkaevDropboxBackupBundle",
+            "keywords": [
+                "database",
+                "dump",
+                "mysql",
+                "dropbox"
             ]
         },
         {
@@ -855,7 +911,6 @@
                 "symfony/locale": "2.1.*",
                 "ext-intl": "*"
             },
-            "time": "1348979180",
             "type": "symfony-bundle",
             "installation-source": "source",
             "autoload": {
@@ -885,7 +940,8 @@
                 "multilanguage",
                 "language",
                 "cookie"
-            ]
+            ],
+            "time": "1348979180"
         },
         {
             "name": "monolog/monolog",
@@ -1504,6 +1560,7 @@
     "stability-flags": {
         "doctrine/doctrine-migrations-bundle": 20,
         "jms/serializer-bundle": 20,
-        "kachkaev/assets-version-bundle": 20
+        "kachkaev/assets-version-bundle": 20,
+        "kachkaev/dropbox-backup-bundle": 20
     }
 }

@@ -15,16 +15,17 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-	        new JMS\SerializerBundle\JMSSerializerBundle($this),
+            new JMS\SerializerBundle\JMSSerializerBundle($this),
             new Lunetics\LocaleBundle\LuneticsLocaleBundle(),
-            new Kachkaev\PhotoAssessmentBundle\PhotoAssessmentBundle(),
+            new Kachkaev\AssetsVersionBundle\KachkaevAssetsVersionBundle(),
             new Kachkaev\CountersBundle\KachkaevCountersBundle(),
             new Kachkaev\DropboxBackupBundle\KachkaevDropboxBackupBundle(),
-            new Kachkaev\AssetsVersionBundle\KachkaevAssetsVersionBundle(),
+            new Kachkaev\PhotoAssessmentBundle\PhotoAssessmentBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
