@@ -25,7 +25,7 @@ class AppKernel extends Kernel
             new Kachkaev\AssetsVersionBundle\KachkaevAssetsVersionBundle(),
             new Kachkaev\CountersBundle\KachkaevCountersBundle(),
             new Kachkaev\DropboxBackupBundle\KachkaevDropboxBackupBundle(),
-            new Kachkaev\PhotoAssessmentBundle\PhotoAssessmentBundle(),
+            new Kachkaev\PhotoAssessmentBundle\KachkaevPhotoAssessmentBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
