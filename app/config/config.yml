@@ -50,6 +50,9 @@ doctrine:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
 
+doctrine_migrations:
+    table_name:           MigrationVersions
+
 lunetics_locale:
   allowed_locales:
     - en
@@ -75,7 +78,7 @@ kachkaev_dropbox_backup:
         password: %database_password%
         
         output_directory: pat-db/
-        output_fileprefix: dblocal_
+        output_fileprefix: %database_dropbox_prefix%
         output_compression: false
     dropbox:
         user: %dropbox_user%

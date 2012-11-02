@@ -16,7 +16,7 @@ class GeographDownloadCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('geograph:download')
+            ->setName('pat:geograph:download')
             ->setDescription('Downloads geograph images')
         ;
     }

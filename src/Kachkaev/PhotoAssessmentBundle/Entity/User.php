@@ -24,6 +24,10 @@ class User extends AbstractStandardEntity implements UserInterface {
 	*/
 	protected $responses;
 	
+	/** @ORM\OneToMany(targetEntity="UserStats", mappedBy="user", cascade={"all"})
+	*/
+	protected $stats;
+	
 	/** @ORM\Column(type="integer", nullable=false)
 	 */
 	protected $status = 0;

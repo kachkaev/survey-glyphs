@@ -15,3 +15,6 @@ services:
         tags:
             -  { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    pat.stats.manager:
+        class: Kachkaev\PhotoAssessmentBundle\Stats\StatsManager
+        arguments: [@doctrine.orm.entity_manager]

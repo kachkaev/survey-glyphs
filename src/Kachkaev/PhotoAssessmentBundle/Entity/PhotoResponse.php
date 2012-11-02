@@ -90,7 +90,7 @@ class PhotoResponse extends AbstractStandardEntity {
 	 */
 	protected $submissionCount = 0;
 	
-	/** @ORM\Column(type="datetime", nullable=true)
+	/** @ORM\Column(type="integer", nullable=true)
 	 */
 	protected $submittedAt;
 	

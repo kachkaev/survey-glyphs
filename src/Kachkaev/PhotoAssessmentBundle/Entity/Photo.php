@@ -22,6 +22,10 @@ class Photo extends AbstractStandardEntity {
 	*/
 	protected $responses;
 	
+	/** @ORM\OneToMany(targetEntity="PhotoStats", mappedBy="photo", cascade={"all"})
+	*/
+	protected $stats;
+	
 	/** @ORM\Column(type="string", nullable=false)
 	 */
 	protected $source;
