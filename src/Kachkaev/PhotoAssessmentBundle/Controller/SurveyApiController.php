@@ -37,16 +37,16 @@ class SurveyApiController extends Controller
     		throw new AuthenticationException();
     	
     	// Getting all responses by the user + info on photos themselves
-    	$queryStr = "Select pr, p, u FROM PhotoAssessmentBundle:PhotoResponse pr LEFT JOIN pr.photo p LEFT JOIN pr.user u WHERE u.id = ".$user->getId()." ORDER BY pr.id";
+    	$queryStr = "Select pr, p, u FROM KachkaevPhotoAssessmentBundle:PhotoResponse pr LEFT JOIN pr.photo p LEFT JOIN pr.user u WHERE u.id = ".$user->getId()." ORDER BY pr.id";
     	$photoResponses = $em->createQuery($queryStr)->getResult();
-    	//$photoResponses = $em->getRepository('PhotoAssessmentBundle:PhotoResponse')->findByUser($user);
+    	//$photoResponses = $em->getRepository('KachkaevPhotoAssessmentBundle:PhotoResponse')->findByUser($user);
     	
     	// Queue automatically extends for the first time
     	if (!sizeof($photoResponses)) {
     		$photosToAdd = $container->getParameter('pat.queue_initial_size');
     		$firstPhotoId = $container->getParameter('pat.queue_first_photo_id');
     		if ($firstPhotoId !== null) {
-	    		$photoref = $em->getReference('PhotoAssessmentBundle:Photo', $firstPhotoId);
+	    		$photoref = $em->getReference('KachkaevPhotoAssessmentBundle:Photo', $firstPhotoId);
 	    		$photoResponse = new PhotoResponse($photoref, $user);
 	    		$em->persist($photoResponse);
     			--$photosToAdd;
@@ -91,7 +91,7 @@ class SurveyApiController extends Controller
     	
     	// Creating empty responses for these photos
     	foreach ($idsRes as $idRes) {
-    		$photoref = $em->getReference('PhotoAssessmentBundle:Photo', $idRes['id']);
+    		$photoref = $em->getReference('KachkaevPhotoAssessmentBundle:Photo', $idRes['id']);
     		$photoResponse = new PhotoResponse($photoref, $user);
     		$em->persist($photoResponse);
     		$photoResponses []= $photoResponse;
@@ -122,7 +122,7 @@ class SurveyApiController extends Controller
     		throw new AuthenticationException();
     	
     	// Finding PhotoResponse in the DB
-    	$photoResponse = $em->getRepository('PhotoAssessmentBundle:PhotoResponse')->findOneById($data['id']);
+    	$photoResponse = $em->getRepository('KachkaevPhotoAssessmentBundle:PhotoResponse')->findOneById($data['id']);
     	if (!$photoResponse) {
     		throw new AccessDeniedException("Response does not exist");
     	}

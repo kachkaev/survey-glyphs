@@ -26,10 +26,10 @@
 {#  <link rel="<apple-touch-icon></apple-touch-icon>" href="/favicon-mobile.png" /> #}
 {% block assets_css %}
 	{% stylesheets output='static/css/commons.css' filter="?yui_css" combine=true
-		'@PhotoAssessmentBundle/Resources/assets/scss/reset.scss'
-		'@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.modif.css'
-		'@PhotoAssessmentBundle/Resources/assets/bem/pages/*/*.scss'
-		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.scss'
+		'@KachkaevPhotoAssessmentBundle/Resources/assets/scss/reset.scss'
+		'@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.modif.css'
+		'@KachkaevPhotoAssessmentBundle/Resources/assets/bem/pages/*/*.scss'
+		'@KachkaevPhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.scss'
 	    %}
 	    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="all" />
 	{% endstylesheets %}
@@ -46,29 +46,29 @@
 
 {% block assets_js %}
 	{% javascripts output='static/js/vendor.js' filter="?closure" combine=true
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.dump.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.timers.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.tmpl.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.scrollintoview.modif.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.preload.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.dump.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.timers.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.tmpl.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.scrollintoview.modif.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.ui.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.preload.js'
     
-    '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.string.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/underscore/underscore.string.js'
 
-    '@PhotoAssessmentBundle/Resources/assets/vendor/namespace.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/keycodes.js'
-    '@PhotoAssessmentBundle/Resources/assets/vendor/signals.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/namespace.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/keycodes.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/signals.js'
     %}
     	<script type="text/javascript" src="{{ asset_url }}"></script>
     {%- endjavascripts -%}
 
 	{% javascripts output='static/js/commons.js' filter="?closure"
-		'@PhotoAssessmentBundle/Resources/assets/js/pat/*.js'
-		'@PhotoAssessmentBundle/Resources/assets/js/pat/photoInfoProvider/*.js'
-		'@PhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
-		'@PhotoAssessmentBundle/Resources/assets/bem/pages/*/*.js'
+		'@KachkaevPhotoAssessmentBundle/Resources/assets/js/pat/*.js'
+		'@KachkaevPhotoAssessmentBundle/Resources/assets/js/pat/photoInfoProvider/*.js'
+		'@KachkaevPhotoAssessmentBundle/Resources/assets/bem/blocks/*/*.js'
+		'@KachkaevPhotoAssessmentBundle/Resources/assets/bem/pages/*/*.js'
 		%}
 	    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

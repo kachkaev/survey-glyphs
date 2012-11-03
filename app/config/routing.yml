@@ -1,5 +1,5 @@
 PhotoAssessmentBundle:
-    resource: "@PhotoAssessmentBundle/Controller/"
+    resource: "@KachkaevPhotoAssessmentBundle/Controller/"
     type:     annotation
     prefix:   /
 
