@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User extends AbstractStandardEntity implements UserInterface {
 	protected $standardProperties = array("source", "id", "status", "language", "location");
-	protected $standardGetters = array("responses");
+	protected $standardGetters = array("responses", "createdAt");
 
 	/** @ORM\Column(type="integer")
      *  @ORM\Id
@@ -40,11 +40,17 @@ class User extends AbstractStandardEntity implements UserInterface {
 	 */
 	protected $location;
 	
+	/** @ORM\Column(type="integer")
+	 */
+	protected $createdAt;
+	
 	public function __construct()
     {
         parent::__construct();
         $this->responses = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->stats = new \Doctrine\Common\Collections\ArrayCollection();
+		
+		$this->createdAt = time();
     }
 	
     public function getName() {
