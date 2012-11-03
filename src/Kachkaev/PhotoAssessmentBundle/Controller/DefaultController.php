@@ -25,7 +25,7 @@ class DefaultController extends Controller
     		'userIsReturning' => ($this->get('security.context')->getToken()->getUser() instanceof UserInterface),
     		'user' => null,
     	];
-	    return $this->render("PhotoAssessmentBundle:Default:index.html.twig", $parameters);
+	    return $this->render("KachkaevPhotoAssessmentBundle:Default:index.html.twig", $parameters);
     }
     
 //     * @Route("/survey/{photoSource}", defaults={"photoId" = null}, name="pat_default_survey")
@@ -91,7 +91,7 @@ class DefaultController extends Controller
     		'askLocation' => $this->container->getParameter('pat.ask_location')
     	];
     	
-	    return $this->render("PhotoAssessmentBundle:Default:survey.html.twig", $parameters, $response);
+	    return $this->render("KachkaevPhotoAssessmentBundle:Default:survey.html.twig", $parameters, $response);
     }
     
     protected function checkUserChangeBackdoor() {

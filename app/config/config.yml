@@ -26,7 +26,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [PhotoAssessmentBundle]
+    bundles:        [KachkaevPhotoAssessmentBundle]
     java: %java_bin%
     filters:
         cssrewrite: ~
@@ -49,6 +49,9 @@ doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+
+doctrine_migrations:
+    table_name:           MigrationVersions
 
 lunetics_locale:
   allowed_locales:
@@ -75,7 +78,7 @@ kachkaev_dropbox_backup:
         password: %database_password%
         
         output_directory: pat-db/
-        output_fileprefix: dblocal_
+        output_fileprefix: %database_dropbox_prefix%
         output_compression: false
     dropbox:
         user: %dropbox_user%

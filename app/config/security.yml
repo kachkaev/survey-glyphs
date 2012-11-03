@@ -13,7 +13,7 @@ security:
     providers:
         main:
            entity:
-               class:  PhotoAssessmentBundle:User
+               class:  KachkaevPhotoAssessmentBundle:User
                property: id
 
     firewalls:
