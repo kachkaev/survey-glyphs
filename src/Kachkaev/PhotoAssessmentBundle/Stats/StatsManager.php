@@ -27,39 +27,91 @@ class StatsManager
         $photoStats = array();
         $userStats = array();
 
-        // Calculating stats
+        // Getting list of questions in PhotoResponse
+        $refl = new \ReflectionClass(
+                'Kachkaev\PhotoAssessmentBundle\Entity\PhotoResponse');
+        $questions = array();
+        foreach ($refl->getProperties() as $property) {
+            if ($property->name[0] == 'q') {
+                $questions[] = $property->name;
+            }
+        }
+
+        // Extracting stats
         foreach ($photoResponses as $photoResponse) {
             $photoId = $photoResponse->getPhoto()->getId();
             $userId = $photoResponse->getUser()->getId();
 
+            // Creating a stat entity for photo if it is new
             if (!array_key_exists($photoId, $photoStats)) {
-                $photoStats[$photoId] = new PhotoStat(
+                $photoStats[$photoId] = array();
+                $photoStats[$photoId]['entity'] = new PhotoStat(
                         $photoResponse->getPhoto(), $timestamp);
+                $photoStats[$photoId]['durations'] = array();
+                $photoStats[$photoId]['answers'] = array();
+
+                foreach ($questions as $question) {
+                    $photoStats[$photoId]['answers'][$question] = array();
+                }
             }
 
+            // Creating a stat entity for user if it is new
             if (!array_key_exists($userId, $userStats)) {
-                $userStats[$userId] = new UserStat($photoResponse->getUser(),
-                        $timestamp);
+                $userStats[$userId] = array();
+                $userStats[$userId]['entity'] = new UserStat(
+                        $photoResponse->getUser(), $timestamp);
+                $userStats[$userId]['durations'] = array();
             }
 
-            $photoStat = $photoStats[$photoId];
-            $userStat = $userStats[$userId];
+            $photoStat = &$photoStats[$photoId];
+            $userStat = &$userStats[$userId];
+            $photoStatEntity = $photoStat['entity'];
+            $userStatEntity = $userStat['entity'];
 
-            $status = PhotoResponseStatus::valueToString(
-                    $photoResponse->getStatus());
+            $status = $photoResponse->getStatus();
+            $statusAsString = PhotoResponseStatus::valueToString($status);
 
-            $photoStat
+            $photoStatEntity
                     ->set('responsesCount_ALL',
-                            $photoStat->get('responsesCount_ALL') + 1);
-            $photoStat
-                    ->set('responsesCount_' . $status,
-                            $photoStat->get('responsesCount_' . $status) + 1);
-            $userStat
+                            $photoStatEntity->get('responsesCount_ALL') + 1);
+            $photoStatEntity
+                    ->set('responsesCount_' . $statusAsString,
+                            $photoStatEntity
+                                    ->get('responsesCount_' . $statusAsString)
+                                    + 1);
+            $userStatEntity
                     ->set('responsesCount_ALL',
-                            $userStat->get('responsesCount_ALL') + 1);
-            $userStat
-                    ->set('responsesCount_' . $status,
-                            $userStat->get('responsesCount_' . $status) + 1);
+                            $userStatEntity->get('responsesCount_ALL') + 1);
+            $userStatEntity
+                    ->set('responsesCount_' . $statusAsString,
+                            $userStatEntity
+                                    ->get('responsesCount_' . $statusAsString)
+                                    + 1);
+
+            foreach ($questions as $question) {
+                $photoStat['answers'][$question][] = $photoResponse
+                        ->get($question);
+            }
+
+            $duration = $photoResponse->getDuration();
+            if ($duration) {
+                array_push($photoStat['durations'], $duration);
+                array_push($userStat['durations'], $duration);
+            }
+        }
+
+        // Calculating aggregations
+        //// PhotoStat
+        foreach ($photoStats as $photoStat) {
+            $photoStat['entity']
+                    ->setMedianDuration(
+                            calculate_median($photoStat['durations']));
+        }
+        //// UserStat
+        foreach ($userStats as $userStat) {
+            $userStat['entity']
+                    ->setMedianDuration(
+                            calculate_median($userStat['durations']));
         }
 
         // Wiping off old stats
@@ -67,10 +119,10 @@ class StatsManager
 
         // Saving new stats
         foreach ($photoStats as $photoStat) {
-            $this->em->persist($photoStat);
+            $this->em->persist($photoStat['entity']);
         }
         foreach ($userStats as $userStat) {
-            $this->em->persist($userStat);
+            $this->em->persist($userStat['entity']);
         }
         $this->em->flush();
 
@@ -127,4 +179,22 @@ class StatsManager
                         . var_export($timestamp, true) . ' - positive integer '
                         . ($nullable ? 'or null ' : '') . 'expected');
     }
+}
+
+// http://www.php.net/manual/en/ref.math.php#55173
+function calculate_median($arr)
+{
+    $count = count($arr); //total numbers in array
+    if ($count === 0)
+        return null;
+    sort($arr);
+    $middleval = floor(($count - 1) / 2); // find the middle value, or the lowest middle value
+    if ($count % 2) { // odd number, middle is the median
+        $median = $arr[$middleval];
+    } else { // even number, calculate avg of 2 medians
+        $low = $arr[$middleval];
+        $high = $arr[$middleval + 1];
+        $median = (($low + $high) / 2);
+    }
+    return $median;
 }
