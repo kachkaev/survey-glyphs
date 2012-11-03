@@ -8,19 +8,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  */
-class UserStats extends AbstractStandardEntity
+class PhotoStat extends AbstractStandardEntity
 {
     protected $standardProperties = ["responsesCount_UNANSWERED",
             "responsesCount_INCOMPLETE", "responsesCount_COMPLETE",
             "responsesCount_PHOTO_PROBLEM", "medianDuration"];
     protected $standardGetters = ["user", "timestamp"];
-
+    
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="stats")
-     * @ORM\JoinColumn(name="userId", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Photo", inversedBy="stats")
      * @ORM\Id
+     * @ORM\JoinColumn(name="photoId", referencedColumnName="id")
      */
-    protected $user;
+    protected $photo;
 
     /** @ORM\Column(type="integer")
      *  @ORM\Id
@@ -29,27 +29,31 @@ class UserStats extends AbstractStandardEntity
 
     /** @ORM\Column(type="integer")
      */
-    protected $responsesCount_UNANSWERED;
+    protected $responsesCount_ALL = 0;
+    
+    /** @ORM\Column(type="integer")
+     */
+    protected $responsesCount_UNANSWERED = 0;
 
     /** @ORM\Column(type="integer")
      */
-    protected $responsesCount_INCOMPLETE;
+    protected $responsesCount_INCOMPLETE = 0;
 
     /** @ORM\Column(type="integer")
      */
-    protected $responsesCount_COMPLETE;
+    protected $responsesCount_COMPLETE = 0;
 
     /** @ORM\Column(type="integer")
      */
-    protected $responsesCount_PHOTO_PROBLEM;
-
-    /** @ORM\Column(type="float")
+    protected $responsesCount_PHOTO_PROBLEM = 0;
+    
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $medianDuration;
     
-    public function __construct(User $user, $timestamp)
-    {
+    public function __construct(Photo $photo, $timestamp) {
         $this->timestamp = $timestamp;
-        $this->user = $user;
+        $this->photo = $photo;
     }
+
 }

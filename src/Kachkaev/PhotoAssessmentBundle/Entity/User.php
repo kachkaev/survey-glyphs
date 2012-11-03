@@ -24,7 +24,7 @@ class User extends AbstractStandardEntity implements UserInterface {
 	*/
 	protected $responses;
 	
-	/** @ORM\OneToMany(targetEntity="UserStats", mappedBy="user", cascade={"all"})
+	/** @ORM\OneToMany(targetEntity="UserStat", mappedBy="user", cascade={"all"})
 	*/
 	protected $stats;
 	
@@ -44,6 +44,7 @@ class User extends AbstractStandardEntity implements UserInterface {
     {
         parent::__construct();
         $this->responses = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->stats = new \Doctrine\Common\Collections\ArrayCollection();
     }
 	
     public function getName() {

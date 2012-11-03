@@ -22,7 +22,7 @@ class Photo extends AbstractStandardEntity {
 	*/
 	protected $responses;
 	
-	/** @ORM\OneToMany(targetEntity="PhotoStats", mappedBy="photo", cascade={"all"})
+	/** @ORM\OneToMany(targetEntity="PhotoStat", mappedBy="photo", cascade={"all"})
 	*/
 	protected $stats;
 	
@@ -66,6 +66,7 @@ class Photo extends AbstractStandardEntity {
 	{
 		parent::__construct();
 		$this->responses = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->stats = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 
 	public function getSerializableProperties() {

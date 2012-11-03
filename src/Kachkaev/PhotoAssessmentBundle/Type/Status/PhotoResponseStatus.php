@@ -12,7 +12,11 @@ class PhotoResponseStatus {
 	
 	public static function valueToString($value) {
 	    static::generateConstantsTableIfNeeded();
-	    return $constantsTable[$value];
+	    $result = static::$constantsTable[$value];
+	    if (!$result) {
+	        throw new InvalidArgumentException('Wrong value given: '.var_export($value, true). ' - expected '. implode(', ', array_keys(static::$constantsTable)));
+	    }
+	    return $result;
 	}
 	
 	public static function getListOfValues() {
@@ -20,9 +24,9 @@ class PhotoResponseStatus {
 	    return $constantsTable;
 	}
 	
-	protected function generateConstantsTableIfNeeded() {
+	protected static function generateConstantsTableIfNeeded() {
 	    if (!static::$constantsTable) {
-	        $refl = new ReflectionClass('Kachkaev\PhotoAssessmentBundle\Type\Status\PhotoResponseStatus');
+	        $refl = new \ReflectionClass('Kachkaev\PhotoAssessmentBundle\Type\Status\PhotoResponseStatus');
 	        static::$constantsTable = array_flip($refl->getConstants());
 	    }
 	}
