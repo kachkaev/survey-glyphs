@@ -146,7 +146,7 @@ class SurveyApiController extends Controller
     		$photoResponse->set($k, $data[$k]);
     	}
     	
-    	$photoResponse->setSubmittedAt(new \DateTime());
+    	$photoResponse->setSubmittedAt(time());
     	if ($data['duration'])
     		$photoResponse->setDuration($photoResponse->getDuration() + $data['duration']);
     	$photoResponse->setSubmissionCount($photoResponse->getSubmissionCount() + 1);
