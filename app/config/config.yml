@@ -79,7 +79,7 @@ kachkaev_dropbox_backup:
         
         output_directory: pat-db/
         output_fileprefix: %database_dropbox_prefix%
-        output_compression: false
+        output_compression: true
     dropbox:
         user: %dropbox_user%
         password: %dropbox_password%
