@@ -53,8 +53,6 @@ class DefaultController extends Controller
     		try {
     		    $location = $this->get('bazinga_geocoder.geocoder')->using('ip_info_db')->geocode($this->getRequest()->server->get('REMOTE_ADDR'));
     		    
-    		    var_dump($location);
-    		    
     		    $country = $location->getCountry();
     		    if ($country == '-')
     		        $country = null;
