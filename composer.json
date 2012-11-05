@@ -22,7 +22,8 @@
         "jms/serializer-bundle": "dev-master",
         "kachkaev/assets-version-bundle": "dev-master",
         "kachkaev/dropbox-backup-bundle": "dev-master",
-        "lunetics/locale-bundle": "2.1.*"
+        "lunetics/locale-bundle": "2.1.*",
+        "willdurand/geocoder-bundle": "*"
     },
     "scripts": {
         "post-install-cmd": [

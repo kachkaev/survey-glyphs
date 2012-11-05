@@ -62,6 +62,13 @@ lunetics_locale:
     - router
     - browser
 
+bazinga_geocoder:
+    fake_ip:      188.120.234.99
+    providers:
+        ip_info_db:
+            api_key:    %api_key_ipinfodb%
+        free_geo_ip: ~
+
 kachkaev_counters:
     disabled: %kernel.debug%
     google_analytics:

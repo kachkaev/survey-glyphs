@@ -1,5 +1,5 @@
 {
-    "hash": "9bb75bf8fb041cfc0b844d5b5cb0951c",
+    "hash": "495a0bc9d838e2cf71377726624e512e",
     "packages": [
         {
             "name": "doctrine/common",
@@ -1549,6 +1549,118 @@
             "homepage": "http://twig.sensiolabs.org",
             "keywords": [
                 "templating"
+            ]
+        },
+        {
+            "name": "willdurand/geocoder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/willdurand/Geocoder",
+                "reference": "3eda573da01fe1699a9244173df30caad7705c5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/willdurand/Geocoder/zipball/3eda573da01fe1699a9244173df30caad7705c5a",
+                "reference": "3eda573da01fe1699a9244173df30caad7705c5a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "kriswallsmith/buzz": "*",
+                "guzzle/guzzle": "*",
+                "zendframework/zend-http": "*"
+            },
+            "suggest": {
+                "kriswallsmith/buzz": "Enabling Buzz allows you to use the BuzzHttpAdapter, it's the recommended HTTP layer.",
+                "ext-curl": "Enabling the curl extension allows you to use CurlHttpAdapter.",
+                "guzzle/guzzle": "Enabling Guzzle allows you to use the GuzzleHttpAdapter.",
+                "zendframework/zend-http": "Enabling Zend_Http allows you to use the ZendHttpAdapter"
+            },
+            "time": "1351968035",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Geocoder": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "william.durand1@gmail.com",
+                    "homepage": "http://www.willdurand.fr"
+                }
+            ],
+            "description": "The almost missing Geocoder PHP 5.3 library.",
+            "homepage": "http://geocoder-php.org",
+            "keywords": [
+                "geocoding",
+                "abstraction",
+                "geocoder",
+                "geoip"
+            ]
+        },
+        {
+            "name": "willdurand/geocoder-bundle",
+            "version": "dev-master",
+            "target-dir": "Bazinga/Bundle/GeocoderBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/willdurand/BazingaGeocoderBundle",
+                "reference": "7382d215c92e47b15b2fc5db7df3fc2cb258c25b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/willdurand/BazingaGeocoderBundle/zipball/7382d215c92e47b15b2fc5db7df3fc2cb258c25b",
+                "reference": "7382d215c92e47b15b2fc5db7df3fc2cb258c25b",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/framework-bundle": ">=2.1,<2.3-dev",
+                "willdurand/geocoder": ">=1.0,<1.2-dev",
+                "symfony/console": ">=2.1,<2.3-dev"
+            },
+            "require-dev": {
+                "symfony/yaml": ">=2.1,<2.3-dev"
+            },
+            "time": "1351169568",
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Bazinga\\Bundle\\GeocoderBundle": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "william.durand1@gmail.com",
+                    "homepage": "http://www.willdurand.fr"
+                }
+            ],
+            "description": "Integration of Geocoder into Symfony2",
+            "keywords": [
+                "geocoding",
+                "geocoder"
             ]
         }
     ],

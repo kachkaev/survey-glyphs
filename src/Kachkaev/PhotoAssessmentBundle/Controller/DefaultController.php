@@ -49,17 +49,27 @@ class DefaultController extends Controller
     		// Recording interface language that is used by a new person
     		$user->setLanguage(substr($translator->getLocale(), 0, 2));
     		
-    		// Detecting location using http://www.ipinfodb.com/ip_location_api.php
-    		$timeout = ini_get('default_socket_timeout');
-    		ini_set('default_socket_timeout', 3);
+    		// Detecting location
     		try {
-    			$location = explode(';', file_get_contents('http://api.ipinfodb.com/v3/ip-city/?key='.$this->container->getParameter('ipinfodb_key').'&ip='.$this->getRequest()->getClientIp()));
-    			if ($location['4'] && $location['4'] != '-')
-    				$user->setLocation($location['4'] . ( $location['5'] && $location['5'] != '-' ? ' | ' . $location['5'] : '') . ($location['6'] && $location['6'] != '-' ? ' | ' . $location['6'] : ''));
+    		    $location = $this->get('bazinga_geocoder.geocoder')->using('ip_info_db')->geocode($this->getRequest()->server->get('REMOTE_ADDR'));
+    		    
+    		    var_dump($location);
+    		    
+    		    $country = $location->getCountry();
+    		    if ($country == '-')
+    		        $country = null;
+    		    $region = $location->getRegion();
+    		    if ($region == '-')
+    		        $region = null;
+    		    $city = $location->getCity();
+    		    if ($city == '-')
+    		        $city = null;
+    		    
+    			if ($country)
+    				$user->setLocation($country . ( $region ? ' | ' . $region : '') . ($city ? ' | ' . $city : ''));
     		} catch (\Exception $e) {
     			
     		};
-    		ini_set('default_socket_timeout', $timeout);
     		
     		$em = $this->get("doctrine.orm.entity_manager");
     		$em->persist($user);
