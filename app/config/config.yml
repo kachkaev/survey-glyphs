@@ -63,7 +63,6 @@ lunetics_locale:
     - browser
 
 bazinga_geocoder:
-    fake_ip:      188.120.234.99
     providers:
         ip_info_db:
             api_key:    %api_key_ipinfodb%

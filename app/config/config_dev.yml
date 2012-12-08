@@ -21,6 +21,9 @@ monolog:
 
 assetic:
     use_controller: true
+    
+bazinga_geocoder:
+    fake_ip:      188.120.234.99
 
 #swiftmailer:
 #    delivery_address: me@example.com
