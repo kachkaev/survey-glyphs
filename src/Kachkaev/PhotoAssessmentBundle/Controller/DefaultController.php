@@ -51,7 +51,7 @@ class DefaultController extends Controller
     		
     		// Detecting location
     		try {
-    		    $location = $this->get('bazinga_geocoder.geocoder')->using('ip_info_db')->geocode($this->getRequest()->getClientIp());
+    		    $location = $this->get('bazinga_geocoder.geocoder')->using('ip_info_db')->geocode($_SERVER['REMOTE_ADDR']);
     		    
     		    $country = $location->getCountry();
     		    if ($country == '-')
