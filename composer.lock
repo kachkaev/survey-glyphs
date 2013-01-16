@@ -709,12 +709,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kachkaev/KachkaevAssetsVersionBundle",
-                "reference": "v1.0.0"
+                "reference": "v1.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kachkaev/KachkaevAssetsVersionBundle/zipball/v1.0.0",
-                "reference": "v1.0.0",
+                "url": "https://github.com/kachkaev/KachkaevAssetsVersionBundle/archive/v1.0.1.zip",
+                "reference": "v1.0.1",
                 "shasum": ""
             },
             "require": {
@@ -729,7 +729,7 @@
                 "symfony/twig-bundle": ">=2.1.0,<2.3-dev",
                 "symfony/assetic-bundle": ">=2.1.0,<2.3-dev"
             },
-            "time": "1351553807",
+            "time": "1352331901",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
@@ -774,12 +774,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kachkaev/KachkaevDropboxBackupBundle",
-                "reference": "166b48c02d641d6e01099ad339be958afb046d6f"
+                "reference": "6788aecfaab2f623d67536a0ef1bd7497b6d6063"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kachkaev/KachkaevDropboxBackupBundle/zipball/166b48c02d641d6e01099ad339be958afb046d6f",
-                "reference": "166b48c02d641d6e01099ad339be958afb046d6f",
+                "url": "https://github.com/kachkaev/KachkaevDropboxBackupBundle/archive/6788aecfaab2f623d67536a0ef1bd7497b6d6063.zip",
+                "reference": "6788aecfaab2f623d67536a0ef1bd7497b6d6063",
                 "shasum": ""
             },
             "require": {
@@ -787,7 +787,7 @@
                 "symfony/framework-bundle": ">=2.0,<2.3-dev",
                 "doctrine/doctrine-bundle": "1.0.*"
             },
-            "time": "1351869029",
+            "time": "1352209967",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
