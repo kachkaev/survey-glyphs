@@ -37,7 +37,7 @@ class SurveyApiController extends Controller
     		throw new AuthenticationException();
     	
     	// Getting all responses by the user + info on photos themselves
-    	$queryStr = "Select pr, p, u FROM KachkaevPhotoAssessmentBundle:PhotoResponse pr LEFT JOIN pr.photo p LEFT JOIN pr.user u WHERE u.id = ".$user->getId()." ORDER BY pr.id";
+    	$queryStr = "SELECT pr, p, u FROM KachkaevPhotoAssessmentBundle:PhotoResponse pr LEFT JOIN pr.photo p LEFT JOIN pr.user u WHERE u.id = ".$user->getId()." ORDER BY pr.id";
     	$photoResponses = $em->createQuery($queryStr)->getResult();
     	//$photoResponses = $em->getRepository('KachkaevPhotoAssessmentBundle:PhotoResponse')->findByUser($user);
     	

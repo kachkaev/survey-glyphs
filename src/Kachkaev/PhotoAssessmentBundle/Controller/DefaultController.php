@@ -2,6 +2,8 @@
 
 namespace Kachkaev\PhotoAssessmentBundle\Controller;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 use Symfony\Component\Translation\IdentityTranslator;
 
 use Symfony\Component\Routing\Router;
@@ -102,6 +104,74 @@ class DefaultController extends Controller
 	    return $this->render("KachkaevPhotoAssessmentBundle:Default:survey.html.twig", $parameters, $response);
     }
     
+    /**
+     * @Route("/results/{backdoorSecret}/", name="pat_default_results")
+     * @Template
+     */
+    public function resultsAction($backdoorSecret) { 
+        if ($backdoorSecret !== $this->container->getParameter('backdoor_secret')) {
+            throw new NotFoundHttpException();
+        }
+        
+    	$em = $this->get("doctrine.orm.entity_manager");
+    	
+    	// Get all photos
+        $photosStmt = $em->getConnection()->query("SELECT * FROM Photo ORDER BY id");
+        $photosStmt->execute();
+        $photosArray = $photosStmt->fetchAll(\PDO::FETCH_ASSOC);
+        $photosCollection = [];
+        foreach ($photosArray as $photo) {
+            $photosCollection[$photo['id']] = $photo;
+        };
+        
+    	// Get all users
+        $usersStmt = $em->getConnection()->query("SELECT * FROM User ORDER BY id");
+        $usersStmt->execute();
+        $usersArray = $usersStmt->fetchAll(\PDO::FETCH_ASSOC);
+        $usersCollection = [];
+        foreach ($usersArray as $user) {
+            $usersCollection[$user['id']] = $user;
+        };
+        
+    	// Get all photo responses
+        $photoResponsesStmt = $em->getConnection()->query("SELECT * FROM PhotoResponse ORDER BY id");
+        $photoResponsesStmt->execute();
+        $photoResponsesArray = $photoResponsesStmt->fetchAll(\PDO::FETCH_ASSOC);
+        $photoResponsesCollection = [];
+        foreach ($photoResponsesArray as $photoResponse) {
+            $photoResponsesCollection[$photoResponse['id']] = $photoResponse;
+        };
+        
+        // Prepare translation strings
+        $jsTranslations = [];
+        $translator = $this->get('translator');
+        foreach (['answer.hts',
+                'hint.questionnaire_incomplete',
+                'hint.dashboard.access_denied',
+                'hint.dashboard.queue_extended_0',
+                'hint.dashboard.queue_extended_1',
+                'hint.dashboard.queue_extended_2',
+                'hint.dashboard.queue_extended_3',
+                'hint.dashboard.queue_extended_4',
+                'hint.dashboard.queue_extended_5',
+                'hint.dashboard.queue_extended_6',
+                'message.error_api'
+                ] as $v) {
+            $jsTranslations[$v] = $translator->trans($v);
+        }
+        
+        $data = [
+                'photos' => $photosCollection,
+                'users' => $usersCollection,
+                'photoResponses' => $photoResponsesCollection,
+            ];
+        
+        return [
+            'data' => json_encode($data),
+            'jsTranslationStrings' => json_encode($jsTranslations)
+        ];
+    }
+    
     protected function checkUserChangeBackdoor() {
         // If switch user backdoor is used, changing user
         $backdoorUserId = $this->getRequest()->query->get('u');
@@ -113,7 +183,5 @@ class DefaultController extends Controller
         if ($backdoorSecret !== $this->container->getParameter('backdoor_secret')) {
             return new Response("Wrong value for backdoor_secret");
         }
-        
-        
     }
 }

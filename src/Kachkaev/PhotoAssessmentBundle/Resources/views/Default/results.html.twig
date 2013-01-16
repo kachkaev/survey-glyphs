@@ -1,0 +1,46 @@
+{% extends 'KachkaevPhotoAssessmentBundle:Components/layouts:base.html.twig' %}
+
+{% block head_title %}{{ 'title' | trans }}{% endblock %}
+
+{% block body_modif %} class="p-results"{% endblock %}
+
+{% block body %}
+	<div class="p-results__header">
+		<h1><a href="{{ path("pat_default_index") }}">{{ 'pat_default_index.h1' | trans }}</a>{{ 'pat_default_results.h1' | trans }}</h1>
+	</div>
+	<table class="p-results__layout">
+	    <tr>
+	        <td>
+	            <div class="b-infolist b-infolist_user"></div>
+	        </td><td colspan="2">
+	            <div class="b-infolist b-infolist_photo"></div>
+	        </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <h2 class="p-results__listcaption p-results__listcaption__user"></h2>
+            </td><td colspan="2">
+                <h2 class="p-results__listcaption p-results__listcaption_title"></h2>
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div class="b-responsepattern b-responsepattern_user"></div>
+            </td><td>
+                <div class="b-responsepattern b-responsepattern_photo"></div>
+            </td><td>
+                <div class="b-survey-photo b-survey-photo_small"></div>
+            </td>
+        </tr>
+	</table>
+{% endblock body %}
+
+{% block assets_js %}
+	{{ parent() }}
+    <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl={{ app.request.locale }}"></script>
+    <script type="text/javascript">data = {{ data | raw }}; lang = { str: {{ jsTranslationStrings | raw }} };</script>
+{% endblock assets_js %}
+
+{% block footer %}{% endblock %}

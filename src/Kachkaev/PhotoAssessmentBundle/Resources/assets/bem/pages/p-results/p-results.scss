@@ -1,0 +1,39 @@
+.p-results {
+	margin: 0px auto 0px;
+	width: 960px;
+	padding: 0 120px 18px 20px;
+	position: relative;
+	
+	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+	font-size: 14px;
+	line-height: 18px;
+}
+
+.p-results {
+	height: 54px;
+}
+
+.p-results h1{
+	font-size: 25px;
+	font-weight: normal;
+	margin: 0px;
+	line-height: 36px;
+	padding-top: 10px;
+}
+
+.p-results h1 a{
+	color: #000;
+	text-decoration: none;
+}
+
+.p-results h1 a:hover{
+	text-decoration: underline;
+}
+
+.p-results__layout {
+	
+}
+
+.p-results__layout td {
+    vertical-align: top;
+}
