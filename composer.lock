@@ -1,5 +1,5 @@
 {
-    "hash": "495a0bc9d838e2cf71377726624e512e",
+    "hash": "5771d8869bf8976b4d791881a3b5a1bc",
     "packages": [
         {
             "name": "doctrine/common",
@@ -24,7 +24,6 @@
                     "dev-master": "2.3.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common": "lib/"
@@ -67,7 +66,7 @@
                 "annotations",
                 "persistence"
             ],
-            "time": "1348120518"
+            "time": "2012-09-20 05:55:18"
         },
         {
             "name": "doctrine/dbal",
@@ -87,14 +86,13 @@
                 "php": ">=5.3.2",
                 "doctrine/common": "2.3.*"
             },
-            "time": "1350419590",
+            "time": "2012-10-16 20:33:10",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.3.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\DBAL": "lib/"
@@ -167,7 +165,6 @@
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Bundle\\DoctrineBundle": ""
@@ -198,7 +195,7 @@
                 "persistence",
                 "dbal"
             ],
-            "time": "1350120716"
+            "time": "2012-10-13 09:31:56"
         },
         {
             "name": "doctrine/doctrine-migrations-bundle",
@@ -221,9 +218,8 @@
                 "symfony/framework-bundle": ">=2.1.0,<2.3-dev",
                 "doctrine/doctrine-bundle": "1.0.*"
             },
-            "time": "1350561870",
+            "time": "2012-10-18 12:04:30",
             "type": "symfony-bundle",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Bundle\\MigrationsBundle": ""
@@ -279,9 +275,8 @@
             "suggest": {
                 "symfony/console": "to run the migration from the console"
             },
-            "time": "1350643044",
+            "time": "2012-10-19 10:37:24",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\DBAL\\Migrations": "lib"
@@ -341,7 +336,6 @@
                     "dev-master": "2.3.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\ORM": "lib/"
@@ -376,7 +370,7 @@
                 "database",
                 "orm"
             ],
-            "time": "1350071385"
+            "time": "2012-10-12 19:49:45"
         },
         {
             "name": "jms/aop-bundle",
@@ -399,7 +393,6 @@
             },
             "time": "2012-01-02 12:50:26",
             "type": "symfony-bundle",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "JMS\\AopBundle": ""
@@ -441,7 +434,6 @@
             },
             "time": "2012-01-02 20:40:52",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "CG\\": "src/"
@@ -499,7 +491,6 @@
                 "doctrine/orm": "*"
             },
             "type": "symfony-bundle",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "JMS\\DiExtraBundle": ""
@@ -522,7 +513,7 @@
                 "dependency injection",
                 "annotations"
             ],
-            "time": "1348217792"
+            "time": "2012-09-21 08:56:32"
         },
         {
             "name": "jms/metadata",
@@ -543,7 +534,6 @@
             },
             "time": "2012-01-02 21:32:49",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Metadata\\": "src/"
@@ -605,7 +595,6 @@
                 "symfony/validator": "*"
             },
             "type": "symfony-bundle",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "JMS\\SecurityExtraBundle": ""
@@ -631,7 +620,7 @@
                 "secure",
                 "expression"
             ],
-            "time": "1346947943"
+            "time": "2012-09-06 16:12:23"
         },
         {
             "name": "jms/serializer-bundle",
@@ -668,14 +657,13 @@
             "suggest": {
                 "symfony/framework-bundle": "2.*"
             },
-            "time": "1350639143",
+            "time": "2012-10-19 09:32:23",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "JMS\\SerializerBundle": ""
@@ -729,14 +717,13 @@
                 "symfony/twig-bundle": ">=2.1.0,<2.3-dev",
                 "symfony/assetic-bundle": ">=2.1.0,<2.3-dev"
             },
-            "time": "1352331901",
+            "time": "2012-11-07 23:45:01",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Kachkaev\\AssetsVersionBundle": ""
@@ -768,6 +755,57 @@
             ]
         },
         {
+            "name": "kachkaev/counters-bundle",
+            "version": "dev-master",
+            "target-dir": "Kachkaev/CountersBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kachkaev/KachkaevCountersBundle",
+                "reference": "3bc622fa49a78fd8cfb7c164eda5a4ebe9a09c1e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/kachkaev/KachkaevCountersBundle/archive/3bc622fa49a78fd8cfb7c164eda5a4ebe9a09c1e.zip",
+                "reference": "3bc622fa49a78fd8cfb7c164eda5a4ebe9a09c1e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "symfony/framework-bundle": ">=2.0,<2.3-dev",
+                "symfony/twig-bundle": ">=2.1.0,<2.3-dev"
+            },
+            "time": "2012-12-18 18:27:36",
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Kachkaev\\CountersBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Kachkaev",
+                    "email": "alexander@kachkaev.ru",
+                    "homepage": "http://en.kachkaev.ru/"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/kachkaev/KachkaevCountersBundle/contributors"
+                }
+            ],
+            "description": "A simple bundle for embedding trackers into web pages",
+            "homepage": "http://github.com/kachkaev/KachkaevCountersBundle",
+            "keywords": [
+                "google analytics",
+                "statistics",
+                "counters",
+                "yandex-metrika"
+            ]
+        },
+        {
             "name": "kachkaev/dropbox-backup-bundle",
             "version": "dev-master",
             "target-dir": "Kachkaev/DropboxBackupBundle",
@@ -787,14 +825,13 @@
                 "symfony/framework-bundle": ">=2.0,<2.3-dev",
                 "doctrine/doctrine-bundle": "1.0.*"
             },
-            "time": "1352209967",
+            "time": "2012-11-06 13:52:47",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "0.1.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Kachkaev\\DropboxBackupBundle": ""
@@ -861,7 +898,6 @@
                     "dev-master": "1.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Assetic": "src/"
@@ -887,7 +923,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "1351079542"
+            "time": "2012-10-24 11:52:22"
         },
         {
             "name": "lunetics/locale-bundle",
@@ -912,7 +948,6 @@
                 "ext-intl": "*"
             },
             "type": "symfony-bundle",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Lunetics\\LocaleBundle": ""
@@ -941,7 +976,7 @@
                 "language",
                 "cookie"
             ],
-            "time": "1348979180"
+            "time": "2012-09-30 04:26:20"
         },
         {
             "name": "monolog/monolog",
@@ -974,7 +1009,6 @@
                     "dev-master": "1.3.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Monolog": "src/"
@@ -997,7 +1031,7 @@
                 "log",
                 "logging"
             ],
-            "time": "1351084926"
+            "time": "2012-10-24 13:22:06"
         },
         {
             "name": "sensio/distribution-bundle",
@@ -1023,7 +1057,6 @@
                     "dev-master": "2.1.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Sensio\\Bundle\\DistributionBundle": ""
@@ -1043,7 +1076,7 @@
                 "distribution",
                 "configuration"
             ],
-            "time": "1347340208"
+            "time": "2012-09-11 05:10:08"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -1064,14 +1097,13 @@
                 "symfony/framework-bundle": "2.1.*",
                 "doctrine/common": ">=2.1,<2.4-dev"
             },
-            "time": "1350448707",
+            "time": "2012-10-17 04:38:27",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Sensio\\Bundle\\FrameworkExtraBundle": ""
@@ -1122,7 +1154,6 @@
                     "dev-master": "2.1.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Sensio\\Bundle\\GeneratorBundle": ""
@@ -1138,7 +1169,7 @@
                 }
             ],
             "description": "This bundle generates code for you",
-            "time": "1348030981"
+            "time": "2012-09-19 05:03:01"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1164,7 +1195,6 @@
                     "dev-master": "4.2-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "lib/swift_required.php"
@@ -1227,7 +1257,6 @@
                     "dev-master": "2.1.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Bundle\\AsseticBundle": ""
@@ -1250,7 +1279,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "1350864366"
+            "time": "2012-10-22 00:06:06"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -1284,7 +1313,6 @@
                     "dev-master": "2.1.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Bundle\\MonologBundle": ""
@@ -1305,7 +1333,7 @@
             ],
             "description": "Symfony MonologBundle",
             "homepage": "http://symfony.com",
-            "time": "1348137624"
+            "time": "2012-09-20 10:40:24"
         },
         {
             "name": "symfony/swiftmailer-bundle",
@@ -1333,14 +1361,13 @@
                 "symfony/config": ">=2.1.0,<2.3-dev",
                 "symfony/yaml": ">=2.1.0,<2.3-dev"
             },
-            "time": "1350447491",
+            "time": "2012-10-17 04:18:11",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Bundle\\SwiftmailerBundle": ""
@@ -1422,14 +1449,13 @@
                 "propel/propel1": "dev-master",
                 "monolog/monolog": "1.*"
             },
-            "time": "1351584854",
+            "time": "2012-10-30 08:14:14",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony": "src/",
@@ -1478,7 +1504,6 @@
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Twig_Extensions_": "lib/"
@@ -1500,7 +1525,7 @@
                 "i18n",
                 "text"
             ],
-            "time": "1349889206"
+            "time": "2012-10-10 17:13:26"
         },
         {
             "name": "twig/twig",
@@ -1519,14 +1544,13 @@
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "1351434618",
+            "time": "2012-10-28 14:30:18",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.11-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Twig_": "lib/"
@@ -1579,14 +1603,13 @@
                 "guzzle/guzzle": "Enabling Guzzle allows you to use the GuzzleHttpAdapter.",
                 "zendframework/zend-http": "Enabling Zend_Http allows you to use the ZendHttpAdapter"
             },
-            "time": "1351968035",
+            "time": "2012-11-03 18:40:35",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Geocoder": "src/"
@@ -1634,14 +1657,13 @@
             "require-dev": {
                 "symfony/yaml": ">=2.1,<2.3-dev"
             },
-            "time": "1351169568",
+            "time": "2012-10-25 12:52:48",
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.1.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Bazinga\\Bundle\\GeocoderBundle": ""
@@ -1673,6 +1695,7 @@
         "doctrine/doctrine-migrations-bundle": 20,
         "jms/serializer-bundle": 20,
         "kachkaev/assets-version-bundle": 20,
+        "kachkaev/counters-bundle": 20,
         "kachkaev/dropbox-backup-bundle": 20
     }
 }
