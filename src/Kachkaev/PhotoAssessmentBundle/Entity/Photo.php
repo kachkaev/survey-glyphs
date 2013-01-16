@@ -54,9 +54,9 @@ class Photo extends AbstractStandardEntity {
 	 */
 	protected $status = 0;
 
-	/** @ORM\Column(type="integer", nullable=false)
+	/** @ORM\Column(type="integer")
 	 */
-	protected $completeResponsesCount = 0;
+	protected $priority;
 	
 	public function getId() {    
         return $this->id;        

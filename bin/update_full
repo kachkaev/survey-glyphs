@@ -7,3 +7,4 @@ bin/update
 rm -r web/static/css
 rm -r web/static/js
 app/console assetic:dump --env=prod
+app/console assets_version:increment --env=prod

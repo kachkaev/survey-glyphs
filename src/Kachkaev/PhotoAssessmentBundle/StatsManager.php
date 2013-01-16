@@ -1,5 +1,5 @@
 <?php
-namespace Kachkaev\PhotoAssessmentBundle\Stats;
+namespace Kachkaev\PhotoAssessmentBundle;
 use Kachkaev\PhotoAssessmentBundle\Type\Status\PhotoResponseStatus;
 
 use Kachkaev\PhotoAssessmentBundle\Entity\UserStat;
@@ -20,7 +20,7 @@ class StatsManager
         $timestamp = $this->validateTimestamp($timestamp, false);
 
         // Getting data
-        $queryPhotoResponses = "SELECT pr FROM KachkaevPhotoAssessmentBundle:PhotoResponse pr WHERE pr.submittedAt <= $timestamp";
+        $queryPhotoResponses = "SELECT pr, user FROM KachkaevPhotoAssessmentBundle:PhotoResponse pr LEFT JOIN pr.user user WHERE pr.submittedAt <= $timestamp AND user.status = 0";
         $photoResponses = $this->em->createQuery($queryPhotoResponses)
                 ->getResult();
 
@@ -159,12 +159,12 @@ class StatsManager
     public function listTimestamps()
     {
         $timestampStmt = $this->em->getConnection()
-                ->query("SELECT DISTINCT(timestamp) FROM PhotoStat");
+                ->query("SELECT DISTINCT(timestamp) FROM PhotoStat ORDER BY timestamp");
         $timestampStmt->execute();
-        $timestampRes = $timestampStmt->fetchAll(\PDO::FETCH_COLUMN, 0);
-        return $timestampRes;
+        $timestamps = $timestampStmt->fetchAll(\PDO::FETCH_COLUMN, 0);
+        return $timestamps;
     }
-
+    
     protected function validateTimestamp($timestamp, $nullable = true)
     {
         if ((is_int($timestamp)

@@ -16,5 +16,10 @@ services:
             -  { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     pat.stats.manager:
-        class: Kachkaev\PhotoAssessmentBundle\Stats\StatsManager
+        class: Kachkaev\PhotoAssessmentBundle\StatsManager
         arguments: [@doctrine.orm.entity_manager]
+
+    pat.photo_priorities.manager:
+        class: Kachkaev\PhotoAssessmentBundle\PhotoPrioritiesManager
+        arguments: [@doctrine.orm.entity_manager, @pat.stats.manager]
+        

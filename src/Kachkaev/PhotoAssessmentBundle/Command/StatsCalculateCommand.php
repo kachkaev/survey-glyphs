@@ -40,7 +40,7 @@ class StatsCalculateCommand extends ContainerAwareCommand
         
         if ($statsManger->statsExistFor($timestamp) && !$input->getOption('force')) {
             $dialog = $this->getHelperSet()->get('dialog');
-            if (!$dialog
+            if ($input->isInteractive() && !$dialog
                     ->askConfirmation($output,
                             '<question>Stats already exist for this time. Overwrite them (y/n)?</question>',
                             false)) {
@@ -49,11 +49,11 @@ class StatsCalculateCommand extends ContainerAwareCommand
         }
 
         $output
-                ->writeln(
+                ->write(
                         "Calculating stats for <info>$timestamp</info> (<info>$timestampHR</info>)...");
 
         $statsManger->calculate($timestamp);
 
-        $output->writeln('Done.');
+        $output->writeln(' Done.');
     }
 }

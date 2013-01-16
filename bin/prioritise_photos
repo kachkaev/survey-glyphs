@@ -1,0 +1,5 @@
+#!/bin/sh
+
+app/console pat:stats:calculate --env=prod
+app/console pat:photo_priorities:update --env=prod
+app/console pat:stats:delete --env=prod --no-interaction

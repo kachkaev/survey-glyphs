@@ -32,7 +32,7 @@ class StatsDeleteCommand extends ContainerAwareCommand
 
         if (is_null($timestamp) && !$input->getOption('force')) {
             $dialog = $this->getHelperSet()->get('dialog');
-            if (!$dialog
+            if ($input->isInteractive() && !$dialog
                     ->askConfirmation($output,
                             '<question>Are you sure you want to delete all stats (y/n)?</question>',
                             false)) {
@@ -50,15 +50,15 @@ class StatsDeleteCommand extends ContainerAwareCommand
             }
 
             $output
-                    ->writeln(
+                    ->write(
                             "Deleting stats for <info>$timestamp</info> (<info>$timestampHR</info>)...");
         } else {
-            $output->writeln("Deleting <info>all</info> stats...");
+            $output->write("Deleting <info>all</info> stats...");
 
         }
 
         $statsManger->delete($timestamp);
 
-        $output->writeln('Done.');
+        $output->writeln(' Done.');
     }
 }

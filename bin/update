@@ -1,6 +1,6 @@
 #!/bin/sh
 
 git pull
-composer install
+composer install --prefer-dist
 rm -r app/cache/prod
 app/console cache:clear --env=prod

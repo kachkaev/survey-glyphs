@@ -49,6 +49,7 @@ class SurveyApiController extends Controller
 	    		$photoref = $em->getReference('KachkaevPhotoAssessmentBundle:Photo', $firstPhotoId);
 	    		$photoResponse = new PhotoResponse($photoref, $user);
 	    		$em->persist($photoResponse);
+	    		$em->flush();
     			--$photosToAdd;
     		}
     		
@@ -85,7 +86,7 @@ class SurveyApiController extends Controller
     	$photoResponses = [];
 
     	// Getting $count random unanswered photos
-    	$idsStmt = $em->getConnection()->query("SELECT id FROM Photo WHERE status = 0 AND id NOT IN (SELECT photoId FROM PhotoResponse WHERE userId = ".$user->getId().") ORDER BY RAND() LIMIT ".$count);
+    	$idsStmt = $em->getConnection()->query("SELECT id FROM Photo WHERE status = 0 AND id NOT IN (SELECT photoId FROM PhotoResponse WHERE userId = ".$user->getId().") ORDER BY priority DESC, RAND() LIMIT ".$count);
     	$idsStmt->execute();
     	$idsRes = $idsStmt->fetchAll();
     	
