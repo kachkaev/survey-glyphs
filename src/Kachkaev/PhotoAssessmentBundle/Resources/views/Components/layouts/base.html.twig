@@ -49,6 +49,7 @@
 {% block assets_js %}
 	{% javascripts output='static/js/vendor.js' filter="?closure" combine=true
     '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.canvas.js'
     '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.dump.js'
     '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.timers.js'
     '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/jquery/jquery.tmpl.js'
@@ -61,6 +62,7 @@
 
     '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/namespace.js'
     '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/keycodes.js'
+    '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/rainbow-vis.js'
     '@KachkaevPhotoAssessmentBundle/Resources/assets/vendor/signals.js'
     %}
     	<script type="text/javascript" src="{{ asset_url }}"></script>

@@ -28,7 +28,7 @@ $.widget('ui.bsurveyphoto', {
 		w.$loading = $('<div class="b-survey-photo__loading"/>').append($('<img/>', {src: preloaderImg}));
 		$.preload([preloaderImg]);
 		
-		w.$error = $('<div class="b-survey-photo__error"/>').text('Error loading photograph. It seems like it was just deleted or got hidden.');
+		w.$error = $('<div class="b-survey-photo__error"/>').text('Error loading photograph. It seems like it was just deleted or got hidden.');
 		
 	},
 

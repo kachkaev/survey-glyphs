@@ -119,6 +119,8 @@ class DefaultController extends Controller
         $photosStmt = $em->getConnection()->query("SELECT * FROM Photo ORDER BY id");
         $photosStmt->execute();
         $photosArray = $photosStmt->fetchAll(\PDO::FETCH_ASSOC);
+        // Put the test photo (id = -1) to the end of the list
+        array_push($photosArray, array_shift($photosArray));
         $photosCollection = [];
         foreach ($photosArray as $photo) {
             $photosCollection[$photo['id']] = $photo;
@@ -134,7 +136,7 @@ class DefaultController extends Controller
         };
         
     	// Get all photo responses
-        $photoResponsesStmt = $em->getConnection()->query("SELECT * FROM PhotoResponse ORDER BY id");
+        $photoResponsesStmt = $em->getConnection()->query("SELECT * FROM PhotoResponse WHERE status != 0 ORDER BY id");
         $photoResponsesStmt->execute();
         $photoResponsesArray = $photoResponsesStmt->fetchAll(\PDO::FETCH_ASSOC);
         $photoResponsesCollection = [];

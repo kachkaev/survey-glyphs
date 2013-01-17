@@ -1,13 +1,3 @@
-/**
- * Displays the survey queue and allows selecting different photos
- * 
- * Update queue: $elem.bInfoList('updateItems', ids);
- * 
- * Events:
- * mouseoveritem(id) — when non-current item is clicked
- * changeitem(id) — when an item is hovered over
- */
-
 $.widget('ui.bInfoList', {
 
 	_init: function() {
@@ -35,7 +25,7 @@ $.widget('ui.bInfoList', {
 		    w.mouseIdChangerHash = mouseIdChangerHash;
 		    setTimeout(function() {
 		        if (w.mouseIdChangerHash === mouseIdChangerHash) {
-		            w._self._trigger("changeitem", null, {id: id});
+		            w._self._trigger("hoveroveritem", null, {id: id});
 		            w.mouseId = id;
 		        }
 		    }, 50);
@@ -66,7 +56,6 @@ $.widget('ui.bInfoList', {
 		    $item.mouseleave(onItemHoverOut);
 		    $item.data('id', id);
 		    $item.data('data', itemData);
-		    $item.attr('title', id);
 		    if (_.isFunction(w.options.customizeItem)) {
 		        w.options.customizeItem($item, id, itemData);
 		    }
@@ -114,7 +103,6 @@ $.widget('ui.bInfoList', {
 	
 	setCurrentItemId: function(newId) {
 		var w = this.w;
-		
 
 		if (newId == w.currentId)
 			return false;
@@ -125,13 +113,12 @@ $.widget('ui.bInfoList', {
 		
 		var $newCurrentItem = w.itemsMap[newId];
 		
-		if (!$newCurrentItem)
-			return false;
-		
-		$newCurrentItem.addClass('current');
-		w.currentId = newId;
-		w.$currentItem = $newCurrentItem;
+		if ($newCurrentItem) {
+		    $newCurrentItem.addClass('current');
+		    w.currentId = newId;
+		    w.$currentItem = $newCurrentItem;
+		    w.$currentItem.scrollintoview();
+		}
 		w._self._trigger("changeitem", null, {id: newId});
-		w.$currentItem.scrollintoview();
 	}
 });

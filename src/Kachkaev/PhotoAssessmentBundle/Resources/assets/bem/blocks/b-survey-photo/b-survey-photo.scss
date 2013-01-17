@@ -5,10 +5,6 @@
 	height: auto;	
 }
 
-.b-survey-photo_small {
-    height: 300px;
-}
-
 .b-survey-photo__info {
 	display: block;
 	margin: -15px -15px 30px;
@@ -96,4 +92,30 @@
 
 .b-survey-photo__info.b-survey-photo__logo {
 	opacity: 1;
+}
+
+
+/* small version of the photo - on the results page */
+.b-survey-photo_small {
+    float: right;
+    height: 300px;
+    padding: 30px 15px 15px;
+}
+.b-survey-photo_small .b-survey-photo__photo {
+    min-height: 100px;
+    min-width: 100px;
+    max-width: 300px;
+    max-height: 300px;
+}
+.b-survey-photo_small .b-survey-photo__loading {
+    padding-top: 0px;
+}
+.b-survey-photo_small .b-survey-photo__error {
+    padding-top: 0px;
+    text-align: center;
+    width: 200px;
+}
+
+.b-survey-photo_small .b-survey-photo__timestampanduser {
+	float: right;
 }
