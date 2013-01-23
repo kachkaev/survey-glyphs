@@ -23,3 +23,8 @@ services:
         class: Kachkaev\PhotoAssessmentBundle\PhotoPrioritiesManager
         arguments: [@doctrine.orm.entity_manager, @pat.stats.manager]
         
+        
+    ajax.listener:
+        class: Kachkaev\PhotoAssessmentBundle\Listener\AjaxAuthenticationListener
+        tags:
+          - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }

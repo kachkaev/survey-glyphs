@@ -64,6 +64,9 @@ $(function(){
 	   var user = data.users[photoResponse['userId']];
 	   var photo = data.photos[photoResponse['photoId']]; 
 	   
+	   if (!user || !photo)
+	       return;
+	   
 	   user.photoResponses.push(photoResponse);
 	   user.photoResponseCounts[PHOTO_RESPONSE_ALL] += 1;
 	   user.photoResponseCounts[photoResponse.status] += 1;
@@ -80,7 +83,6 @@ $(function(){
            }
        });
 	});
-	
 	
 	// =====================================
 	// Objects with UI
@@ -108,19 +110,40 @@ $(function(){
 	var $bUserInfoList = $('.b-infolist_user').height(listsHeight).bInfoList({
 	        items: data.users,
 	        customizeItem: function($item, id, data) {
+	            if (data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] < 2)
+	                return false;
 	            $item.css('backgroundColor', numberToColor(colourSchemeUser[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
-	            $item.attr('title', id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]);
 	            $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
 	            $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
+	            
+	            var title = 'User ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+	            if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
+	                title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
+	                if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
+	                    title += 's';
+	                }
+	                    
+	            };
+	            $item.attr('title', title);
 	        }
         });
 	var $bPhotoInfoList = $('.b-infolist_photo').height(listsHeight).bInfoList({
         items: data.photos,
         customizeItem: function($item, id, data) {
             $item.css('backgroundColor', numberToColor(colourSchemePhoto[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
-            $item.attr('title', id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]);
             $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
             $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
+
+            var title = 'Photo ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+            if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
+                title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
+                if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
+                    title += 's';
+                }
+                    
+            };
+            
+            $item.attr('title', title);
         }
     });
 	var $bothInfoLists = $bUserInfoList.add($bPhotoInfoList);

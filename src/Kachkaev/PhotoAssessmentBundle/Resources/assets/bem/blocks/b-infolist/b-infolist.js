@@ -51,16 +51,28 @@ $.widget('ui.bInfoList', {
         // Populate items
 		_.each(w.options.items, function(itemData, id) {
 		    var $item = $('<li/>').addClass('b-infolist__item');
+		    var addItem = true;
 		    $item.click(onItemHoverClick);
 		    $item.mouseenter(onItemHoverOver);
 		    $item.mouseleave(onItemHoverOut);
 		    $item.data('id', id);
 		    $item.data('data', itemData);
 		    if (_.isFunction(w.options.customizeItem)) {
-		        w.options.customizeItem($item, id, itemData);
+		        if (false === w.options.customizeItem($item, id, itemData)) {
+		            addItem = false;
+		        }
 		    }
-		    $item.appendTo(w.$items);
-		    w.itemsMap[id] = $item;
+		    if (addItem) {
+	            $item.tooltip({
+	                position: {
+	                    my: "left top",
+	                    at: "right bottom-1"
+	                },
+	                tooltipClass: "b-infolist__tooltip",
+	            });
+		        $item.appendTo(w.$items);
+		        w.itemsMap[id] = $item;
+		    }
 		});
 		
 		// Make the element resizable with constraints taken from css

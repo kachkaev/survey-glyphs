@@ -2,6 +2,8 @@
 
 namespace Kachkaev\PhotoAssessmentBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -163,6 +165,28 @@ class SurveyApiController extends Controller
     	return new Response(json_encode($apiResponse));
     }
     
+    /**
+     * @Route("/api/set_user_status", name="pat_api_setuserstatus", defaults={"_format"="json", "count" = 0})
+     * @Method({"GET", "POST"})
+     * #@Method({"POST"})
+	 * @Template()
+     */
+    public function setUserStatusAction($count)
+    {
+        return $this->changeEntityStatus('User', $this->get('request'));
+    }
+    
+    /**
+     * @Route("/api/set_photo_status", name="pat_api_setphotostatus", defaults={"_format"="json", "count" = 0})
+     * @Method({"GET", "POST"})
+     * #@Method({"POST"})
+	 * @Template()
+     */
+    public function setPhotoStatusAction($count)
+    {
+        return $this->changeEntityStatus('Photo', $this->get('request'));
+    }
+    
     function serializePhotoResponses($photoResponses) {
     	// Serializing
     	$serializedPhotoResponses = [];
@@ -184,5 +208,52 @@ class SurveyApiController extends Controller
     		$serializedPhotoResponses []= $serializedPhotoResponse;
     	}
     	return $serializedPhotoResponses;
+    }
+    
+    protected function changeEntityStatus($entityName, Request $request)
+    {
+        $requestParameters = $request;
+        $backdoorSecret = $requestParameters->get('s');
+         
+        // Checking backdoor security
+        if ($backdoorSecret !== $this->container->getParameter('backdoor_secret')) {
+            throw new \InvalidArgumentException("Wrong value for backdoor_secret");
+        }
+         
+        // Checking status
+        $id     = $requestParameters->get('id');
+        $status = (int)$requestParameters->get('status');
+        if ($status !== 0 && $status !== 1) {
+            throw new \InvalidArgumentException("Wrong value for status");
+        }
+        
+        // Checking id and getting the entity
+        $em = $this->get("doctrine.orm.entity_manager");
+        $entity = $em->getRepository('KachkaevPhotoAssessmentBundle:'.$entityName)->findOneById($id);
+        if (!$entity) {
+            throw new \InvalidArgumentException("Wrong value for id");
+        }
+
+        // Making sure that the old status is 0 or 1
+        $oldStatus = $entity->getStatus();
+        if ($oldStatus !== 0 && $oldStatus !== 1) {
+            throw new \InvalidArgumentException("Can't change status because old status = ". $oldStatus);
+        }
+        
+        // Changing status and saving this to the DB
+        $entity->setStatus($status);
+        $em->persist($entity);
+        $em->flush();
+         
+        $apiResponse = [
+        "response" => [
+                "status" => "ok",
+                "changed" => $oldStatus !== $status,
+                "old_value" => $oldStatus,
+                "new_value" => $status
+            ],
+        ];
+        
+        return new Response(json_encode($apiResponse));
     }
 }

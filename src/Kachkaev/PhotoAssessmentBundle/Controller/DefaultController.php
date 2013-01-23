@@ -127,7 +127,7 @@ class DefaultController extends Controller
         };
         
     	// Get all users
-        $usersStmt = $em->getConnection()->query("SELECT * FROM User ORDER BY id");
+        $usersStmt = $em->getConnection()->query("SELECT * FROM User WHERE status < 2 ORDER BY id");
         $usersStmt->execute();
         $usersArray = $usersStmt->fetchAll(\PDO::FETCH_ASSOC);
         $usersCollection = [];

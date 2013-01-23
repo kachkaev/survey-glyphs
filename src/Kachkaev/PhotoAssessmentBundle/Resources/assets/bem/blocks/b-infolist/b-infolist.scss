@@ -65,3 +65,22 @@
 	z-index: 999;
 	background: rgba(0,0,0,0);
 }
+
+.b-infolist__tooltip {
+    background: #fffcd2 !important;
+    color: #999;
+    font-size: 14px !important;
+    font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    border: 1px solid #999 !important;
+    
+    -webkit-border-radius: .5em; 
+    -moz-border-radius: .5em;
+    -o-border-radius: .5em;
+    border-radius: .5em;
+    background: #fcfc80;
+    
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -o-box-shadow: none;
+}
