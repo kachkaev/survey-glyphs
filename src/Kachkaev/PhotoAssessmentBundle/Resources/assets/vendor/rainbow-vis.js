@@ -33,7 +33,7 @@ function Rainbow()
 			return this;
 		}
 	}
-	
+
 	this.setColors = this.setColours;
 
 	this.setSpectrum = function () 
@@ -41,10 +41,11 @@ function Rainbow()
 		setColours(arguments);
 		return this;
 	};
-
+	
 	this.setSpectrumByArray = function (array)
 	{
 		setColours(array);
+        return this;
 	};
 
 	this.colourAt = function (number)
