@@ -170,7 +170,8 @@ class DefaultController extends Controller
         
         return [
             'data' => json_encode($data),
-            'jsTranslationStrings' => json_encode($jsTranslations)
+            'jsTranslationStrings' => json_encode($jsTranslations),
+            'backdoorSecret' => $backdoorSecret,
         ];
     }
     

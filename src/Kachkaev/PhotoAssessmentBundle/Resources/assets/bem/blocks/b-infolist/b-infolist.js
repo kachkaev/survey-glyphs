@@ -43,18 +43,26 @@ $.widget('ui.bInfoList', {
 		};
 
 		// Click
-		var onItemHoverClick = function() {
+		var onItemClick = function() {
 		    var $this = $(this);
 		    w._self.setCurrentItemId($this.data('id'));
         };
-        
+
+        // Double click
+        var onItemDblClick = function() {
+        };
+
         // Populate items
 		_.each(w.options.items, function(itemData, id) {
 		    var $item = $('<li/>').addClass('b-infolist__item');
 		    var addItem = true;
-		    $item.click(onItemHoverClick);
+		    $item.click(onItemClick);
 		    $item.mouseenter(onItemHoverOver);
 		    $item.mouseleave(onItemHoverOut);
+		    if (_.isFunction(w.options.dblclickAction)) {
+		        $item.dblclick(w.options.dblclickAction);
+		    }
+
 		    $item.data('id', id);
 		    $item.data('data', itemData);
 		    if (_.isFunction(w.options.customizeItem)) {
@@ -99,14 +107,14 @@ $.widget('ui.bInfoList', {
 		var w = this.w;
 
 		if (!_.isArray(ids)) {
-		    ids = _.keys(w.options.data);
+		    ids = _.keys(w.options.items);
 		}
 		
 		w.$items.detach();
         if (_.isFunction(w.options.customizeItem)) {
             _.each(ids, function(id) {
                 var $item = w.itemsMap[id];
-                w.options.customizeItem($item, id, w.options.data[id]);
+                w.options.customizeItem($item, id, w.options.items[id]);
             });
         }
 

@@ -40,7 +40,7 @@
 {% block assets_js %}
 	{{ parent() }}
     <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl={{ app.request.locale }}"></script>
-    <script type="text/javascript">data = {{ data | raw }}; lang = { str: {{ jsTranslationStrings | raw }} };</script>
+    <script type="text/javascript">data = {{ data | raw }}; lang = { str: {{ jsTranslationStrings | raw }} }; backdoorSecret = '{{ backdoorSecret }}'</script>
 {% endblock assets_js %}
 
 {% block footer %}{% endblock %}

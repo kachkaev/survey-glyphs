@@ -222,7 +222,10 @@ class SurveyApiController extends Controller
          
         // Checking status
         $id     = $requestParameters->get('id');
-        $status = (int)$requestParameters->get('status');
+        $status = $requestParameters->get('status');
+        if (is_string($status))
+            $status = (int)$status;
+        
         if ($status !== 0 && $status !== 1) {
             throw new \InvalidArgumentException("Wrong value for status");
         }

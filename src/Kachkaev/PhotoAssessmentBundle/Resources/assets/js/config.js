@@ -1,0 +1,1 @@
+var apiBaseURL = (document.URL.indexOf('p_app_dev.php') != -1) ? "/p_app_dev.php/api/" : "/api/";
