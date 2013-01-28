@@ -44,7 +44,20 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(pa
 				info.lon = pos.lng;
 				info.lat = pos.lat;
 			}
-			info.imgSrc = photo.Ga[0].url;
+			// Panoramio widget internals change, so we don't know for sure which parameter contains url
+			try {
+			    // Suppose that it's Ha (2012-01-28)
+			    info.imgSrc = photo.Ha[0].url;
+			} catch (e) {
+			    // If not, looping through all array keys to find one
+			    _.some(photo, function(v, k) {
+			        try {
+			            info.imgSrc = v[0].url;
+			            return false;
+			        } catch (e) {
+			        }
+			    });
+			}
 //			info.imgSrc = "http://static.panoramio.com/photos/large/"+photo.getPhotoId()+".jpg";
 		} else {
 			info.photoId = params.photoId;
