@@ -1,6 +1,10 @@
 $(function(){
 	if (!$(document.body).hasClass("p-survey"))
 		return;
+
+    // fix chrome + jquery position margin: 0 auto bug
+    pat.fixWebkitJqueryPositionBug();
+
 	// =====================================
 	// Objects with UI
 	// =====================================

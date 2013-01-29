@@ -38,6 +38,9 @@ $(function(){
     if (!$(document.body).hasClass("p-results"))
         return;
     
+    // fix chrome + jquery position margin: 0 auto bug
+    pat.fixWebkitJqueryPositionBug();
+
     // =====================================
     // Supplement data with stats
     // =====================================
