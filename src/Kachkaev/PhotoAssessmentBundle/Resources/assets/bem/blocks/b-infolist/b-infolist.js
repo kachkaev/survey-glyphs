@@ -1,13 +1,34 @@
+(function() {
+
+var PHOTO_RESPONSE_ALL = -42; // used as key for all response counts
+var PHOTO_RESPONSE_UNANSWERED = 0;
+var PHOTO_RESPONSE_INCOMPLETE = 1;
+var PHOTO_RESPONSE_COMPLETE = 2;
+var PHOTO_RESPONSE_PHOTO_PROBLEM = 0x10;
+
+var useQuicksand = false;
+
 $.widget('ui.bInfoList', {
 
 	_init: function() {
-		var w = {
+        this.options = _.extend({
+            sortMode: 'id',
+            items: [],
+            dblclickAction: null,
+            customizeItem: null,
+        }, this.options);
+
+        var w = {
 				_self: this,
 				$element: this.element,
 				options: this.options
 			};
 		this.w = w;
 		
+		w.$sorters = $('<ul/>').addClass("b-infolist__sorters").disableSelection();
+		_.each(['id', 'completed', 'problems'], function(sortMode) {
+		    w.$sorters.append($('<li/>').addClass('b-infolist__sorter').attr('data-mode', sortMode).append($('<i/>').text(sortMode)));
+		});
 		w.$items = $('<ul/>').addClass("b-infolist__items");
 		w.$resizeBlind = $('<div/>').addClass("b-infolist__resize-blind");
 		w.itemsMap = {};
@@ -15,6 +36,13 @@ $.widget('ui.bInfoList', {
 		w.mouseId = null;
 		w.mouseIdChangerHash = null;
 		w.$currentItem = null;
+		
+		// Sorters evenrs
+		
+		w.$sorters.children().click(function() {
+		    var $this = $(this);
+		    w._self.sortItemsBy($this.data('mode'));
+		});
 
 		// Item events
 		//// Changes mouse id when hover
@@ -63,7 +91,7 @@ $.widget('ui.bInfoList', {
 		        $item.dblclick(w.options.dblclickAction);
 		    }
 
-		    $item.data('id', id);
+		    $item.attr('data-id', id);
 		    $item.data('data', itemData);
 		    if (_.isFunction(w.options.customizeItem)) {
 		        if (false === w.options.customizeItem($item, id, itemData)) {
@@ -83,6 +111,9 @@ $.widget('ui.bInfoList', {
 		    }
 		});
 		
+		// sort items
+		w._self.sortItemsBy(w.options.sortMode, false, true);
+		
 		// Make the element resizable with constraints taken from css
 		w.$element.resizable({
 		    maxHeight: w.$element.css('maxHeight'),
@@ -98,7 +129,98 @@ $.widget('ui.bInfoList', {
 		    }
 		});
 		
-		w.$element.append(w.$items);
+		w.$element.append(w.$sorters, w.$items);
+	},
+	
+	sortItemsBy: function(mode, isDescending, forceNoAnimation) {
+	    var w = this.w;
+	    
+	    var currentIsDescending = null;
+	    
+	    // Check whether sort mode has been changed, update interface if needed and exit otherwise
+	    var $currentModeNode = w.$sorters.find('.ascending, .descending');
+	    if ($currentModeNode.length) {
+	        currentIsDescending = $currentModeNode.hasClass('descending');
+	        $currentModeNode.removeClass('ascending descending');
+	        if (_.isUndefined(isDescending)) {
+	            if ($currentModeNode.data('mode') == mode) {
+	                isDescending = !currentIsDescending;
+	            } else {
+	                isDescending = false;
+	            }
+	        } else {
+	            if ($currentModeNode.data('mode') == mode && $currentModeNode == $currentModeNode) {
+	                return;
+	            }
+	        }
+	    }
+	    
+	    var $newModeNode = w.$sorters.find('[data-mode="' + mode + '"]');
+	    $newModeNode.addClass(isDescending ? 'descending' : 'ascending');
+	    
+        // Get list of new ids, if the sequence matches the old one, exit
+	    var oldIds = _.map(w.options.items, function(item) {
+	        return item.id;
+	    });
+	    
+	    var newItems = _.sortBy(w.options.items, function(item) {
+	       var id = item.id < 0 ? 9999 : parseInt(item.id, 10);
+	       switch (mode) {
+	       case "completed":
+	           return item.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] * 10000 + id;
+	           
+	       case "problems":
+               return item.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] * 10000 + id;
+
+	       case "id":
+	       default:
+	           return id;
+	       
+	       }
+	    });
+	    
+	    if (isDescending) {
+	        newItems.reverse();
+	    }
+	    
+	    var newIds = _.map(newItems, function(item) {
+            return item.id;
+        });
+	    
+	    if (_.isEqual(oldIds, newIds))
+	        return;
+	    
+	    // Sort using quicksand
+	    if (useQuicksand) {
+	        // Generate a list of new ui objects to then pass them to sandbox 
+	        console.log('resort needed!', mode, isDescending);
+	        var $newItems = $();
+	        _.each(newIds, function(id) {
+	            if (!w.itemsMap[id])
+	                return;
+	            $newItems = $newItems.add($('<li/>').addClass('b-infolist__item-placeholder').attr('data-id', id));
+	        });
+	        
+	        w.$items.quicksand($newItems, {
+	            //atomic: true,
+	            useScaling: false,
+	            adjustHeight: false,
+	            adjustWidth: false,
+	        });
+	        
+	    } else {
+	        var oldScrollTop = w.$items.scrollTop();
+	        //w.$items.empty();
+	        w.$items.detach();
+	        _.each(newIds, function(id) {
+                if (!w.itemsMap[id])
+                    return;
+	            w.$items.append(w.itemsMap[id]);
+	        });
+	        w.$items.appendTo(w.$element);
+	        w.$items.scrollTop(oldScrollTop);
+	    }
+	    w.options.items = newItems;
 	},
 
 	/** Update items
@@ -142,3 +264,4 @@ $.widget('ui.bInfoList', {
 		w._self._trigger("changeitem", null, {id: newId});
 	}
 });
+}());

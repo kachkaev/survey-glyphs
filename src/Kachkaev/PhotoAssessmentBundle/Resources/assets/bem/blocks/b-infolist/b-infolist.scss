@@ -1,7 +1,7 @@
 .b-infolist {
 	position: relative;
 	min-height: 200px; 
-	max-height: 500px; 
+	max-height: 520px; 
 }
 
 .b-infolist_user {
@@ -12,9 +12,44 @@
     width: 700px;
 }
 
+.b-infolist__sorters {
+	
+}
+
+
+.b-infolist__sorter {
+    float: left;
+    margin-right: 10px;
+    padding-right: 10px;
+    color: #009;
+    cursor: pointer;
+    background: no-repeat right 0.5em;
+	opacity: .8;
+}
+.b-infolist__sorter:hover {
+	opacity: 1;
+}
+.b-infolist__sorter.descending,
+.b-infolist__sorter.ascending {
+    color: #000;
+}
+.b-infolist__sorter.ascending {
+    background-image: url("data:image/gif;base64,R0lGODlhBwAEAIABAKydhf///yH5BAEAAAEALAAAAAAHAAQAAAIHjGEJq8sOCwA7");
+}
+.b-infolist__sorter.descending {
+	background-image: url("data:image/gif;base64,R0lGODlhBwAEAIABAKydhf///yH5BAEAAAEALAAAAAAHAAQAAAIIhA+BGWoNWSgAOw%3D%3D");
+}
+
+.b-infolist__sorter i {
+    display: block;
+    float: left;
+    border-bottom: 1px dotted;
+    height: 1.1em;
+}
+
 .b-infolist__items {
 	position: absolute;
-	top: 0;
+	top: 20px;
 	left: 0;
 	bottom: 0;
 	right: 0;
@@ -67,6 +102,7 @@
 
 .b-infolist__tooltip {
     background: #fffcd2 !important;
+    margin: 0;
     color: #999;
     font-size: 14px !important;
     font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
