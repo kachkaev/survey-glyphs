@@ -180,7 +180,7 @@ $(function(){
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({
         questions: questions,
         answers: answers,
-        maxTime: DEFAULT_MAX_TIME
+        maxTime: DEFAULT_MAX_TIME,
     });
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
         questions: questions,
