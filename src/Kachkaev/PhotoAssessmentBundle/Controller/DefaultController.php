@@ -116,7 +116,7 @@ class DefaultController extends Controller
     	$em = $this->get("doctrine.orm.entity_manager");
     	
     	// Get all photos
-        $photosStmt = $em->getConnection()->query("SELECT * FROM Photo ORDER BY id");
+        $photosStmt = $em->getConnection()->query("SELECT * FROM Photo where id > 0 ORDER BY id");
         $photosStmt->execute();
         $photosArray = $photosStmt->fetchAll(\PDO::FETCH_ASSOC);
         // Put the test photo (id = -1) to the end of the list
@@ -136,7 +136,7 @@ class DefaultController extends Controller
         };
         
     	// Get all photo responses
-        $photoResponsesStmt = $em->getConnection()->query("SELECT * FROM PhotoResponse WHERE status != 0 ORDER BY id");
+        $photoResponsesStmt = $em->getConnection()->query("SELECT * FROM PhotoResponse WHERE status != 0 && photoId >= 0 ORDER BY id");
         $photoResponsesStmt->execute();
         $photoResponsesArray = $photoResponsesStmt->fetchAll(\PDO::FETCH_ASSOC);
         $photoResponsesCollection = [];

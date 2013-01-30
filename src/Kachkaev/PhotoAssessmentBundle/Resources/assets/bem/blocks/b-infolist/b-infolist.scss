@@ -74,6 +74,10 @@
 	cursor: pointer;
 	text-align: center;
 	overflow: hidden;
+    color: rgba(0,0,0,0.3);
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 20px;
 }
 
 .b-infolist__item.complete:before {
@@ -81,10 +85,6 @@
 }
 
 .b-infolist__item.photo_problem {
-	color: rgba(0,0,0,0.3);
-	font-weight: bold;
-	font-size: 15px;
-	line-height: 20px;
 }
 .b-infolist__item.photo_problem:before {
 	content: "!";
@@ -94,13 +94,19 @@
 }
 
 .b-infolist__item.unread {
-	-webkit-box-shadow: inset 0px 0px 2px 2px rgba(0, 0, 0, .4);
-	box-shadow: inset 0px 0px 2px 2px rgba(0, 0, 0, .4);
+	-webkit-box-shadow: inset 0px 0px 3px 2px rgba(255, 255, 255, 1);
+	box-shadow: inset 0px 0px 3px 2px rgba(255, 255, 255, 1);
+}
+.b-infolist__item.unread:before {
 }
 
 .b-infolist__item.current {
-	border-color: #737373;
+	border-color: #333;
     border-radius: 2px;
+    border-width: 2px;
+    height: 15px;
+    width: 15px;
+    line-height: 18px;
 }
 
 .b-infolist__resize-blind {

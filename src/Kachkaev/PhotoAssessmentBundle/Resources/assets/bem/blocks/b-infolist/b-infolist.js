@@ -258,7 +258,7 @@ $.widget('ui.bInfoList', {
         if (_.isFunction(w.options.customizeItem)) {
             _.each(ids, function(id) {
                 var $item = w.$itemsMap[id];
-                w.options.customizeItem($item, id, w.options.items[id]);
+                w.options.customizeItem($item, id, w.itemsMap[id]);
             });
         }
 

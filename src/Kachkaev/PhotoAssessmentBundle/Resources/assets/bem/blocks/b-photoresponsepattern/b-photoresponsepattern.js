@@ -13,6 +13,7 @@ var defaultLineStyle = {
 $.widget('ui.bphotoresponsepattern', {
 
 	_init: function() {
+        
 	    this.options = _.extend({
 	        answers: [],
 	        questions: [],
@@ -29,7 +30,12 @@ $.widget('ui.bphotoresponsepattern', {
 		this.w = w;
 		
 		
-//		w.$svgCanvas = $('<svg/>')
+        w.d3line = d3.svg.line()
+            .x(function(d){return d.x;})
+            .y(function(d){return d.y;})
+            .interpolate("linear"); 
+        
+        //		w.$svgCanvas = $('<svg/>')
 //    		.attr('width', w.$element.width())
 //    		.attr('height', w.$element.height())
 //		    .width(w.$element.width())
@@ -38,10 +44,10 @@ $.widget('ui.bphotoresponsepattern', {
 		    .append("svg:svg")
     		.attr('width', w.$element.width())
     		.attr('height', w.$element.height());
+		w.d3SvgCanvas.append("g")
+		    .attr('class', 'photoResponses');
 		
 		w.$svgCanvas = w.$element.find('svg');
-		console.log(w.$svgCanvas);
-		//console.log(w.d3SvgCanvas);
 		w._self._redraw();
 	},
 
@@ -61,7 +67,37 @@ $.widget('ui.bphotoresponsepattern', {
 	_redraw: function() {
 	    var w = this.w;
 	    
-	    w.d3SvgCanvas.selectAll('*').remove();
+	    d3responseLine = w.d3SvgCanvas.select('g.photoResponses').selectAll('path').data(w.options.photoResponses);
+	    
+	    // Update
+	    d3responseLine
+            .attr("d", function(d) {
+                var pts = [];
+                _.each(w.options.questions, function(question) {
+                    pts.push(w._self._qaToCoords(d, question));
+                });
+                return w.d3line(pts);
+            });
+	    
+	    // Enter
+	    d3responseLine.enter()
+           .append("svg:path")
+           .attr("d", function(d) {
+               var pts = [];
+               _.each(w.options.questions, function(question) {
+                   pts.push(w._self._qaToCoords(d, question));
+               });
+               return w.d3line(pts);
+           })
+           .attr("class", "answer")
+           .on("click", function(d, i){
+               w._self._trigger("contextclick", null, {photoResponses: [d]});
+           });
+       
+	   // Exit
+       d3responseLine.exit()
+           .remove();
+	    return;
 	    
 	    w.d3SvgCanvas.data(w.options.photoResponses);
 
@@ -81,10 +117,6 @@ $.widget('ui.bphotoresponsepattern', {
                 w._self._drawMarker(pts[0]);
             };
             
-            var d3line2 = d3.svg.line()
-                .x(function(d){return d.x;})
-                .y(function(d){return d.y;})
-                .interpolate("linear"); 
             
             w.d3SvgCanvas.append("svg:path")
                 .attr("d", d3line2(pts))

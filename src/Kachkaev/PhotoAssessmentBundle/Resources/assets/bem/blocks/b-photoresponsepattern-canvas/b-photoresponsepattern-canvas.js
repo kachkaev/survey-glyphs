@@ -10,7 +10,7 @@ var defaultLineStyle = {
         rounded: true
       };
 
-$.widget('ui.bphotoresponsepattern', {
+$.widget('ui.bphotoresponsepatterncanvas', {
 
 	_init: function() {
 	    this.options = _.extend({

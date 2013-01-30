@@ -114,6 +114,7 @@ $(function(){
     // Objects with UI
     // =====================================
 
+
     // Info lists colouring
     var colourSchemeUser = {
             0: ['ebf7fa', new Rainbow().setNumberRange(0, USER_SPECTRUM_MAX).setSpectrum('c0e0e8', '7ab1bf', '428696')],
@@ -132,7 +133,8 @@ $(function(){
             type: "POST",
             success: function(ajaxData) {
                 data.status = ajaxData.response.new_value;
-                data.isUnread = false;
+                if (data.type == 'user')
+                    data.isUnread = false;
                 $infoList.bInfoList('updateItems', [data.id]);
             },
             error: function() {
@@ -153,6 +155,7 @@ $(function(){
         return '#' + pallete[1].colorAt(n);
     };
     
+
     //// Info lists
     ///// Users
     var listsHeight = localStorage.getItem(listsHeightLocalstorageParameter) || listsHeightDefaults;
@@ -161,7 +164,7 @@ $(function(){
         dblclickAction: toggleStatusFunction,
         sortModes: ['id', 'completed', 'problems', 'unread'],
         customizeItem: function($item, id, data) {
-            if (data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] < 2)
+            if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                 return false;
             $item.css('backgroundColor', numberToColor(colourSchemeUser[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
             $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
@@ -237,6 +240,15 @@ $(function(){
     });
     var $bothPhotoresponsePatterns = $bPhotoResponsePatternUser.add($bPhotoResponsePatternPhoto);
 
+    
+    $bPhotoResponsePatternPhoto.on('bphotoresponsepatterncontextclick', function(event, ui) {
+        $bUserInfoList.bInfoList('setCurrentItemId', ui.photoResponses[0].userId);
+    });
+    $bPhotoResponsePatternUser.on('bphotoresponsepatterncontextclick', function(event, ui) {
+        $bPhotoInfoList.bInfoList('setCurrentItemId', ui.photoResponses[0].photoId);
+    });
+
+    
     //// Box with photo
     var $bPhoto = $('.b-survey-photo').bsurveyphoto();
     
@@ -396,7 +408,6 @@ $(function(){
         }
     });
     
-
     // =====================================
     // Starting it all up!
     // =====================================
