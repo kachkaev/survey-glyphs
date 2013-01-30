@@ -216,6 +216,8 @@ $(function(){
     $bUserInfoList.on('binfolistchangeitem', function(event, ui) {
         var userId = ui.id;
         var userData = ui.itemData;
+        if (!userData)
+            return;
         var userStatus = userData.status;
         if (userData.isUnread) {
             setTimeout(function() {
@@ -226,6 +228,12 @@ $(function(){
         }
     });
 
+    // Titles above captions
+    var $bListCaptionUser = $('.p-results__listcaption__user');
+    var $bListCaptionPhoto = $('.p-results__listcaption__photo');
+    
+    
+    
 
     //// Patterns
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({
@@ -336,6 +344,8 @@ $(function(){
     // =====================================
     $bUserInfoList.on('binfolistchangeitem', function(event, ui) {
         var userId = ui.id;
+
+        $bListCaptionUser.text(userId ? 'User ' + userId : '');
         if (userId === null) {
             $bPhotoResponsePatternUser.bphotoresponsepattern('option', 'photoResponses', []);
             return
@@ -347,6 +357,8 @@ $(function(){
     
     $bPhotoInfoList.on('binfolistchangeitem', function(event, ui) {
         var photoId = ui.id;
+        $bListCaptionPhoto.text(photoId ? 'Photo ' + photoId : '');
+
         if (photoId === null) {
             $bPhoto.bsurveyphoto('showNothing');
             $bPhotoResponsePatternPhoto.bphotoresponsepattern('option', 'photoResponses', []);

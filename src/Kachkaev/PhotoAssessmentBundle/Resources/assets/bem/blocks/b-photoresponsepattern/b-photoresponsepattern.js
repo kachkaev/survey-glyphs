@@ -1,6 +1,6 @@
 (function(){
 
-var canvasPadding = [30, 20, 5, 20]; // top right bottom left
+var canvasPadding = [10, 20, 5, 20]; // top right bottom left
 
 var durationBarHalfWidth = 5;
 
