@@ -13,6 +13,9 @@ var PHOTO_RESPONSE_INCOMPLETE = 1;
 var PHOTO_RESPONSE_COMPLETE = 2;
 var PHOTO_RESPONSE_PHOTO_PROBLEM = 0x10;
 
+var MARK_AS_READ_DELAY = 2000;
+
+
 var questions = [
     "qIsRealPhoto",
     "qIsOutdoors",
@@ -91,6 +94,22 @@ $(function(){
        });
     });
     
+    // Update users' unread property
+    _.each(data.users, function(user) {
+        var statusCheckedAt = user.statusCheckedAt; 
+        if (!user.statusCheckedAt) {
+            user.isUnread = true;
+            return;
+        }
+        user.isUnread = false;
+        _.each(user.photoResponses, function(photoResponse) {
+            if (photoResponse.submittedAt > statusCheckedAt) {
+                user.isUnread = true;
+                return false;
+            }
+        });
+    });
+
     // =====================================
     // Objects with UI
     // =====================================
@@ -106,23 +125,26 @@ $(function(){
             1: ['faeeee', new Rainbow().setNumberRange(0, PHOTO_SPECTRUM_MAX).setSpectrum('F7D9D9', 'd88282')]
     };
     
-    var toggleStatusFunction = function(event) {
-        $this = $(this);
-        var data = $this.data('data');
-        
+    var setStatusFunction = function($infoList, data, status) {
         $.ajax({
             url: apiBaseURL + 'set_' + data.type + '_status',
-            data: {s: backdoorSecret, id: data.id, status: data.status == 0 ? 1 : 0},
+            data: {s: backdoorSecret, id: data.id, status: status},
             type: "POST",
             success: function(ajaxData) {
                 data.status = ajaxData.response.new_value;
-                $this.parents('.b-infolist').bInfoList('updateItems', [data.id]);
+                data.isUnread = false;
+                $infoList.bInfoList('updateItems', [data.id]);
             },
             error: function() {
                 console.log('Failed updating status', data);
             }
         });
-
+    };
+    
+    var toggleStatusFunction = function(event) {
+        var $this = $(this);
+        var data = $this.data('data');
+        setStatusFunction($this.parents('.b-infolist'), data, data.status == 0 ? 1 : 0);
     };
     
     var numberToColor = function(pallete, n) {
@@ -132,20 +154,23 @@ $(function(){
     };
     
     //// Info lists
+    ///// Users
     var listsHeight = localStorage.getItem(listsHeightLocalstorageParameter) || listsHeightDefaults;
     var $bUserInfoList = $('.b-infolist_user').height(listsHeight).bInfoList({
         items: data.users,
         dblclickAction: toggleStatusFunction,
+        sortModes: ['id', 'completed', 'problems', 'unread'],
         customizeItem: function($item, id, data) {
             if (data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] < 2)
                 return false;
             $item.css('backgroundColor', numberToColor(colourSchemeUser[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
             $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
             $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
+            $item.toggleClass('unread', data.isUnread);
             
-            var title = 'User ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+            var title = 'User ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
             if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
-                title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
+                title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
                 if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
                     title += 's';
                 }
@@ -154,6 +179,8 @@ $(function(){
             $item.attr('title', title);
         },
         });
+    
+    ////// Photos
     var $bPhotoInfoList = $('.b-infolist_photo').height(listsHeight).bInfoList({
         items: data.photos,
         dblclickAction: toggleStatusFunction,
@@ -162,9 +189,9 @@ $(function(){
             $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
             $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
 
-            var title = 'Photo ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+            var title = 'Photo ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
             if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
-                title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
+                title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
                 if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
                     title += 's';
                 }
@@ -172,12 +199,30 @@ $(function(){
             $item.attr('title', title);
         }
     });
+    //// Events shared by both info lists
     var $bothInfoLists = $bUserInfoList.add($bPhotoInfoList);
+    
+    ///// Resize
     $bothInfoLists.on('resize', function(event, ui) {
         localStorage.setItem(listsHeightLocalstorageParameter, ui.size.height);
         $bothInfoLists.height(ui.size.height);
         
     });
+    
+    ///// mouseChanged
+    $bUserInfoList.on('binfolistchangeitem', function(event, ui) {
+        var userId = ui.id;
+        var userData = ui.itemData;
+        var userStatus = userData.status;
+        if (userData.isUnread) {
+            setTimeout(function() {
+                if ($bUserInfoList.bInfoList('option','currentId') == userId && userStatus == userData.status) {
+                    setStatusFunction($bUserInfoList, userData, userData.status);
+                }
+            }, MARK_AS_READ_DELAY);
+        }
+    });
+
 
     //// Patterns
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({

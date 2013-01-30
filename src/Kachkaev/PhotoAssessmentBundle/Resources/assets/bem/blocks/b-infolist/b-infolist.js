@@ -16,6 +16,9 @@ $.widget('ui.bInfoList', {
             items: [],
             dblclickAction: null,
             customizeItem: null,
+            mouseHoverDelay: 50,
+            currentId: null,
+            sortModes: ['id', 'completed', 'problems']
         }, this.options);
 
         var w = {
@@ -25,19 +28,21 @@ $.widget('ui.bInfoList', {
 			};
 		this.w = w;
 		
+		w.$percentage = $('<div/>').addClass('b-infolist__percentage');
 		w.$sorters = $('<ul/>').addClass("b-infolist__sorters").disableSelection();
-		_.each(['id', 'completed', 'problems'], function(sortMode) {
+		_.each(w.options.sortModes, function(sortMode) {
 		    w.$sorters.append($('<li/>').addClass('b-infolist__sorter').attr('data-mode', sortMode).append($('<i/>').text(sortMode)));
 		});
 		w.$items = $('<ul/>').addClass("b-infolist__items");
 		w.$resizeBlind = $('<div/>').addClass("b-infolist__resize-blind");
 		w.itemsMap = {};
-		w.currentId = null;
+		w.$itemsMap = {};
+		w.options.currentId = null;
 		w.mouseId = null;
 		w.mouseIdChangerHash = null;
 		w.$currentItem = null;
 		
-		// Sorters evenrs
+		// Sorters events
 		
 		w.$sorters.children().click(function() {
 		    var $this = $(this);
@@ -53,10 +58,23 @@ $.widget('ui.bInfoList', {
 		    w.mouseIdChangerHash = mouseIdChangerHash;
 		    setTimeout(function() {
 		        if (w.mouseIdChangerHash === mouseIdChangerHash) {
-		            w._self._trigger("hoveroveritem", null, {id: id});
+		            w._self._trigger("hoveroveritem", null, {id: id, itemData: w.itemsMap[id]});
 		            w.mouseId = id;
 		        }
-		    }, 50);
+		    }, w.options.mouseHoverDelay);
+
+		    // updates percentage
+            setTimeout(function() {
+                if (w.mouseId === id)
+                    return;
+                if (id === null) {
+                    w.$percentage.text('');
+                } else {
+                    var itemsTotal = _.size(w.$itemsMap);
+                    var currentIndex = w.$itemsMap[id].index();
+                    w.$percentage.text(Math.floor((currentIndex + 1)/itemsTotal*100) + '%');
+                }
+            }, 20);
 		};
 		
 		//// Hover over
@@ -81,7 +99,8 @@ $.widget('ui.bInfoList', {
         };
 
         // Populate items
-		_.each(w.options.items, function(itemData, id) {
+		_.each(w.options.items, function(itemData) {
+		    var id = itemData.id;
 		    var $item = $('<li/>').addClass('b-infolist__item');
 		    var addItem = true;
 		    $item.click(onItemClick);
@@ -107,7 +126,8 @@ $.widget('ui.bInfoList', {
 	                tooltipClass: "b-infolist__tooltip",
 	            });
 		        $item.appendTo(w.$items);
-		        w.itemsMap[id] = $item;
+		        w.itemsMap[id] = itemData;
+		        w.$itemsMap[id] = $item;
 		    }
 		});
 		
@@ -129,7 +149,7 @@ $.widget('ui.bInfoList', {
 		    }
 		});
 		
-		w.$element.append(w.$sorters, w.$items);
+		w.$element.append(w.$percentage, w.$sorters, w.$items);
 	},
 	
 	sortItemsBy: function(mode, isDescending, forceNoAnimation) {
@@ -170,9 +190,12 @@ $.widget('ui.bInfoList', {
 	           return item.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] * 10000 + id;
 	           
 	       case "problems":
-               return item.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] * 10000 + id;
+               return item.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] * -10000 + id;
 
-	       case "id":
+           case "unread":
+               return (item.isUnread ? -10000 : 0) + id;
+
+           case "id":
 	       default:
 	           return id;
 	       
@@ -193,10 +216,9 @@ $.widget('ui.bInfoList', {
 	    // Sort using quicksand
 	    if (useQuicksand) {
 	        // Generate a list of new ui objects to then pass them to sandbox 
-	        console.log('resort needed!', mode, isDescending);
 	        var $newItems = $();
 	        _.each(newIds, function(id) {
-	            if (!w.itemsMap[id])
+	            if (!w.$itemsMap[id])
 	                return;
 	            $newItems = $newItems.add($('<li/>').addClass('b-infolist__item-placeholder').attr('data-id', id));
 	        });
@@ -213,9 +235,9 @@ $.widget('ui.bInfoList', {
 	        //w.$items.empty();
 	        w.$items.detach();
 	        _.each(newIds, function(id) {
-                if (!w.itemsMap[id])
+                if (!w.$itemsMap[id])
                     return;
-	            w.$items.append(w.itemsMap[id]);
+	            w.$items.append(w.$itemsMap[id]);
 	        });
 	        w.$items.appendTo(w.$element);
 	        w.$items.scrollTop(oldScrollTop);
@@ -235,7 +257,7 @@ $.widget('ui.bInfoList', {
 		w.$items.detach();
         if (_.isFunction(w.options.customizeItem)) {
             _.each(ids, function(id) {
-                var $item = w.itemsMap[id];
+                var $item = w.$itemsMap[id];
                 w.options.customizeItem($item, id, w.options.items[id]);
             });
         }
@@ -246,22 +268,22 @@ $.widget('ui.bInfoList', {
 	setCurrentItemId: function(newId) {
 		var w = this.w;
 
-		if (newId == w.currentId)
+		if (newId == w.options.currentId)
 			return false;
 
 		if (w.$currentItem) {
 			w.$currentItem.removeClass('current');
 		}
 		
-		var $newCurrentItem = w.itemsMap[newId];
+		var $newCurrentItem = w.$itemsMap[newId];
 		
 		if ($newCurrentItem) {
 		    $newCurrentItem.addClass('current');
-		    w.currentId = newId;
+		    w.options.currentId = newId;
 		    w.$currentItem = $newCurrentItem;
 		    w.$currentItem.scrollintoview();
 		}
-		w._self._trigger("changeitem", null, {id: newId});
+		w._self._trigger("changeitem", null, {id: newId, itemData: w.itemsMap[newId]});
 	}
 });
 }());

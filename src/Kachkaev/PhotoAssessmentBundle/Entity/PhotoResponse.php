@@ -94,10 +94,6 @@ class PhotoResponse extends AbstractStandardEntity {
 	 */
 	protected $submittedAt;
 	
-	/** @ORM\Column(type="datetime", nullable=true)
-	 */
-	protected $statusCheckedAt;
-	
 	public function __construct(Photo $photo, User $user) {
 		parent::__construct();
 		$this->photo = $photo;

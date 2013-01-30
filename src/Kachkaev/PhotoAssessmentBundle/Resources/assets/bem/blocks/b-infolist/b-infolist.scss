@@ -12,10 +12,10 @@
     width: 700px;
 }
 
+/* sorters */
 .b-infolist__sorters {
 	
 }
-
 
 .b-infolist__sorter {
     float: left;
@@ -24,7 +24,7 @@
     color: #009;
     cursor: pointer;
     background: no-repeat right 0.5em;
-	opacity: .8;
+	opacity: .6;
 }
 .b-infolist__sorter:hover {
 	opacity: 1;
@@ -47,6 +47,14 @@
     height: 1.1em;
 }
 
+/* percentage */
+.b-infolist__percentage {
+	float: right;
+	color: #ccc;
+	padding-right: 14px;
+}
+
+/* items */
 .b-infolist__items {
 	position: absolute;
 	top: 20px;
@@ -62,7 +70,6 @@
 	width: 17px;
 	float: left;
 	border: 1px solid #ccc;
-	border-radius: 2px;
 	float: left;
 	cursor: pointer;
 	text-align: center;
@@ -86,8 +93,14 @@
     color: rgba(0,0,0,1);
 }
 
+.b-infolist__item.unread {
+	-webkit-box-shadow: inset 0px 0px 2px 2px rgba(0, 0, 0, .4);
+	box-shadow: inset 0px 0px 2px 2px rgba(0, 0, 0, .4);
+}
+
 .b-infolist__item.current {
 	border-color: #737373;
+    border-radius: 2px;
 }
 
 .b-infolist__resize-blind {

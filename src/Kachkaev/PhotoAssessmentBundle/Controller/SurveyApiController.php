@@ -245,6 +245,11 @@ class SurveyApiController extends Controller
         
         // Changing status and saving this to the DB
         $entity->setStatus($status);
+        try {
+            $entity->setStatusCheckedAt(time());
+        } catch (\Exception $e) {
+            
+        }
         $em->persist($entity);
         $em->flush();
          
