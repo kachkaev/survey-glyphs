@@ -11,6 +11,9 @@ var useQuicksand = false;
 $.widget('ui.bInfoList', {
 
 	_init: function() {
+	    // Options are being extended with defaults (except for items that should not be cloned)
+	    var items = this.options.items || [];
+	    this.options.items = null;
         this.options = _.extend({
             sortMode: 'id',
             items: [],
@@ -20,6 +23,7 @@ $.widget('ui.bInfoList', {
             currentId: null,
             sortModes: ['id', 'completed', 'problems']
         }, this.options);
+        this.options.items = items;
 
         var w = {
 				_self: this,
