@@ -116,31 +116,63 @@ class DefaultController extends Controller
     	$em = $this->get("doctrine.orm.entity_manager");
     	
     	// Get all photos
-        $photosStmt = $em->getConnection()->query("SELECT * FROM Photo where id > 0 ORDER BY id");
+    	$photosColumnTypes = [
+            "id"                 => "string",
+            "source"             => "string",
+            "photoId"            => "string",
+            "userId"             => "string",
+            "status"             => "int",
+            "priority"           => "int",
+    	];
+        $photosStmt = $em->getConnection()->query(sprintf("SELECT %s FROM Photo where id > 0 ORDER BY id", implode(',', array_keys($photosColumnTypes))));
         $photosStmt->execute();
         $photosArray = $photosStmt->fetchAll(\PDO::FETCH_ASSOC);
         // Put the test photo (id = -1) to the end of the list
         array_push($photosArray, array_shift($photosArray));
         $photosCollection = [];
         foreach ($photosArray as $photo) {
+            $this->castFetchedRowTypes($photo, $photosColumnTypes);
             $photosCollection[$photo['id']] = $photo;
         };
         
     	// Get all users
-        $usersStmt = $em->getConnection()->query("SELECT * FROM User WHERE status < 2 ORDER BY id");
+        $usersColumnTypes = [
+            "id"                 => "string",
+            "status"             => "int",
+            "createdAt"          => "int",
+            "statusCheckedAt"    => "int",
+        ];
+        $usersStmt = $em->getConnection()->query(sprintf("SELECT %s FROM User WHERE status < 2 ORDER BY id", implode(',', array_keys($usersColumnTypes))));
         $usersStmt->execute();
         $usersArray = $usersStmt->fetchAll(\PDO::FETCH_ASSOC);
         $usersCollection = [];
         foreach ($usersArray as $user) {
+            $this->castFetchedRowTypes($user, $usersColumnTypes);
             $usersCollection[$user['id']] = $user;
         };
         
     	// Get all photo responses
-        $photoResponsesStmt = $em->getConnection()->query("SELECT * FROM PhotoResponse WHERE status != 0 && photoId >= 0 ORDER BY id");
+    	$photoResponsesColumnTypes = [
+    	    "id"                 => "string",
+    	    "status"             => "int",
+    	    "qIsRealPhoto"       => "int",
+    	    "qIsOutdoors"        => "int",
+    	    "qTimeOfDay"         => "int",
+    	    "qSubjectTemporal"   => "int",
+    	    "qSubjectPeople"     => "int",
+            "qIsByPedestrian"    => "int",
+            "qIsSpaceAttractive" => "int",
+            "photoId"            => "int",
+            "userId"             => "int",
+            "submissionCount"    => "int",
+            "submittedAt"        => "int",
+    	];
+        $photoResponsesStmt = $em->getConnection()->query(sprintf("SELECT %s FROM PhotoResponse WHERE status != 0 && photoId >= 0 ORDER BY id", implode(',', array_keys($photoResponsesColumnTypes))));
         $photoResponsesStmt->execute();
         $photoResponsesArray = $photoResponsesStmt->fetchAll(\PDO::FETCH_ASSOC);
         $photoResponsesCollection = [];
         foreach ($photoResponsesArray as $photoResponse) {
+            $this->castFetchedRowTypes($photoResponse, $photoResponsesColumnTypes);
             $photoResponsesCollection[$photoResponse['id']] = $photoResponse;
         };
         
@@ -185,6 +217,23 @@ class DefaultController extends Controller
         
         if ($backdoorSecret !== $this->container->getParameter('backdoor_secret')) {
             return new Response("Wrong value for backdoor_secret");
+        }
+    }
+    
+    /**
+     * PDOStatement->fetchAll returns strings only.
+     * This function casts some columns if necessary.
+     */
+    protected function castFetchedRowTypes(&$row, &$columnTypes) {
+        // Casting returned strings into proper types
+        foreach ($row as $k => $v) {
+            switch ($columnTypes[$k]) {
+                case "int":
+                    if ($v !== null) {
+                        $row[$k] = (int)$v;
+                    }
+                    break;
+            }
         }
     }
 }
