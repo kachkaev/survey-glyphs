@@ -15,7 +15,20 @@ var PHOTO_RESPONSE_PHOTO_PROBLEM = 0x10;
 
 var MARK_AS_READ_DELAY = 2000;
 
+// TODO replace with D3 palletess
+// Info lists colouring
+var COLORSCHEME_USER = {
+        0: ['ebf7fa', new Rainbow().setNumberRange(0, USER_SPECTRUM_MAX).setSpectrum('c0e0e8', '7ab1bf', '428696')],
+        1: ['faeeee', new Rainbow().setNumberRange(0, USER_SPECTRUM_MAX).setSpectrum('F7D9D9', 'd88282')]
+};
 
+var COLORSCHEME_PHOTO = {
+        0: ['ebfaef', new Rainbow().setNumberRange(0, PHOTO_SPECTRUM_MAX).setSpectrum('c0e8c2', '7abf8a', '429756')],
+        1: ['faeeee', new Rainbow().setNumberRange(0, PHOTO_SPECTRUM_MAX).setSpectrum('F7D9D9', 'd88282')]
+};
+
+// List of parameters in PhotoResponse that are answers to questions
+// (projected on y axis in b-photoresponsepattern)
 var questions = [
     "qIsRealPhoto",
     "qIsOutdoors",
@@ -26,6 +39,8 @@ var questions = [
     "qIsSpaceAttractive"
 ];
 
+// List of answer values
+// (projected on x axis in b-photoresponsepattern)
 var answers = [
        null,
        -42,
@@ -58,6 +73,7 @@ $(function(){
         user.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] = 0;
         user.photoResponses = [];
     });
+    
     _.each(data.photos, function(photo) {
         photo.type = 'photo';
         photo.photoResponseCounts = {};
@@ -68,6 +84,7 @@ $(function(){
         photo.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] = 0;
         photo.photoResponses = [];
     });
+    
     _.each(data.photoResponses, function(photoResponse) {
         photoResponse.type = 'photoResponse';
 
@@ -94,7 +111,7 @@ $(function(){
        });
     });
     
-    // Update users' unread property
+    // Update users' "unread" property
     _.each(data.users, function(user) {
         var statusCheckedAt = user.statusCheckedAt; 
         if (!user.statusCheckedAt) {
@@ -110,22 +127,20 @@ $(function(){
         });
     });
 
+    
     // =====================================
-    // Objects with UI
+    // Helpers
     // =====================================
 
+    // Finds the color in the pallete matching n and returns it
+    var numberToColor = function(pallete, n) {
+        if (!n)
+            return '#' + pallete[0];
+        return '#' + pallete[1].colorAt(n);
+    };
 
-    // Info lists colouring
-    var colourSchemeUser = {
-            0: ['ebf7fa', new Rainbow().setNumberRange(0, USER_SPECTRUM_MAX).setSpectrum('c0e0e8', '7ab1bf', '428696')],
-            1: ['faeeee', new Rainbow().setNumberRange(0, USER_SPECTRUM_MAX).setSpectrum('F7D9D9', 'd88282')]
-    };
     
-    var colourSchemePhoto = {
-            0: ['ebfaef', new Rainbow().setNumberRange(0, PHOTO_SPECTRUM_MAX).setSpectrum('c0e8c2', '7abf8a', '429756')],
-            1: ['faeeee', new Rainbow().setNumberRange(0, PHOTO_SPECTRUM_MAX).setSpectrum('F7D9D9', 'd88282')]
-    };
-    
+    // Sends a new value of status for a photo / user / photoresponse to the server
     var setStatusFunction = function($infoList, data, status) {
         $.ajax({
             url: apiBaseURL + 'set_' + data.type + '_status',
@@ -143,22 +158,33 @@ $(function(){
         });
     };
     
+    // Toggles status function
     var toggleStatusFunction = function(event) {
         var $this = $(this);
         var data = $this.data('data');
         setStatusFunction($this.parents('.b-infolist'), data, data.status == 0 ? 1 : 0);
     };
     
-    var numberToColor = function(pallete, n) {
-        if (!n)
-            return '#' + pallete[0];
-        return '#' + pallete[1].colorAt(n);
-    };
-    
+    // =====================================
+    // Objects with no UI
+    // =====================================
 
-    //// Info lists
-    ///// Users
+    // Photo info providers
+    var photoInfoProviders = {
+            flickr: new pat.photoInfoProvider.FlickrPhotoInfoProvider(),
+            geograph: new pat.photoInfoProvider.GeographPhotoInfoProvider(),
+            panoramio: new pat.photoInfoProvider.PanoramioPhotoInfoProvider()
+        };
+
+    // =====================================
+    // Objects with UI
+    // =====================================
+
+    // Default height of info lists
     var listsHeight = localStorage.getItem(listsHeightLocalstorageParameter) || listsHeightDefaults;
+    
+    // Info lists
+    //// Users
     var $bUserInfoList = $('.b-infolist_user').height(listsHeight).bInfoList({
         items: data.users,
         dblclickAction: toggleStatusFunction,
@@ -166,7 +192,7 @@ $(function(){
         customizeItem: function($item, id, data) {
             if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                 return false;
-            $item.css('backgroundColor', numberToColor(colourSchemeUser[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+            $item.css('backgroundColor', numberToColor(COLORSCHEME_USER[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
             $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
             $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
             $item.toggleClass('unread', data.isUnread);
@@ -183,12 +209,12 @@ $(function(){
         },
         });
     
-    ////// Photos
+    //// Photos
     var $bPhotoInfoList = $('.b-infolist_photo').height(listsHeight).bInfoList({
         items: data.photos,
         dblclickAction: toggleStatusFunction,
         customizeItem: function($item, id, data) {
-            $item.css('backgroundColor', numberToColor(colourSchemePhoto[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+            $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
             $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
             $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
 
@@ -202,181 +228,111 @@ $(function(){
             $item.attr('title', title);
         }
     });
-    //// Events shared by both info lists
-    var $bothInfoLists = $bUserInfoList.add($bPhotoInfoList);
     
-    ///// Resize
-    $bothInfoLists.on('resize', function(event, ui) {
-        localStorage.setItem(listsHeightLocalstorageParameter, ui.size.height);
-        $bothInfoLists.height(ui.size.height);
-        
-    });
-    
-    ///// mouseChanged
-    $bUserInfoList.on('binfolistchangeitem', function(event, ui) {
-        var userId = ui.id;
-        var userData = ui.itemData;
-        if (!userData)
-            return;
-        var userStatus = userData.status;
-        if (userData.isUnread) {
-            setTimeout(function() {
-                if ($bUserInfoList.bInfoList('option','currentId') == userId && userStatus == userData.status) {
-                    setStatusFunction($bUserInfoList, userData, userData.status);
-                }
-            }, MARK_AS_READ_DELAY);
-        }
-    });
-
     // Titles above captions
     var $bListCaptionUser = $('.p-results__listcaption__user');
     var $bListCaptionPhoto = $('.p-results__listcaption__photo');
     
-    
-    
 
-    //// Patterns
+    // Patterns
+    //// Users
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({
         questions: questions,
         answers: answers,
         maxTime: DEFAULT_MAX_TIME,
     });
+    //// Photos
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
         questions: questions,
         answers: answers,
         maxTime: DEFAULT_MAX_TIME
     });
-    var $bothPhotoresponsePatterns = $bPhotoResponsePatternUser.add($bPhotoResponsePatternPhoto);
 
-    
-    $bPhotoResponsePatternPhoto.on('bphotoresponsepatterncontextclick', function(event, ui) {
-        $bUserInfoList.bInfoList('setCurrentItemId', ui.photoResponses[0].userId);
-    });
-    $bPhotoResponsePatternUser.on('bphotoresponsepatterncontextclick', function(event, ui) {
-        $bPhotoInfoList.bInfoList('setCurrentItemId', ui.photoResponses[0].photoId);
-    });
-
-    
     //// Box with photo
     var $bPhoto = $('.b-survey-photo').bsurveyphoto();
     
-    // =====================================
-    // Objects with no UI
-    // =====================================
-    //// info providers
-    var photoInfoProviders = {
-            flickr: new pat.photoInfoProvider.FlickrPhotoInfoProvider(),
-            geograph: new pat.photoInfoProvider.GeographPhotoInfoProvider(),
-            panoramio: new pat.photoInfoProvider.PanoramioPhotoInfoProvider()
-        };
-    // =====================================
-    // Functions
-    // =====================================
-
-    // Preloads info for next photo
-    // -------------------------------------
-//    var preloadNextPhoto = function() {
-//        var nextIncompleteId = surveyQueue.getNextIncompleteId();
-//        if (nextIncompleteId !== null) {
-//            var nextPhotoResponseInQueue = surveyQueue.get(nextIncompleteId);
-//            photoInfoProviders[nextPhotoResponseInQueue.photo.source].load(nextPhotoResponseInQueue.photo, function(info) {
-//                if (info.imgSrc)
-//                    $.preload(info.imgSrc);
-//            });
-//        }
-//    };
-
-    // Goes to the next photo
-    // -------------------------------------
-//    var gotoNextPhoto = function() {
-//        if (surveyQueue.getUnansweredOrIncompleteCount() <= 2) {
-//            $bSurveyDashboard.bsurveydashboard("setCurrentItemId", surveyQueue.getFirstIncompleteId(true));
-//            surveyQueue.extendQueue();
-//        } else {
-//            $bSurveyDashboard.bsurveydashboard("setCurrentItemId", surveyQueue.getFirstIncompleteId(true));
-//        }
-//    };
-//    surveyQueue.extended.add(function(){
-//        preloadNextPhoto();
-//    });
-
-    
-    // Saves answers
-//    // -------------------------------------
-//    var saveAnswers = function() {
-//        if (!$bQuestionnaire.bsurveyquestionnaire('option', 'disabled') || $bPhoto.bsurveyphoto('isShowingError')) {
-//            var photoResponse = $bQuestionnaire.bsurveyquestionnaire('getAnswers');
-//            if ($bPhoto.bsurveyphoto('isShowingError')) {
-//                photoResponse.status = pat.PhotoResponseStatus.PHOTO_PROBLEM;
-//            } else {
-//                if ($bQuestionnaire.bsurveyquestionnaire('isComplete'))
-//                    photoResponse.status = pat.PhotoResponseStatus.COMPLETE;
-//                else {
-//                    photoResponse.status = $bQuestionnaire.bsurveyquestionnaire('isUnanswered') ? pat.PhotoResponseStatus.UNANSWERED : pat.PhotoResponseStatus.INCOMPLETE;
-//                }
-//            };
-//            surveyQueue.setPhotoResponseFor(surveyQueue.getCurrentId(), photoResponse);
-//        }
-//    };
-//    
-//    // Submits questionnaire
-//    // -------------------------------------
-//    var submitQuestionnaire = function() {
-//        gotoNextPhoto();
-//    };
-//
-//    // Submits questionnaire only if complete or forced
-//    // -------------------------------------
-//    var submitQuestionnaireIfCompleteOrError = function(event) {
-//        if ($bQuestionnaire.bsurveyquestionnaire('option', 'disabled') && !$bPhoto.bsurveyphoto('isShowingError'))
-//            return;
-//        if (/*event.shiftKey || */ $bPhoto.bsurveyphoto('isShowingError') || $bQuestionnaire.bsurveyquestionnaire('isComplete'))
-//            submitQuestionnaire();
-//        else {
-//            //str = "Questinnaire is incomplete. Hold shift pressed to force submitting it.";
-//            $questionnaireHint.stop(true, true).text(lang.str['hint.questionnaire_incomplete']).fadeIn(0).delay(2000).fadeOut(2000);
-//            $bQuestionnaire.bsurveyquestionnaire('blinkFirstMissingAnswer');
-//        }
-//    };
     
     // =====================================
-    // Bindings
+    // Object Events
     // =====================================
+
+    // When current item is changed in the user info list
     $bUserInfoList.on('binfolistchangeitem', function(event, ui) {
         var userId = ui.id;
 
+        // Update user caption
         $bListCaptionUser.text(userId ? 'User ' + userId : '');
+        
+        // Hide patterns if nothing is selected
         if (userId === null) {
             $bPhotoResponsePatternUser.bphotoresponsepattern('option', 'photoResponses', []);
             return
         }
-        var user = data.users[userId];
 
+        var user = ui.itemData;
+
+        // Show patterns when something is selected
         $bPhotoResponsePatternUser.bphotoresponsepattern('option', 'photoResponses', user.photoResponses);
+        
+        // Mark user as "read" after some time if current selected item does not get change quickly
+        var userStatus = user.status;
+        if (user.isUnread) {
+            setTimeout(function() {
+                if ($bUserInfoList.bInfoList('option','currentId') == userId && userStatus == user.status) {
+                    setStatusFunction($bUserInfoList, user, user.status);
+                }
+            }, MARK_AS_READ_DELAY);
+        }
     });
     
+    // When current item is changed in the photo info list
     $bPhotoInfoList.on('binfolistchangeitem', function(event, ui) {
         var photoId = ui.id;
+
+        // Update photo caption
         $bListCaptionPhoto.text(photoId ? 'Photo ' + photoId : '');
 
+        // Hide photo and patterns if nothing is selected
         if (photoId === null) {
-            $bPhoto.bsurveyphoto('showNothing');
             $bPhotoResponsePatternPhoto.bphotoresponsepattern('option', 'photoResponses', []);
+            $bPhoto.bsurveyphoto('showNothing');
             return;    
         }
-        var photo = data.photos[photoId];
-        
-        $bPhotoResponsePatternPhoto.bphotoresponsepattern('option', 'photoResponses', photo.photoResponses);
 
+        // Show patterns and load photos when something is selected
+        var photo = data.photos[photoId];
+        $bPhotoResponsePatternPhoto.bphotoresponsepattern('option', 'photoResponses', photo.photoResponses);
         $bPhoto.bsurveyphoto('showLoading');
-        
         photoInfoProviders[photo.source].load(photo, function(info) {
             $bPhoto.bsurveyphoto('showPhotoInfo', info);
         });
     });
 
+    // When both info lists are resized
+    var $bothInfoLists = $bUserInfoList.add($bPhotoInfoList);
+    $bothInfoLists.on('resize', function(event, ui) {
+        // Save the new value of info lists as a localstorage value
+        localStorage.setItem(listsHeightLocalstorageParameter, ui.size.height);
+        $bothInfoLists.height(ui.size.height);
+        
+    });
+    
+    // When a line in user pattern is clicked 
+    $bPhotoResponsePatternPhoto.on('bphotoresponsepatterncontextclick', function(event, ui) {
+        $bUserInfoList.bInfoList('setCurrentItemId', ui.photoResponses[0].userId);
+    });
+    // When a line in photo pattern is clicked 
+    $bPhotoResponsePatternUser.on('bphotoresponsepatterncontextclick', function(event, ui) {
+        $bPhotoInfoList.bInfoList('setCurrentItemId', ui.photoResponses[0].photoId);
+    });
+
+    var $bothPhotoresponsePatterns = $bPhotoResponsePatternUser.add($bPhotoResponsePatternPhoto);
+    
+
+    // =====================================
     // Global keys
-    // -------------------------------------
+    // =====================================
+
     $(document.body).bind("keydown", function(event) {
         var key = event.keyCode || event.which;
         
@@ -388,18 +344,15 @@ $(function(){
             
         // t for toggling time/question scaling
         case 84:
-            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling', !$bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling'));
-            return false;
+            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling', !$bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling'));
+                return false;
+            } else {
+                return;
+            }
             
         case KEY_BACKSPACE:
             return false;
-////            photoSurveyIdHistoryNewCandidate = null;
-////            if (photoSurveyIdHistory.length) {
-////                saveAnswers();
-////                var newId = photoSurveyIdHistory.shift();
-////                surveyQueue.setCurrentId(newId);
-////            };
-////            return false;
             
         // space to reset time
         case 32:
@@ -419,11 +372,5 @@ $(function(){
             return false;
         }
     });
-    
-    // =====================================
-    // Starting it all up!
-    // =====================================
-    //surveyQueue.fetchQueue();
-
 });
 }());
