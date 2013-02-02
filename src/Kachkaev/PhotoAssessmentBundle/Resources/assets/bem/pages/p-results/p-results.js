@@ -239,12 +239,14 @@ $(function(){
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({
         questions: questions,
         answers: answers,
+        photoResponseEqualityParameter: 'photoId',
         maxTime: DEFAULT_MAX_TIME,
     });
     //// Photos
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
         questions: questions,
         answers: answers,
+        photoResponseEqualityParameter: 'userId',
         maxTime: DEFAULT_MAX_TIME
     });
 
