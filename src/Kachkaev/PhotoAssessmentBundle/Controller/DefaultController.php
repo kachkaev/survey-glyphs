@@ -164,6 +164,7 @@ class DefaultController extends Controller
             "qIsSpaceAttractive" => "int",
             "photoId"            => "int",
             "userId"             => "int",
+            "duration"           => "int",
             "submissionCount"    => "int",
             "submittedAt"        => "int",
     	];
