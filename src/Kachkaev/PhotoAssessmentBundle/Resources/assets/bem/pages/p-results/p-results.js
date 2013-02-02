@@ -1,7 +1,10 @@
 (function() {
     
-var listsHeightLocalstorageParameter = 'interface.b-results-infolist.height';
-var listsHeightDefaults = 300;
+var LOCALSTORAGE_PREFIX = 'interface.p-results.';
+var LOCALSTORAGE_PARAMETER_LISTHEIGHT = LOCALSTORAGE_PREFIX + 'listheight';
+var LOCALSTORAGE_PARAMETER_USERID     = LOCALSTORAGE_PREFIX + 'userid';
+var LOCALSTORAGE_PARAMETER_PHOTOID    = LOCALSTORAGE_PREFIX + 'photoid';
+var LIST_DEFAULT_HEIGHT = 300;
 
 var USER_SPECTRUM_MAX = 20;
 var PHOTO_SPECTRUM_MAX = 5;
@@ -58,6 +61,19 @@ $(function(){
     
     // fix chrome + jquery position margin: 0 auto bug
     pat.fixWebkitJqueryPositionBug();
+    
+    // Read defaults from localstorage
+    var defaultListHeight = localStorage.getItem(LOCALSTORAGE_PARAMETER_LISTHEIGHT) || LIST_DEFAULT_HEIGHT;
+    
+    var defaultUserId = localStorage.getItem(LOCALSTORAGE_PARAMETER_USERID);
+    if (!data.users[defaultUserId]) {
+        defaultUserId = null;
+    }
+    var defaultPhotoId = localStorage.getItem(LOCALSTORAGE_PARAMETER_PHOTOID);
+    if (!data.photos[defaultPhotoId]) {
+        defaultPhotoId = null;
+    }
+
 
     // =====================================
     // Supplement data with stats
@@ -180,54 +196,57 @@ $(function(){
     // Objects with UI
     // =====================================
 
-    // Default height of info lists
-    var listsHeight = localStorage.getItem(listsHeightLocalstorageParameter) || listsHeightDefaults;
-    
     // Info lists
     //// Users
-    var $bUserInfoList = $('.b-infolist_user').height(listsHeight).bInfoList({
-        items: data.users,
-        dblclickAction: toggleStatusFunction,
-        sortModes: ['id', 'completed', 'problems', 'unread'],
-        customizeItem: function($item, id, data) {
-            if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
-                return false;
-            $item.css('backgroundColor', numberToColor(COLORSCHEME_USER[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
-            $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
-            $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
-            $item.toggleClass('unread', data.isUnread);
-            
-            var title = 'User ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
-            if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
-                title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
-                if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
-                    title += 's';
-                }
-                    
-            };
-            $item.attr('title', title);
-        },
+    var $bUserInfoList = $('.b-infolist_user')
+        .height(defaultListHeight)
+        .bInfoList({
+            items: data.users,
+            dblclickAction: toggleStatusFunction,
+            currentId: defaultUserId,
+            sortModes: ['id', 'completed', 'problems', 'unread'],
+            customizeItem: function($item, id, data) {
+                if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
+                    return false;
+                $item.css('backgroundColor', numberToColor(COLORSCHEME_USER[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
+                $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
+                $item.toggleClass('unread', data.isUnread);
+                
+                var title = 'User ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+                if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
+                    title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
+                    if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
+                        title += 's';
+                    }
+                        
+                };
+                $item.attr('title', title);
+            },
         });
     
     //// Photos
-    var $bPhotoInfoList = $('.b-infolist_photo').height(listsHeight).bInfoList({
-        items: data.photos,
-        dblclickAction: toggleStatusFunction,
-        customizeItem: function($item, id, data) {
-            $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
-            $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
-            $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
-
-            var title = 'Photo ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
-            if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
-                title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
-                if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
-                    title += 's';
-                }
-            };
-            $item.attr('title', title);
-        }
-    });
+    var $bPhotoInfoList = $('.b-infolist_photo')
+        .height(localStorage.getItem(LOCALSTORAGE_PARAMETER_LISTHEIGHT) || LIST_DEFAULT_HEIGHT)
+        .bInfoList({
+            items: data.photos,
+            dblclickAction: toggleStatusFunction,
+            currentId: defaultPhotoId,
+            customizeItem: function($item, id, data) {
+                $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
+                $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
+    
+                var title = 'Photo ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+                if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
+                    title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
+                    if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
+                        title += 's';
+                    }
+                };
+                $item.attr('title', title);
+            }
+        });
     
     // Titles above captions
     var $bListCaptionUser = $('.p-results__listcaption__user');
@@ -241,13 +260,15 @@ $(function(){
         answers: answers,
         photoResponseEqualityParameter: 'photoId',
         maxTime: DEFAULT_MAX_TIME,
+        photoResponses: defaultUserId ? data.users[defaultUserId].photoResponses : null
     });
     //// Photos
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
         questions: questions,
         answers: answers,
         photoResponseEqualityParameter: 'userId',
-        maxTime: DEFAULT_MAX_TIME
+        maxTime: DEFAULT_MAX_TIME,
+        photoResponses: defaultPhotoId ? data.photos[defaultPhotoId].photoResponses : null
     });
 
     //// Box with photo
@@ -261,6 +282,9 @@ $(function(){
     // When current item is changed in the user info list
     $bUserInfoList.on('binfolistchangeitem', function(event, ui) {
         var userId = ui.id;
+        
+        // Save user id to localstorage
+        localStorage.setItem(LOCALSTORAGE_PARAMETER_USERID, userId);
 
         // Update user caption
         $bListCaptionUser.text(userId ? 'User ' + userId : '');
@@ -291,6 +315,9 @@ $(function(){
     $bPhotoInfoList.on('binfolistchangeitem', function(event, ui) {
         var photoId = ui.id;
 
+        // Save photo id to localstorage
+        localStorage.setItem(LOCALSTORAGE_PARAMETER_PHOTOID, photoId);
+
         // Update photo caption
         $bListCaptionPhoto.text(photoId ? 'Photo ' + photoId : '');
 
@@ -314,7 +341,7 @@ $(function(){
     var $bothInfoLists = $bUserInfoList.add($bPhotoInfoList);
     $bothInfoLists.on('resize', function(event, ui) {
         // Save the new value of info lists as a localstorage value
-        localStorage.setItem(listsHeightLocalstorageParameter, ui.size.height);
+        localStorage.setItem(LOCALSTORAGE_PARAMETER_LISTHEIGHT, ui.size.height);
         $bothInfoLists.height(ui.size.height);
         
     });

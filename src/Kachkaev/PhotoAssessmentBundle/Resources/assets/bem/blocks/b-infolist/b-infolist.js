@@ -24,15 +24,16 @@ $.widget('ui.bInfoList', {
             sortModes: ['id', 'completed', 'problems']
         }, this.options);
         this.options.items = items;
-
+        var defaultCurrentId = this.options.currentId;
+        
         var w = {
 				_self: this,
 				$element: this.element,
 				options: this.options
 			};
 		this.w = w;
-		
-		w.$percentage = $('<div/>').addClass('b-infolist__percentage');
+
+        w.$percentage = $('<div/>').addClass('b-infolist__percentage');
 		w.$sorters = $('<ul/>').addClass("b-infolist__sorters").disableSelection();
 		_.each(w.options.sortModes, function(sortMode) {
 		    w.$sorters.append($('<li/>').addClass('b-infolist__sorter').attr('data-mode', sortMode).append($('<i/>').text(sortMode)));
@@ -42,7 +43,7 @@ $.widget('ui.bInfoList', {
 		w.itemsMap = {};
 		w.$itemsMap = {};
 		w.options.currentId = null;
-		w.mouseId = null;
+        w.mouseId = null;
 		w.mouseIdChangerHash = null;
 		w.$currentItem = null;
 		
@@ -153,7 +154,9 @@ $.widget('ui.bInfoList', {
 		    }
 		});
 		
-		w.$element.append(w.$percentage, w.$sorters, w.$items);
+        w._self.setCurrentItemId(defaultCurrentId);
+
+        w.$element.append(w.$percentage, w.$sorters, w.$items);
 	},
 	
 	sortItemsBy: function(mode, isDescending, forceNoAnimation) {
