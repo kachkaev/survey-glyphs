@@ -307,11 +307,11 @@ $.widget('ui.bInfoList', {
             w.$highlightedItems.removeClass('highlighted');
         }
         
-        var $newHighlightedItems = $();
+        var $newHighlightedItemElements = [];
         _.each(newIds, function(id) {
-            $newHighlightedItems = $newHighlightedItems.add(w.$itemsMap[id]);  
+            $newHighlightedItemElements.push(w.$itemsMap[id][0]);  
         });
-        
+        var $newHighlightedItems = $($newHighlightedItemElements);
         $newHighlightedItems.addClass('highlighted');
         w.options.highlightedIds = newIds;
         w.$highlightedItems = $newHighlightedItems;
