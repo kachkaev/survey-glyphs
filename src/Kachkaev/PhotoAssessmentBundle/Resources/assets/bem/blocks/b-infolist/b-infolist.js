@@ -131,7 +131,7 @@ $.widget('ui.bInfoList', {
 	                    my: "left top",
 	                    at: "right bottom-1"
 	                },
-	                tooltipClass: "b-infolist__tooltip",
+	                tooltipClass: "b-infolist__tooltip"
 	            });
 		        $item.appendTo(w.$items);
 		        w.itemsMap[id] = itemData;
@@ -238,7 +238,7 @@ $.widget('ui.bInfoList', {
 	            //atomic: true,
 	            useScaling: false,
 	            adjustHeight: false,
-	            adjustWidth: false,
+	            adjustWidth: false
 	        });
 	        
 	    } else {

@@ -208,7 +208,7 @@ $(function(){
                         
                 };
                 $item.attr('title', title);
-            },
+            }
         });
     
     //// Photos
@@ -243,13 +243,13 @@ $(function(){
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({
         questions: questions,
         photoResponseEqualityParameter: 'photoId',
-        maxTime: DEFAULT_MAX_TIME,
+        maxTime: DEFAULT_MAX_TIME
     });
     //// Photos
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
         questions: questions,
         photoResponseEqualityParameter: 'userId',
-        maxTime: DEFAULT_MAX_TIME,
+        maxTime: DEFAULT_MAX_TIME
     });
 
     //// Box with photo
@@ -406,4 +406,4 @@ $(function(){
     $bUserInfoList .bInfoList('setCurrentItemId', defaultUserId);
     $bPhotoInfoList.bInfoList('setCurrentItemId', defaultPhotoId);
 });
-}());
+})();
