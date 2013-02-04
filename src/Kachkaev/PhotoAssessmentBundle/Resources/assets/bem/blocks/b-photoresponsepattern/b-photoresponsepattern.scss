@@ -13,15 +13,18 @@
 
 .b-photoresponsepattern .answer {
 	fill: none;
-	opacity: 0.2;
+	opacity: 0.15;
 	stroke-width: 4;
+	stroke-linecap: round;
+	stroke-linejoin: round;
 	stroke: black;
 	cursor: pointer;
 /* 	interpolate: basis; */
 }
 
 .b-photoresponsepattern .answer.selected {
-    opacity: 0.5 !important;
+/*    opacity: 0.5 !important;*/
+    stroke-width: 8;
 }
 
 .b-photoresponsepattern .photoResponses {
