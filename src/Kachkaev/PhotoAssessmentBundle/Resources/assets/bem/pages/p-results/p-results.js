@@ -203,7 +203,6 @@ $(function(){
         .bInfoList({
             items: data.users,
             dblclickAction: toggleStatusFunction,
-            currentId: defaultUserId,
             sortModes: ['id', 'completed', 'problems', 'unread'],
             customizeItem: function($item, id, data) {
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
@@ -231,7 +230,6 @@ $(function(){
         .bInfoList({
             items: data.photos,
             dblclickAction: toggleStatusFunction,
-            currentId: defaultPhotoId,
             customizeItem: function($item, id, data) {
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
@@ -260,7 +258,6 @@ $(function(){
         answers: answers,
         photoResponseEqualityParameter: 'photoId',
         maxTime: DEFAULT_MAX_TIME,
-        photoResponses: defaultUserId ? data.users[defaultUserId].photoResponses : null
     });
     //// Photos
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
@@ -268,7 +265,6 @@ $(function(){
         answers: answers,
         photoResponseEqualityParameter: 'userId',
         maxTime: DEFAULT_MAX_TIME,
-        photoResponses: defaultPhotoId ? data.photos[defaultPhotoId].photoResponses : null
     });
 
     //// Box with photo
@@ -401,5 +397,8 @@ $(function(){
             return false;
         }
     });
+    
+    $bUserInfoList .bInfoList('setCurrentItemId', defaultUserId);
+    $bPhotoInfoList.bInfoList('setCurrentItemId', defaultPhotoId);
 });
 }());
