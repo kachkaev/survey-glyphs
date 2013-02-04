@@ -20,7 +20,7 @@ var ANSWERS_SEQ = [
 
 var LANG_HINT_ANSWERS = {
        "_default": ["N/A", "", "no", "yes", "", "", "hard to say"],
-       "qTimeOfDay": ["N/A", "", "day", "night", "twilight", "", "hard to say"],
+       "qTimeOfDay": ["N/A", "", "day", "twilight", "night", "", "hard to say"],
 };
 
 var LANG_HINT_QUESTIONS = {
