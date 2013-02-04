@@ -4,6 +4,13 @@
 	height: 350px;
 }
 
+.b-photoresponsepattern__hint {
+    position: relative;
+    height: 14px;
+    font-size: 0.8em;
+    color: #999;
+}
+
 .b-photoresponsepattern .answer {
 	fill: none;
 	opacity: 0.2;
@@ -13,13 +20,43 @@
 /* 	interpolate: basis; */
 }
 
-.b-photoresponsepattern .answer.new {
-	opacity: 1;
-}
-.b-photoresponsepattern .answer:hover {
-    opacity: 0.5;
+.b-photoresponsepattern .answer.selected {
+    opacity: 0.5 !important;
 }
 
 .b-photoresponsepattern .photoResponses {
 	
 }
+
+.b-photoresponsepattern .node {
+    fill: black;
+    opacity: 0;
+    cursor: pointer;
+}
+.b-photoresponsepattern .edge {
+    stroke: black;
+    stroke-width: 14;
+    opacity: 0;
+    cursor: pointer;
+}
+/* 
+ .b-photoresponsepattern .node {
+    fill: black;
+    opacity: 0.2;
+    stroke: black;
+    cursor: pointer;
+}
+
+.b-photoresponsepattern .node:hover,
+.b-photoresponsepattern .edge:hover {
+    opacity: 0.5;
+}
+
+
+.b-photoresponsepattern .edge {
+    fill: none;
+    opacity: 0.2;
+    stroke-width: 14;
+    stroke: black;
+    cursor: pointer;
+} */

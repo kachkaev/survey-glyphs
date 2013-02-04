@@ -42,19 +42,6 @@ var questions = [
     "qIsSpaceAttractive"
 ];
 
-// List of answer values
-// (projected on x axis in b-photoresponsepattern)
-var answers = [
-       null,
-       -42,
-       0,
-       1,
-       2,
-       3,
-       -42.2,
-       -1
-   ];
-
 $(function(){
     if (!$(document.body).hasClass("p-results"))
         return;
@@ -255,14 +242,12 @@ $(function(){
     //// Users
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({
         questions: questions,
-        answers: answers,
         photoResponseEqualityParameter: 'photoId',
         maxTime: DEFAULT_MAX_TIME,
     });
     //// Photos
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
         questions: questions,
-        answers: answers,
         photoResponseEqualityParameter: 'userId',
         maxTime: DEFAULT_MAX_TIME,
     });
