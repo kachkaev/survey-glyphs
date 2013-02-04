@@ -9,18 +9,18 @@ var ANIMATION_LENGTH = 750;
 //List of answer values
 //(projected on x axis)
 var ANSWERS_SEQ = [
-    null,
+    -1,
     -42,
     0,
-    1,
     2,
+    1,
     -42.2,
-    -1
+    null
 ];
 
 var LANG_HINT_ANSWERS = {
-       "_default": ["N/A", "", "no", "yes", "", "", "hard to say"],
-       "qTimeOfDay": ["N/A", "", "day", "twilight", "night", "", "hard to say"],
+       "_default": ["hard to say", "", "yes", "", "no", "", "N/A"],
+       "qTimeOfDay": ["hard to say", "", "day", "twilight", "night", "", "N/A"],
 };
 
 var LANG_HINT_QUESTIONS = {
