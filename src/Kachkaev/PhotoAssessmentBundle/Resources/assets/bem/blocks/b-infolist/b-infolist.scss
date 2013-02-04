@@ -100,8 +100,17 @@
 .b-infolist__item.unread:before {
 }
 
+.b-infolist__item.highlighted {
+	border-color: #666;
+    border-radius: 2px;
+    border-width: 2px;
+    height: 15px;
+    width: 15px;
+    line-height: 18px;
+}
+
 .b-infolist__item.current {
-	border-color: #333;
+    border-color: #333;
     border-radius: 2px;
     border-width: 2px;
     height: 15px;

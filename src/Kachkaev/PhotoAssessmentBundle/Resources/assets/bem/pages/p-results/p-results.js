@@ -327,6 +327,16 @@ $(function(){
         
     });
     
+    // When a line in user pattern is hovered
+    $bPhotoResponsePatternUser.on('bphotoresponsepatterncontexthover', function(event, ui) {
+        $bPhotoInfoList.bInfoList('setHighlightedItemIds', _.map(ui.photoResponses, function(pr) {return pr.photoId;}));
+    });
+
+    // When a line in photo pattern is hovered
+    $bPhotoResponsePatternPhoto.on('bphotoresponsepatterncontexthover', function(event, ui) {
+        $bUserInfoList.bInfoList('setHighlightedItemIds', _.map(ui.photoResponses, function(pr) {return pr.userId;}));
+    });
+
     // When a line in user pattern is clicked 
     $bPhotoResponsePatternPhoto.on('bphotoresponsepatterncontextclick', function(event, ui) {
         $bUserInfoList.bInfoList('setCurrentItemId', ui.photoResponses[0].userId);

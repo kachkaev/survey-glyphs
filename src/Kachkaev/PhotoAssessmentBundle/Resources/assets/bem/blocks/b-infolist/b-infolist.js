@@ -21,10 +21,12 @@ $.widget('ui.bInfoList', {
             customizeItem: null,
             mouseHoverDelay: 50,
             currentId: null,
+            highlightedIds: null,
             sortModes: ['id', 'completed', 'problems']
         }, this.options);
         this.options.items = items;
         var defaultCurrentId = this.options.currentId;
+        var defaultHighlightedIds = this.options.highlightedIds;
         
         var w = {
 				_self: this,
@@ -46,6 +48,7 @@ $.widget('ui.bInfoList', {
         w.mouseId = null;
 		w.mouseIdChangerHash = null;
 		w.$currentItem = null;
+		w.$highlightedItems = null;
 		
 		// Sorters events
 		
@@ -155,6 +158,7 @@ $.widget('ui.bInfoList', {
 		});
 		
         w._self.setCurrentItemId(defaultCurrentId);
+        w._self.setHighlightedItemIds(defaultHighlightedIds);
 
         w.$element.append(w.$percentage, w.$sorters, w.$items);
 	},
@@ -291,6 +295,28 @@ $.widget('ui.bInfoList', {
 		    w.$currentItem.scrollintoview();
 		}
 		w._self._trigger("changeitem", null, {id: newId, itemData: w.itemsMap[newId]});
-	}
+	},
+
+    setHighlightedItemIds: function(newIds) {
+        var w = this.w;
+
+        if (_.isEqual(newIds, w.options.highlightedIds))
+            return false;
+
+        if (w.$highlightedItems) {
+            w.$highlightedItems.removeClass('highlighted');
+        }
+        
+        var $newHighlightedItems = $();
+        _.each(newIds, function(id) {
+            $newHighlightedItems = $newHighlightedItems.add(w.$itemsMap[id]);  
+        });
+        
+        $newHighlightedItems.addClass('highlighted');
+        w.options.highlightedIds = newIds;
+        w.$highlightedItems = $newHighlightedItems;
+        w._self._trigger("highlightitems", null, {ids: newIds});
+    }
+
 });
 }());

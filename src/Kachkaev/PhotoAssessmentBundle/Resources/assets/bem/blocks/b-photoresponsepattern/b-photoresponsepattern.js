@@ -26,16 +26,15 @@ var LANG_HINT_ANSWERS = {
 var LANG_HINT_QUESTIONS = {
          "qIsRealPhoto": "real photo",
          "qIsOutdoors": "outdoors",
-         "qTimeOfDay": "when",
+         "qTimeOfDay": "daytime",
          "qSubjectTemporal": "subject temporal",
          "qSubjectPeople": "people",
          "qIsByPedestrian": "by pedestrian",
          "qIsSpaceAttractive": "attractive"
     };
 
-var LANG_HINT_SELECTED = 'selected ';
-var LANG_HINT_RESPONSE = ' response';
-var LANG_HINT_RESPONSES = ' responses';
+var LANG_HINT_RESPONSE = ' response selected';
+var LANG_HINT_RESPONSES = ' responses selected';
 var LANG_HINT_WITH = ' with ';
 var LANG_HINT_QAJOINT = ' = ';
 
@@ -92,7 +91,7 @@ $.widget('ui.bphotoresponsepattern', {
         // =====================================
 
 		// Highlight responses when mouse is over them + generate hint 
-		w.$element.on('bphotoresponsepatterncontextover', function(event, eventData) {
+		w.$element.on('bphotoresponsepatterncontexthover', function(event, eventData) {
 		    var d3PhotoResponse = w.d3SvgCanvas.select('g.photoResponses').selectAll('path');
 		    var photoResponseIds = eventData.photoResponseIds;
 		    
@@ -108,7 +107,6 @@ $.widget('ui.bphotoresponsepattern', {
 		        
 		        // Generate hint
 		        //// xxx responses
-		        hintTextChunks.push(LANG_HINT_SELECTED);
 		        hintTextChunks.push(photoResponseIds.length);
 		        hintTextChunks.push(photoResponseIds.length == 1 ? LANG_HINT_RESPONSE : LANG_HINT_RESPONSES);
 		        //// "with question: answer"
@@ -197,10 +195,10 @@ $.widget('ui.bphotoresponsepattern', {
                 if (_.isNumber(d.answerId)) {
                     triggerObj.answerId = d.answerId;
                 };
-                w._self._trigger("contextover", null, triggerObj);
+                w._self._trigger("contexthover", null, triggerObj);
             })
             .on("mouseout", function(d, i){
-                w._self._trigger("contextover", null, {
+                w._self._trigger("contexthover", null, {
                     photoResponseIds: [],
                     photoResponses: []
                 });
