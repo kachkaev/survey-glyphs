@@ -22,6 +22,7 @@ $.widget('ui.bInfoList', {
             mouseHoverDelay: 50,
             currentId: null,
             highlightedIds: null,
+            disableThumbnails: true,
             sortModes: ['id', 'completed', 'problems']
         }, this.options);
         this.options.items = items;
@@ -159,6 +160,7 @@ $.widget('ui.bInfoList', {
 		
         w._self.setCurrentItemId(defaultCurrentId);
         w._self.setHighlightedItemIds(defaultHighlightedIds);
+        w._self.setDisableThumbnails(w.options.disableThumbnails);
 
         w.$element.append(w.$percentage, w.$sorters, w.$items);
 	},
@@ -316,7 +318,13 @@ $.widget('ui.bInfoList', {
         w.options.highlightedIds = newIds;
         w.$highlightedItems = $newHighlightedItems;
         w._self._trigger("highlightitems", null, {ids: newIds});
-    }
+    },
+	
+	setDisableThumbnails: function(disableThumbnails) {
+        var w = this.w;
 
+	    w.options.disableThumbnails = disableThumbnails;
+	    w.$element.toggleClass('b-infolist_disabled-thumbnails', disableThumbnails);
+	}
 });
 }());

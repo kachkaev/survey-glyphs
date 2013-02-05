@@ -1,9 +1,12 @@
 (function() {
     
 var LOCALSTORAGE_PREFIX = 'interface.p-results.';
-var LOCALSTORAGE_PARAMETER_LISTHEIGHT = LOCALSTORAGE_PREFIX + 'listheight';
-var LOCALSTORAGE_PARAMETER_USERID     = LOCALSTORAGE_PREFIX + 'userid';
-var LOCALSTORAGE_PARAMETER_PHOTOID    = LOCALSTORAGE_PREFIX + 'photoid';
+var LOCALSTORAGE_PARAMETER_LISTHEIGHT        = LOCALSTORAGE_PREFIX + 'listheight';
+var LOCALSTORAGE_PARAMETER_USERID            = LOCALSTORAGE_PREFIX + 'userid';
+var LOCALSTORAGE_PARAMETER_PHOTOID           = LOCALSTORAGE_PREFIX + 'photoid';
+var LOCALSTORAGE_PARAMETER_DISABLETHUMBNAILS = LOCALSTORAGE_PREFIX + 'disablethumbnails';
+var LOCALSTORAGE_PARAMETER_TIMESCALING       = LOCALSTORAGE_PREFIX + 'timescaling';
+var LOCALSTORAGE_PARAMETER_MAXTIME           = LOCALSTORAGE_PREFIX + 'maxtime';
 var LIST_DEFAULT_HEIGHT = 300;
 
 var USER_SPECTRUM_MAX = 20;
@@ -50,7 +53,10 @@ $(function(){
     pat.fixWebkitJqueryPositionBug();
     
     // Read defaults from localstorage
-    var defaultListHeight = localStorage.getItem(LOCALSTORAGE_PARAMETER_LISTHEIGHT) || LIST_DEFAULT_HEIGHT;
+    var defaultListHeight  = localStorage.getItem(LOCALSTORAGE_PARAMETER_LISTHEIGHT) || LIST_DEFAULT_HEIGHT;
+    var defaultDisableThumbnails = localStorage.getItem(LOCALSTORAGE_PARAMETER_DISABLETHUMBNAILS) == 'true';
+    var defaultTimeScaling = localStorage.getItem(LOCALSTORAGE_PARAMETER_TIMESCALING) == 'true';
+    var defaultMaxTime = localStorage.getItem(LOCALSTORAGE_PARAMETER_MAXTIME) || DEFAULT_MAX_TIME;
     
     var defaultUserId = localStorage.getItem(LOCALSTORAGE_PARAMETER_USERID);
     if (!data.users[defaultUserId]) {
@@ -193,6 +199,7 @@ $(function(){
             items: data.users,
             dblclickAction: toggleStatusFunction,
             sortModes: ['id', 'completed', 'problems', 'unread'],
+            disableThumbnails: defaultDisableThumbnails,
             customizeItem: function($item, id, data) {
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                     return false;
@@ -211,6 +218,7 @@ $(function(){
                 };
                 $item.attr('title', title);
                 
+                // Render thumbnail
                 patternThumbnailGenerator.addToQueue(data.photoResponses, null, function(img) {
                     $item.css('background-image', 'url(' + img + ')');
                 });
@@ -223,6 +231,7 @@ $(function(){
         .bInfoList({
             items: data.photos,
             dblclickAction: toggleStatusFunction,
+            disableThumbnails: defaultDisableThumbnails,
             customizeItem: function($item, id, data) {
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
@@ -237,6 +246,7 @@ $(function(){
                 };
                 $item.attr('title', title);
                 
+                // Render thumbnail
                 patternThumbnailGenerator.addToQueue(data.photoResponses, null, function(img) {
                     $item.css('background-image', 'url(' + img + ')');
                 });
@@ -253,13 +263,15 @@ $(function(){
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({
         questions: questions,
         photoResponseEqualityParameter: 'photoId',
-        maxTime: DEFAULT_MAX_TIME
+        timeScaling: defaultTimeScaling,
+        maxTime: defaultMaxTime
     });
     //// Photos
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
         questions: questions,
         photoResponseEqualityParameter: 'userId',
-        maxTime: DEFAULT_MAX_TIME
+        timeScaling: defaultTimeScaling,
+        maxTime: defaultMaxTime
     });
 
     //// Box with photo
@@ -375,6 +387,7 @@ $(function(){
 
     $(document.body).bind("keydown", function(event) {
         var key = event.keyCode || event.which;
+        console.log(key);
         
         switch (key) {
         case 27:
@@ -382,10 +395,24 @@ $(function(){
             $bPhotoInfoList.bInfoList('setCurrentItemId', null);
             return false;
             
+        // p for toggling thumbnails (previews)
+        case 16:
+        case 80:
+            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                var newValue = !$bothInfoLists.bInfoList('option', 'disableThumbnails');
+                $bothInfoLists.bInfoList('setDisableThumbnails', newValue);
+                localStorage.setItem(LOCALSTORAGE_PARAMETER_DISABLETHUMBNAILS, newValue);
+                return false;
+            } else {
+                return;
+            }
+
         // t for toggling time/question scaling
         case 84:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling', !$bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling'));
+                var newValue = !$bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling');
+                $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling', newValue);
+                localStorage.setItem(LOCALSTORAGE_PARAMETER_TIMESCALING, newValue);
                 return false;
             } else {
                 return;
@@ -396,19 +423,25 @@ $(function(){
             
         // space to reset time
         case 32:
-            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', 20);
+            var newValue = DEFAULT_MAX_TIME;
+            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', newValue);
+            localStorage.setItem(LOCALSTORAGE_PARAMETER_MAXTIME, newValue);
             return false;
             
         case KEY_PLUS:
         case KEY_EQUALS:
         case KEY_EQUALS2:
-            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime') * 1.25);
+            var newValue = $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime') * 1.25;
+            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', newValue);
+            localStorage.setItem(LOCALSTORAGE_PARAMETER_MAXTIME, newValue);
             return false;
         case KEY_MINUS:
         case KEY_DASH:
         case KEY_DASH2:
         case KEY_UNDERSCORE:
-            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime') * 0.8);
+            var newValue = $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime') * 0.8;
+            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', newValue);
+            localStorage.setItem(LOCALSTORAGE_PARAMETER_MAXTIME, newValue);
             return false;
         }
     });

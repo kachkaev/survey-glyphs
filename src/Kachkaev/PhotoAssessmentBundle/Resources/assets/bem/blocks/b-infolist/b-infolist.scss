@@ -64,6 +64,10 @@
 	overflow: auto;
 }
 
+.b-infolist_disabled-thumbnails .b-infolist__item {
+	background-image: none !important;
+}
+
 .b-infolist__item {
 	color: #666;
 	height: 17px;
