@@ -1,12 +1,7 @@
 (function() {
     
 var LOCALSTORAGE_PREFIX = 'interface.p-results.';
-var LOCALSTORAGE_PARAMETER_LISTHEIGHT        = LOCALSTORAGE_PREFIX + 'listheight';
-var LOCALSTORAGE_PARAMETER_USERID            = LOCALSTORAGE_PREFIX + 'userid';
-var LOCALSTORAGE_PARAMETER_PHOTOID           = LOCALSTORAGE_PREFIX + 'photoid';
-var LOCALSTORAGE_PARAMETER_DISABLETHUMBNAILS = LOCALSTORAGE_PREFIX + 'disablethumbnails';
-var LOCALSTORAGE_PARAMETER_TIMESCALING       = LOCALSTORAGE_PREFIX + 'timescaling';
-var LOCALSTORAGE_PARAMETER_MAXTIME           = LOCALSTORAGE_PREFIX + 'maxtime';
+var LOCALSTORAGE_STATE = LOCALSTORAGE_PREFIX + 'state';
 var LIST_DEFAULT_HEIGHT = 300;
 
 var USER_SPECTRUM_MAX = 20;
@@ -52,21 +47,49 @@ $(function(){
     // fix chrome + jquery position margin: 0 auto bug
     pat.fixWebkitJqueryPositionBug();
     
-    // Read defaults from localstorage
-    var defaultListHeight  = localStorage.getItem(LOCALSTORAGE_PARAMETER_LISTHEIGHT) || LIST_DEFAULT_HEIGHT;
-    var defaultDisableThumbnails = localStorage.getItem(LOCALSTORAGE_PARAMETER_DISABLETHUMBNAILS) == 'true';
-    var defaultTimeScaling = localStorage.getItem(LOCALSTORAGE_PARAMETER_TIMESCALING) == 'true';
-    var defaultMaxTime = localStorage.getItem(LOCALSTORAGE_PARAMETER_MAXTIME) || DEFAULT_MAX_TIME;
+    var stateContainer = {
+            state: null
+    };
     
-    var defaultUserId = localStorage.getItem(LOCALSTORAGE_PARAMETER_USERID);
-    if (!data.users[defaultUserId]) {
-        defaultUserId = null;
-    }
-    var defaultPhotoId = localStorage.getItem(LOCALSTORAGE_PARAMETER_PHOTOID);
-    if (!data.photos[defaultPhotoId]) {
-        defaultPhotoId = null;
-    }
+    
+    // =====================================
+    // Read state from localstorage or restore it from defaults
+    // =====================================
 
+    var defaultState = {
+            listHeight: LIST_DEFAULT_HEIGHT,
+            disableThumbnails: true,
+            timeScaling: false,
+            maxTime: DEFAULT_MAX_TIME,
+            userId: null,
+            photoId: null,
+    };
+    if (localStorage[LOCALSTORAGE_STATE]) {
+        try {
+            stateContainer.state = _.extend({}, defaultState, JSON.parse(localStorage[LOCALSTORAGE_STATE]));
+        } catch (e) {
+        }
+    }
+    if (!stateContainer.state) {
+        stateContainer.state = _.clone(defaultState);
+    }
+    
+    if (!data.users[stateContainer.state.userId]) {
+        stateContainer.state.userId = null;
+    }
+    
+    if (!data.users[stateContainer.state.photoId]) {
+        stateContainer.state.photoId = null;
+    }
+    
+    stateContainer.stateManager = new ObjectPropertyStateManager(stateContainer, 'state', LOCALSTORAGE_STATE);
+    stateContainer.stateManager.capture();
+    
+    var updateState = function(newState) {
+        stateContainer.state = _.extend({}, stateContainer.state, newState);
+        stateContainer.stateManager.capture();
+    };
+    
 
     // =====================================
     // Supplement data with stats
@@ -194,12 +217,12 @@ $(function(){
     // Info lists
     //// Users
     var $bUserInfoList = $('.b-infolist_user')
-        .height(defaultListHeight)
+        .height(stateContainer.state.listHeight)
         .bInfoList({
             items: data.users,
             dblclickAction: toggleStatusFunction,
             sortModes: ['id', 'completed', 'problems', 'unread'],
-            disableThumbnails: defaultDisableThumbnails,
+            disableThumbnails: stateContainer.state.disableThumbnails,
             customizeItem: function($item, id, data) {
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                     return false;
@@ -227,11 +250,11 @@ $(function(){
     
     //// Photos
     var $bPhotoInfoList = $('.b-infolist_photo')
-        .height(localStorage.getItem(LOCALSTORAGE_PARAMETER_LISTHEIGHT) || LIST_DEFAULT_HEIGHT)
+        .height(stateContainer.state.listHeight)
         .bInfoList({
             items: data.photos,
             dblclickAction: toggleStatusFunction,
-            disableThumbnails: defaultDisableThumbnails,
+            disableThumbnails: stateContainer.state.disableThumbnails,
             customizeItem: function($item, id, data) {
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
@@ -263,15 +286,15 @@ $(function(){
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({
         questions: questions,
         photoResponseEqualityParameter: 'photoId',
-        timeScaling: defaultTimeScaling,
-        maxTime: defaultMaxTime
+        timeScaling: stateContainer.state.timeScaling,
+        maxTime: stateContainer.state.maxTime
     });
     //// Photos
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
         questions: questions,
         photoResponseEqualityParameter: 'userId',
-        timeScaling: defaultTimeScaling,
-        maxTime: defaultMaxTime
+        timeScaling: stateContainer.state.timeScaling,
+        maxTime: stateContainer.state.maxTime
     });
 
     //// Box with photo
@@ -286,9 +309,6 @@ $(function(){
     $bUserInfoList.on('binfolistchangeitem', function(event, ui) {
         var userId = ui.id;
         
-        // Save user id to localstorage
-        localStorage.setItem(LOCALSTORAGE_PARAMETER_USERID, userId);
-
         // Update user caption
         $bListCaptionUser.text(userId ? 'User ' + userId : '');
         
@@ -312,14 +332,13 @@ $(function(){
                 }
             }, MARK_AS_READ_DELAY);
         }
+        
+        updateState({userId: userId});
     });
     
     // When current item is changed in the photo info list
     $bPhotoInfoList.on('binfolistchangeitem', function(event, ui) {
         var photoId = ui.id;
-
-        // Save photo id to localstorage
-        localStorage.setItem(LOCALSTORAGE_PARAMETER_PHOTOID, photoId);
 
         // Update photo caption
         $bListCaptionPhoto.text(photoId ? 'Photo ' + photoId : '');
@@ -338,17 +357,22 @@ $(function(){
         photoInfoProviders[photo.source].load(photo, function(info) {
             $bPhoto.bsurveyphoto('showPhotoInfo', info);
         });
+        
+        updateState({photoId: photoId});
     });
 
     // When both info lists are resized
     var $bothInfoLists = $bUserInfoList.add($bPhotoInfoList);
     $bothInfoLists.on('resize', function(event, ui) {
-        // Save the new value of info lists as a localstorage value
-        localStorage.setItem(LOCALSTORAGE_PARAMETER_LISTHEIGHT, ui.size.height);
         $bothInfoLists.height(ui.size.height);
-        
+    });
+
+    $bothInfoLists.on('resizestop', function(event, ui) {
+        // Save the new value of info lists as a localstorage value
+        updateState({listHeight: ui.size.height});
     });
     
+
     // When an item in user list is hovered
     $bUserInfoList.on('binfolisthoveroveritem', function(event, ui) {
         $bPhotoInfoList.bInfoList('setHighlightedItemIds', ui.itemData ? _.map(ui.itemData.photoResponses, function(pr) {return pr.photoId;}) : null);
@@ -396,7 +420,7 @@ $(function(){
 
     $(document.body).bind("keydown", function(event) {
         var key = event.keyCode || event.which;
-        console.log(key);
+        //console.log(key);
         
         switch (key) {
         case 27:
@@ -405,23 +429,31 @@ $(function(){
             return false;
             
         // p for toggling thumbnails (previews)
-        case 16:
         case 80:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                var newValue = !$bothInfoLists.bInfoList('option', 'disableThumbnails');
-                $bothInfoLists.bInfoList('setDisableThumbnails', newValue);
-                localStorage.setItem(LOCALSTORAGE_PARAMETER_DISABLETHUMBNAILS, newValue);
+                updateState({disableThumbnails: !stateContainer.state.disableThumbnails});
                 return false;
             } else {
                 return;
             }
 
+        // r to reset interface
+        case 82:
+            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                var newState = _.clone(defaultState);
+                if (!event.shiftKey) {
+                    newState.listHeight = stateContainer.state.listHeight;
+                }
+                updateState(newState);
+                return false;
+            } else {
+                return;
+            }
+            
         // t for toggling time/question scaling
         case 84:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                var newValue = !$bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling');
-                $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling', newValue);
-                localStorage.setItem(LOCALSTORAGE_PARAMETER_TIMESCALING, newValue);
+                updateState({timeScaling: !stateContainer.state.timeScaling});
                 return false;
             } else {
                 return;
@@ -432,30 +464,42 @@ $(function(){
             
         // space to reset time
         case 32:
-            var newValue = DEFAULT_MAX_TIME;
-            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', newValue);
-            localStorage.setItem(LOCALSTORAGE_PARAMETER_MAXTIME, newValue);
+            updateState({maxTime: DEFAULT_MAX_TIME});
             return false;
             
         case KEY_PLUS:
         case KEY_EQUALS:
         case KEY_EQUALS2:
-            var newValue = $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime') * 1.25;
-            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', newValue);
-            localStorage.setItem(LOCALSTORAGE_PARAMETER_MAXTIME, newValue);
+            updateState({maxTime: stateContainer.state.maxTime * 1.25});
             return false;
         case KEY_MINUS:
         case KEY_DASH:
         case KEY_DASH2:
         case KEY_UNDERSCORE:
-            var newValue = $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime') * 0.8;
-            $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', newValue);
-            localStorage.setItem(LOCALSTORAGE_PARAMETER_MAXTIME, newValue);
+            updateState({maxTime: stateContainer.state.maxTime * 0.8});
+            return false;
+            
+        case 219:
+            stateContainer.stateManager.undo();
+            return false;
+        case 221:
+            stateContainer.stateManager.redo();
             return false;
         }
     });
     
-    $bUserInfoList .bInfoList('setCurrentItemId', defaultUserId);
-    $bPhotoInfoList.bInfoList('setCurrentItemId', defaultPhotoId);
+    var onStateUpdated = function() {
+        $bUserInfoList .bInfoList('setCurrentItemId', stateContainer.state.userId);
+        $bPhotoInfoList.bInfoList('setCurrentItemId', stateContainer.state.photoId);
+        $bothInfoLists.height(stateContainer.state.listHeight);
+        $bothInfoLists.bInfoList('setDisableThumbnails', stateContainer.state.disableThumbnails);
+        $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling', stateContainer.state.timeScaling);
+        $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', stateContainer.state.maxTime);
+        localStorage[LOCALSTORAGE_STATE] = JSON.stringify(stateContainer.state);
+
+    };
+    
+    stateContainer.stateManager.queueChanged.add(onStateUpdated);
+    onStateUpdated();
 });
 })();

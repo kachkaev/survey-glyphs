@@ -434,13 +434,16 @@ $.widget('ui.bphotoresponsepattern', {
                     return;
                 }
                 break;
+            case 'timeScaling':
+                if (value == w.options.timeScaling) {
+                    return;
+                }
+                break;
             case 'photoResponses':
                 $.Widget.prototype._setOption.apply( this, arguments );
                 w._self._updatePhotoResponsesMap();
                 this._redraw();
                 return;
-//            default:
-//                return;
         }
         $.Widget.prototype._setOption.apply( this, arguments );
         this._redraw();

@@ -290,9 +290,9 @@ $.widget('ui.bInfoList', {
 		
 		var $newCurrentItem = w.$itemsMap[newId];
 		
+		w.options.currentId = newId;
 		if ($newCurrentItem) {
 		    $newCurrentItem.addClass('current');
-		    w.options.currentId = newId;
 		    w.$currentItem = $newCurrentItem;
 		    w.$currentItem.scrollintoview();
 		}
@@ -323,6 +323,9 @@ $.widget('ui.bInfoList', {
 	setDisableThumbnails: function(disableThumbnails) {
         var w = this.w;
 
+        if (w.options.disableThumbnails == disableThumbnails)
+            return;
+        
 	    w.options.disableThumbnails = disableThumbnails;
 	    w.$element.toggleClass('b-infolist_thumbnails-enabled', !disableThumbnails);
 	    w.$element.toggleClass('b-infolist_thumbnails-disabled', disableThumbnails);
