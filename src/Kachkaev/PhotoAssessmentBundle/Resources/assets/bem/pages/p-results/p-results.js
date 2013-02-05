@@ -175,7 +175,7 @@ $(function(){
     // Sends a new value of status for a photo / user / photoresponse to the server
     var setStatusFunction = function($infoList, data, status) {
         $.ajax({
-            url: apiBaseURL + 'set_' + data.type + '_status',
+            url: pat.config.apiBaseURL + 'set_' + data.type + '_status',
             data: {s: backdoorSecret, id: data.id, status: status},
             type: "POST",
             success: function(ajaxData) {
@@ -254,13 +254,14 @@ $(function(){
         .bInfoList({
             items: data.photos,
             dblclickAction: toggleStatusFunction,
+            sortModes: ['id', 'completed', 'problems', 'suitability'],
             disableThumbnails: stateContainer.state.disableThumbnails,
             customizeItem: function($item, id, data) {
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
     
-                var hint = 'Photo ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+                var hint = 'Photo ' + id + ' (' + _.capitalize(data.source) + '): ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
                 if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
                     hint += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
                     if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {

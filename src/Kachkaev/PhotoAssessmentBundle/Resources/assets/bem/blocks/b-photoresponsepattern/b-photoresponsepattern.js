@@ -6,49 +6,6 @@ var NODE_SIZE = 14;
 
 var ANIMATION_LENGTH = 750;
 
-//List of answer values
-//(projected on x axis)
-var ANSWERS_SEQ_LENGTH = 7;
-
-// Sequence must be so that all "valid" photos are represented with a vertical line on the right
-var ANSWERS_SEQS = {};
-ANSWERS_SEQS['_default'] = [
-         1,    // yes
-         -42,
-         -1,   // hard to say
-         -43,
-         0,    // no
-         -44,
-         null  // n/a
-     ];
-
-// Reversed questions
-ANSWERS_SEQS['qSubjectTemporal'] = [
-        0,    // no
-        -42,
-        -1,   // hard to say
-        -43,
-        1,    // yes
-        -44,
-        null  // n/a
-    ];
-ANSWERS_SEQS['qSubjectPeople'] = ANSWERS_SEQS['qSubjectTemporal'];
-
-// Special case: time of day
-ANSWERS_SEQS['qTimeOfDay'] = [
-        0,    // day
-        1,    // twilight
-        -1,   // hard to say
-        -42,
-        2,    // night
-        -43,
-        null  // n/a
-    ];
-
-var getAnswerSeq = function(question) {
-    return ANSWERS_SEQS[question] || ANSWERS_SEQS['_default'];
-};
-
 // Mapping answers with strings to be displayed in the interface
 var LANG_HINT_ANSWERS = {
        '_default': [[1, 'yes'], [0, 'no'], [-1, 'hard to say'], [null, 'N/A']],
@@ -148,7 +105,7 @@ $.widget('ui.bphotoresponsepattern', {
 		            hintTextChunks.push(LANG_HINT_QUESTIONS[question]);
 		            hintTextChunks.push(LANG_HINT_QAJOINT);
 		            var langHintAnswers = LANG_HINT_ANSWERS[question] || LANG_HINT_ANSWERS['_default'];
-		            var answer = getAnswerSeq(question)[eventData.answerId];
+		            var answer = pat.getAnswerSeq(question)[eventData.answerId];
 		            hintTextChunks.push(_.find(langHintAnswers, function(pair){ return pair[0] == answer;})[1]);
 		        }
 		    } else {
@@ -184,7 +141,7 @@ $.widget('ui.bphotoresponsepattern', {
 	    
 	    var x = d3.scale.linear()
         	    .range([0, d3photoResponses.attr('width')])
-	            .domain([0, ANSWERS_SEQ_LENGTH]);
+	            .domain([0, pat.config.answerSequencesLength]);
 	    
 	    // y - domain depends on time scaling
 	    var y = d3.scale.linear()
@@ -245,7 +202,7 @@ $.widget('ui.bphotoresponsepattern', {
             return selection.attr("d", function(d) {
                 var pts = [];
                 _.each(w.options.questions, function(question) {
-                    var answerSeq = getAnswerSeq(question);
+                    var answerSeq = pat.getAnswerSeq(question);
                     pts.push([
                               _.indexOf(answerSeq, d[question]),
                               _.indexOf(w.options.questions, question) * (w.options.timeScaling ? Math.max(0, d.duration) : 1)
@@ -308,7 +265,7 @@ $.widget('ui.bphotoresponsepattern', {
         var responseMatrix = [];       
         for (var i = w.options.questions.length - 1; i >= 0; --i) {
             var q = [];
-            for (var j = ANSWERS_SEQ_LENGTH - 1; j >= 0; --j) {
+            for (var j = pat.config.answerSequencesLength - 1; j >= 0; --j) {
                 q.push([]);
             }
             responseMatrix.push(q);
@@ -316,7 +273,7 @@ $.widget('ui.bphotoresponsepattern', {
         _.each(w.options.photoResponses, function(photoResponse) {
             for (var i = w.options.questions.length - 1; i >= 0; --i) {
                 var question = w.options.questions[i];
-                var indexOfAnswer = _.indexOf(getAnswerSeq(question), photoResponse[question]);
+                var indexOfAnswer = _.indexOf(pat.getAnswerSeq(question), photoResponse[question]);
                 responseMatrix[i][indexOfAnswer].push(photoResponse.id);
             };
         });
@@ -329,11 +286,11 @@ $.widget('ui.bphotoresponsepattern', {
         // Prepare data
         var responseEdges = [];
         for (var i = w.options.questions.length - 1; i >= 1; --i) {
-            for (var j = ANSWERS_SEQ_LENGTH - 1; j >= 0; --j) {
+            for (var j = pat.config.answerSequencesLength - 1; j >= 0; --j) {
                 if (!responseMatrix[i][j].length) {
                     continue;
                 }
-                for (var k = ANSWERS_SEQ_LENGTH - 1; k >= 0; --k) {
+                for (var k = pat.config.answerSequencesLength - 1; k >= 0; --k) {
                     if (!responseMatrix[i-1][k].length) {
                         continue;
                     }
@@ -386,7 +343,7 @@ $.widget('ui.bphotoresponsepattern', {
         // Prepare data
         var responseNodes = [];
         for (var i = w.options.questions.length - 1; i >= 0; --i) {
-             for (var j = ANSWERS_SEQ_LENGTH - 1; j >= 0; --j) {
+             for (var j = pat.config.answerSequencesLength - 1; j >= 0; --j) {
                 if (!responseMatrix[i][j].length) {
                     continue;
                 }

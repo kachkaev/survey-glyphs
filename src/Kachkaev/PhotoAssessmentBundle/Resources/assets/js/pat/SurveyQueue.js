@@ -73,9 +73,9 @@ pat.SurveyQueue = function() {
 };
 
 pat.SurveyQueue._apiURLs = {
-		get_queue: apiBaseURL+"get_queue",
-		extend_queue: apiBaseURL+"extend_queue",
-		submit_response: apiBaseURL+"submit_response"
+		get_queue: pat.config.apiBaseURL+"get_queue",
+		extend_queue: pat.config.apiBaseURL+"extend_queue",
+		submit_response: pat.config.apiBaseURL+"submit_response"
 };
 
 pat.SurveyQueue.prototype.fetchQueue = function() {

@@ -205,6 +205,9 @@ $.widget('ui.bInfoList', {
            case "unread":
                return (item.isUnread ? -10000 : 0) + id;
 
+           case "suitability":
+               return (item.isUnread ? -10000 : 0) + id;
+
            case "id":
 	       default:
 	           return id;
@@ -362,8 +365,6 @@ $.widget('ui.bInfoList', {
 	_updateHintPos: function() {
         var w = this.w;
 
-        console.log('heights', w.$items.get(0).scrollHeight, w.$items.height());
-        console.log('offsets', w.$items.offset().top, w.$items.height());
 	    if (w.$items.get(0).scrollHeight > w.$items.height()) {
 	        w.$hint.css('top', w.$items.offset().top - w.$element.offset().top + w.$items.height());
 	    } else {

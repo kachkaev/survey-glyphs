@@ -1,55 +1,6 @@
 (function(){
 namespace('pat');
 
-var ANSWERS_SEQ_LENGTH = 7;
-var ANSWERS_SEQS = {};
-ANSWERS_SEQS['_default'] = [
-         1,    // yes
-         -42,
-         -1,   // hard to say
-         -43,
-         0,    // no
-         -44,
-         null  // n/a
-     ];
-
-// Reversed questions
-ANSWERS_SEQS['qSubjectTemporal'] = [
-        0,    // no
-        -42,
-        -1,   // hard to say
-        -43,
-        1,    // yes
-        -44,
-        null  // n/a
-    ];
-ANSWERS_SEQS['qSubjectPeople'] = ANSWERS_SEQS['qSubjectTemporal'];
-
-// Special case: time of day
-ANSWERS_SEQS['qTimeOfDay'] = [
-        0,    // day
-        1,    // twilight
-        -1,   // hard to say
-        -42,
-        2,    // night
-        -43,
-        null  // n/a
-    ];
-
-var QUESTIONS = [
-         "qIsRealPhoto",
-         "qIsOutdoors",
-         "qTimeOfDay",
-         "qSubjectTemporal",
-         "qSubjectPeople",
-         "qIsByPedestrian",
-         "qIsSpaceAttractive"
-     ];
-
-var getAnswerSeq = function(question) {
-    return ANSWERS_SEQS[question] || ANSWERS_SEQS['_default'];
-};
-
 var INTERVAL_WAITING = 200;
 var INTERVAL_DRAWING = 10;
     
@@ -132,7 +83,7 @@ pat.PatternThumbnailGenerator.prototype._render = function(thread, queueElement)
         //if (i > 1) return;
         // Get points of answers
         var pts = [];
-        _.each(QUESTIONS, function(question) {
+        _.each(pat.config.questions, function(question) {
             pts.push(obj._qaToCoords(photoResponse, question));
         });
         
@@ -161,13 +112,13 @@ pat.PatternThumbnailGenerator.prototype._render = function(thread, queueElement)
   
 /* Data to Screen conversion */
 pat.PatternThumbnailGenerator.prototype._answerToX = function(answer, question) {
-    var dx = (ANSWERS_SEQ_LENGTH === 1) ? 1 : (this.options.width - this.options.canvasPadding[1] - this.options.canvasPadding[3]) / (ANSWERS_SEQ_LENGTH - 1);
-    return _.indexOf(getAnswerSeq(question), answer) * dx + this.options.canvasPadding[3];
+    var dx = (pat.config.answerSequencesLength === 1) ? 1 : (this.options.width - this.options.canvasPadding[1] - this.options.canvasPadding[3]) / (pat.config.answerSequencesLength - 1);
+    return _.indexOf(pat.getAnswerSeq(question), answer) * dx + this.options.canvasPadding[3];
 };
     
 pat.PatternThumbnailGenerator.prototype._questionToY = function(question) {
-    var dy = (QUESTIONS.length === 1) ? 1 : (this.options.height - this.options.canvasPadding[0] - this.options.canvasPadding[2]) / (QUESTIONS.length - 1);
-    return _.indexOf(QUESTIONS, question) * dy + this.options.canvasPadding[0];
+    var dy = (pat.config.questions.length === 1) ? 1 : (this.options.height - this.options.canvasPadding[0] - this.options.canvasPadding[2]) / (pat.config.questions.length - 1);
+    return _.indexOf(pat.config.questions, question) * dy + this.options.canvasPadding[0];
 };
 
 pat.PatternThumbnailGenerator.prototype._qaToCoords = function(photoResponse, question) {
