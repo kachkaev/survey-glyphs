@@ -178,6 +178,8 @@ $(function(){
             geograph: new pat.photoInfoProvider.GeographPhotoInfoProvider(),
             panoramio: new pat.photoInfoProvider.PanoramioPhotoInfoProvider()
         };
+    
+    var patternThumbnailGenerator = new pat.PatternThumbnailGenerator();
 
     // =====================================
     // Objects with UI
@@ -208,6 +210,10 @@ $(function(){
                         
                 };
                 $item.attr('title', title);
+                
+                patternThumbnailGenerator.addToQueue(data.photoResponses, null, function(img) {
+                    $item.css('background-image', 'url(' + img + ')');
+                });
             }
         });
     
@@ -230,6 +236,10 @@ $(function(){
                     }
                 };
                 $item.attr('title', title);
+                
+                patternThumbnailGenerator.addToQueue(data.photoResponses, null, function(img) {
+                    $item.css('background-image', 'url(' + img + ')');
+                });
             }
         });
     

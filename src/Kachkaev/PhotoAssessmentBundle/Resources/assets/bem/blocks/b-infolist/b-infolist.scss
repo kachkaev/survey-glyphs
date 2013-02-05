@@ -77,17 +77,15 @@
     color: rgba(0,0,0,0.3);
     font-weight: bold;
     font-size: 15px;
-    line-height: 20px;
-}
-
-.b-infolist__item.complete:before {
-	content: "✓";
+    line-height: 18px;
+    background-repeat: no-repeat;
+    background-position: 1px 1px;
 }
 
 .b-infolist__item.photo_problem {
 }
 .b-infolist__item.photo_problem:before {
-	content: "!";
+	content: "•";
 }
 .b-infolist__item.photo_problem_severe {
     color: rgba(0,0,0,1);
@@ -106,7 +104,8 @@
     border-width: 2px;
     height: 15px;
     width: 15px;
-    line-height: 18px;
+    line-height: 16px;
+    background-position: 0px 0px;
 }
 
 .b-infolist__item.current {
@@ -115,7 +114,8 @@
     border-width: 2px;
     height: 15px;
     width: 15px;
-    line-height: 18px;
+    line-height: 16px;
+    background-position: 0px 0px;
 }
 
 .b-infolist__resize-blind {
