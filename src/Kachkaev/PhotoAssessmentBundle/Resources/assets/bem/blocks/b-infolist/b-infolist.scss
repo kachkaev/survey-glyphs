@@ -84,10 +84,10 @@
 .b-infolist_thumbnails-disabled .b-infolist__item {
 	background-image: none !important;
 }
-/* .b-infolist_thumbnails-enabled .b-infolist__item {
+.b-infolist_thumbnails-enabled .b-infolist__item {
     background-color: #fff !important;
-} */
-
+}
+ 
 .b-infolist__item {
 	color: #666;
 	height: 17px;
@@ -173,3 +173,14 @@
     -moz-box-shadow: none;
     -o-box-shadow: none;
 }
+
+/* colour photos by photo source */
+/* .b-infolist__item.source_flickr {
+	background-color: purple !important;
+}
+.b-infolist__item.source_geograph {
+    background-color: green !important;
+}
+.b-infolist__item.source_panoramio {
+    background-color: blue !important;
+}   */

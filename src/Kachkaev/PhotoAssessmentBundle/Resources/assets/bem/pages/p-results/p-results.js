@@ -258,6 +258,7 @@ $(function(){
             disableThumbnails: stateContainer.state.disableThumbnails,
             customizeItem: function($item, id, data) {
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.addClass('source_' + data.source);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
     

@@ -22,8 +22,8 @@ var LANG_HINT_QUESTIONS = {
          'qIsSpaceAttractive': 'attractive'
     };
 
-var LANG_HINT_RESPONSE = ' response selected';
-var LANG_HINT_RESPONSES = ' responses selected';
+var LANG_HINT_RESPONSE = ' selected';
+var LANG_HINT_RESPONSES = ' selected';
 var LANG_HINT_WITH = ' with ';
 var LANG_HINT_QAJOINT = ' = ';
 
@@ -113,12 +113,12 @@ $.widget('ui.bphotoresponsepattern', {
 		    }
 		    
 		    //console.log('hint', eventData, hintTextChunks.join(''));
-		    w.$hint.text(hintTextChunks.join(''));
-		    
+		    w._self._updateHint(hintTextChunks.join(''));
 		});
 		
 		w._self._updatePhotoResponsesMap();
 		w._self._redraw();
+		w._self._updateHint();
 		
 	},
 	
@@ -400,6 +400,7 @@ $.widget('ui.bphotoresponsepattern', {
                 $.Widget.prototype._setOption.apply( this, arguments );
                 w._self._updatePhotoResponsesMap();
                 this._redraw();
+                this._updateHint(null, true);
                 return;
         }
         $.Widget.prototype._setOption.apply( this, arguments );
@@ -413,6 +414,42 @@ $.widget('ui.bphotoresponsepattern', {
         _.each(w.options.photoResponses, function(photoResponse) {
             w.photoResponsesMap[photoResponse.id] = photoResponse;
         });
+    },
+    
+    _updateHint: function(text, reconstructDefault) {
+        var w = this.w;
+        
+        // Update default hint text if needed
+        // x completed / y photo problems
+        if (reconstructDefault) {
+            if (!w.options.photoResponses || !w.options.photoResponses.length) {
+                w.defaultHintText = '';
+            } else {
+                var completeCount = 0;
+                var photoProblemCount = 0;
+                _.each(w.options.photoResponses, function(pr) {
+                    switch(pr.status) {
+                    case pat.PhotoResponseStatus.COMPLETE:
+                        ++completeCount;
+                        break;
+                    case pat.PhotoResponseStatus.PHOTO_PROBLEM:
+                        ++photoProblemCount;
+                        break;
+                    }
+                });
+                
+                var defaultHintSlices = [];
+                defaultHintSlices.push(completeCount, ' completed');
+                if (photoProblemCount) {
+                    defaultHintSlices.push(' / ', photoProblemCount, ' photo problem');
+                    if (photoProblemCount > 1) {
+                        defaultHintSlices.push('s');
+                    }
+                };
+                w.defaultHintText = defaultHintSlices.join('');
+            }
+        }
+        w.$hint.text(text || w.defaultHintText);
     }
 });
 }());
