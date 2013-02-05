@@ -81,13 +81,16 @@
 	overflow: auto;
 }
 
-.b-infolist_thumbnails-disabled .b-infolist__item {
+.b-infolist_thumbnails_disabled .b-infolist__item {
 	background-image: none !important;
 }
-.b-infolist_thumbnails-enabled .b-infolist__item {
+.b-infolist_thumbnails_enabled .b-infolist__item {
     background-color: #fff !important;
 }
- 
+.b-infolist_thumbnails_enabled .b-infolist__item.status_1 {
+    background-color: #F7D9D9 !important;
+}
+
 .b-infolist__item {
 	color: #666;
 	height: 17px;

@@ -155,7 +155,7 @@ $.widget('ui.bInfoList', {
 		
         w._self.setCurrentItemId(defaultCurrentId);
         w._self.setHighlightedItemIds(defaultHighlightedIds);
-        w._self.setDisableThumbnails(w.options.disableThumbnails);
+        w._self.setDisableThumbnails(w.options.disableThumbnails, true);
 
         w.$element.append(w.$percentage, w.$sorters, w.$items, w.$hint);
         
@@ -342,15 +342,15 @@ $.widget('ui.bInfoList', {
         w._self._trigger("highlightitems", null, {ids: newIds});
     },
 	
-	setDisableThumbnails: function(disableThumbnails) {
+	setDisableThumbnails: function(disableThumbnails, force) {
         var w = this.w;
 
-        if (w.options.disableThumbnails == disableThumbnails)
+        if (!force && w.options.disableThumbnails == disableThumbnails)
             return;
         
 	    w.options.disableThumbnails = disableThumbnails;
-	    w.$element.toggleClass('b-infolist_thumbnails-enabled', !disableThumbnails);
-	    w.$element.toggleClass('b-infolist_thumbnails-disabled', disableThumbnails);
+	    w.$element.toggleClass('b-infolist_thumbnails_enabled', !disableThumbnails);
+	    w.$element.toggleClass('b-infolist_thumbnails_disabled', disableThumbnails);
 	},
     
     _updateHintUsingMouseData: function() {

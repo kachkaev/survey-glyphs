@@ -227,6 +227,7 @@ $(function(){
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                     return false;
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_USER[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.addClass('status_' + data.status);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
                 $item.toggleClass('unread', data.isUnread);
@@ -258,6 +259,7 @@ $(function(){
             disableThumbnails: stateContainer.state.disableThumbnails,
             customizeItem: function($item, id, data) {
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.addClass('status_' + data.status);
                 $item.addClass('source_' + data.source);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
