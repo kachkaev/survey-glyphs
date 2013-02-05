@@ -1,7 +1,7 @@
 .b-infolist {
 	position: relative;
 	min-height: 200px; 
-	max-height: 500px; 
+	max-height: 510px; 
 }
 
 .b-infolist_user {
@@ -10,6 +10,23 @@
 
 .b-infolist_photo {
     width: 700px;
+}
+
+/* hint */
+.b-infolist__hint {
+    position: absolute;
+    height: 18px;
+    line-height: 22px;
+    left: 0px;
+    right: 0px;
+    font-size: 0.8em;
+    color: #999;
+}
+
+/* resizer */
+.b-infolist .ui-resizable-handle.ui-resizable-s {
+	height: 18px;
+	bottom: 0px;
 }
 
 /* sorters */
@@ -51,7 +68,7 @@
 .b-infolist__percentage {
 	float: right;
 	color: #ccc;
-	padding-right: 14px;
+	padding-right: 18px;
 }
 
 /* items */
@@ -59,7 +76,7 @@
 	position: absolute;
 	top: 20px;
 	left: 0;
-	bottom: 0;
+	bottom: 14px;
 	right: 0;
 	overflow: auto;
 }
@@ -105,6 +122,7 @@
 .b-infolist__item.unread:before {
 }
 
+.b-infolist__item:hover,
 .b-infolist__item.highlighted {
 	border-color: #555;
     border-radius: 2px;

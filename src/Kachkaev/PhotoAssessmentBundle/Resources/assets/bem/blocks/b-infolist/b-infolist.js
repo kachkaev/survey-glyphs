@@ -43,6 +43,7 @@ $.widget('ui.bInfoList', {
 		});
 		w.$items = $('<ul/>').addClass("b-infolist__items");
 		w.$resizeBlind = $('<div/>').addClass("b-infolist__resize-blind");
+		w.$hint = $('<div/>').addClass('b-infolist__hint');
 		w.itemsMap = {};
 		w.$itemsMap = {};
 		w.options.currentId = null;
@@ -61,7 +62,7 @@ $.widget('ui.bInfoList', {
 		// Item events
 		//// Changes mouse id when hover
 		var triggerMouseoveritemWithDelay = function(id) {
-		    if (w.mouseId === id)
+		    if (w.mouseId === id && id !== null)
 		        return;
 		    var mouseIdChangerHash = Math.random();
 		    w.mouseIdChangerHash = mouseIdChangerHash;
@@ -69,6 +70,7 @@ $.widget('ui.bInfoList', {
 		        if (w.mouseIdChangerHash === mouseIdChangerHash) {
 		            w._self._trigger("hoveroveritem", null, {id: id, itemData: w.itemsMap[id]});
 		            w.mouseId = id;
+		            w._self._updateHintUsingMouseData();
 		        }
 		    }, w.options.mouseHoverDelay);
 
@@ -127,13 +129,6 @@ $.widget('ui.bInfoList', {
 		        }
 		    }
 		    if (addItem) {
-	            $item.tooltip({
-	                position: {
-	                    my: "left top",
-	                    at: "right bottom-1"
-	                },
-	                tooltipClass: "b-infolist__tooltip"
-	            });
 		        $item.appendTo(w.$items);
 		        w.itemsMap[id] = itemData;
 		        w.$itemsMap[id] = $item;
@@ -162,7 +157,9 @@ $.widget('ui.bInfoList', {
         w._self.setHighlightedItemIds(defaultHighlightedIds);
         w._self.setDisableThumbnails(w.options.disableThumbnails);
 
-        w.$element.append(w.$percentage, w.$sorters, w.$items);
+        w.$element.append(w.$percentage, w.$sorters, w.$items, w.$hint);
+        
+        w._self._updateHintPos();
 	},
 	
 	sortItemsBy: function(mode, isDescending, forceNoAnimation) {
@@ -329,6 +326,50 @@ $.widget('ui.bInfoList', {
 	    w.options.disableThumbnails = disableThumbnails;
 	    w.$element.toggleClass('b-infolist_thumbnails-enabled', !disableThumbnails);
 	    w.$element.toggleClass('b-infolist_thumbnails-disabled', disableThumbnails);
+	},
+    
+    _updateHintUsingMouseData: function() {
+        var w = this.w;
+
+        if (!w.mouseId) {
+            w.$hint.text('');
+        } else {
+            w.$hint.text(w.$itemsMap[w.mouseId].data('hint'));
+        }
+    },
+
+    _updateMouseHint: function() {
+        var w = this.w;
+
+        if (!w.mouseId) {
+            w.$hint.text('');
+        } else {
+            w.$hint.text(w.$itemsMap[w.mouseId].data('hint'));
+        }
+    },
+	
+    setHeight: function(newHeight) {
+        var w = this.w;
+
+        if (w.$element.height() == newHeight) {
+            return;
+        }
+        
+        w.$element.height(newHeight);
+        w._self._updateHintPos();
+    },
+    
+	_updateHintPos: function() {
+        var w = this.w;
+
+        console.log('heights', w.$items.get(0).scrollHeight, w.$items.height());
+        console.log('offsets', w.$items.offset().top, w.$items.height());
+	    if (w.$items.get(0).scrollHeight > w.$items.height()) {
+	        w.$hint.css('top', w.$items.offset().top - w.$element.offset().top + w.$items.height());
+	    } else {
+	        var $lastLi = w.$items.children().last();
+	        w.$hint.css('top', $lastLi.offset().top + $lastLi.outerHeight() - w.$element.offset().top);
+	    }
 	}
 });
 }());

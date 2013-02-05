@@ -231,15 +231,15 @@ $(function(){
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
                 $item.toggleClass('unread', data.isUnread);
                 
-                var title = 'User ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+                var hint = 'User ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
                 if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
-                    title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
+                    hint += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
                     if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
-                        title += 's';
+                        hint += 's';
                     }
                         
                 };
-                $item.attr('title', title);
+                $item.data('hint', hint);
                 
                 // Render thumbnail
                 patternThumbnailGenerator.addToQueue(data.photoResponses, null, function(img) {
@@ -260,14 +260,14 @@ $(function(){
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
     
-                var title = 'Photo ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+                var hint = 'Photo ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
                 if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
-                    title += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
+                    hint += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
                     if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
-                        title += 's';
+                        hint += 's';
                     }
                 };
-                $item.attr('title', title);
+                $item.data('hint', hint);
                 
                 // Render thumbnail
                 patternThumbnailGenerator.addToQueue(data.photoResponses, null, function(img) {
@@ -364,7 +364,7 @@ $(function(){
     // When both info lists are resized
     var $bothInfoLists = $bUserInfoList.add($bPhotoInfoList);
     $bothInfoLists.on('resize', function(event, ui) {
-        $bothInfoLists.height(ui.size.height);
+        $bothInfoLists.bInfoList('setHeight', ui.size.height);
     });
 
     $bothInfoLists.on('resizestop', function(event, ui) {
