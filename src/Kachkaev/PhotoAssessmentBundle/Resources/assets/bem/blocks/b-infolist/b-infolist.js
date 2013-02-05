@@ -324,7 +324,8 @@ $.widget('ui.bInfoList', {
         var w = this.w;
 
 	    w.options.disableThumbnails = disableThumbnails;
-	    w.$element.toggleClass('b-infolist_disabled-thumbnails', disableThumbnails);
+	    w.$element.toggleClass('b-infolist_thumbnails-enabled', !disableThumbnails);
+	    w.$element.toggleClass('b-infolist_thumbnails-disabled', disableThumbnails);
 	}
 });
 }());

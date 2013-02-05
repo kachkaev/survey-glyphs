@@ -64,9 +64,12 @@
 	overflow: auto;
 }
 
-.b-infolist_disabled-thumbnails .b-infolist__item {
+.b-infolist_thumbnails-disabled .b-infolist__item {
 	background-image: none !important;
 }
+/* .b-infolist_thumbnails-enabled .b-infolist__item {
+    background-color: #fff !important;
+} */
 
 .b-infolist__item {
 	color: #666;
