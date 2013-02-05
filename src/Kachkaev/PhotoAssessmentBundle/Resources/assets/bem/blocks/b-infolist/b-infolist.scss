@@ -106,23 +106,24 @@
 }
 
 .b-infolist__item.highlighted {
-	border-color: #666;
+	border-color: #555;
     border-radius: 2px;
     border-width: 2px;
     height: 15px;
     width: 15px;
     line-height: 16px;
     background-position: 0px 0px;
-}
+ }
 
 .b-infolist__item.current {
-    border-color: #333;
+    border-color: #000;
     border-radius: 2px;
     border-width: 2px;
     height: 15px;
     width: 15px;
     line-height: 16px;
-    background-position: 0px 0px;
+    background-position: -1px -1px;
+    background-position: 0 0;
 }
 
 .b-infolist__resize-blind {

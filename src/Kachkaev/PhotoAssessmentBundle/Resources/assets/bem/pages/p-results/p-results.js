@@ -369,13 +369,22 @@ $(function(){
         $bUserInfoList.bInfoList('setHighlightedItemIds', _.map(ui.photoResponses, function(pr) {return pr.userId;}));
     });
 
-    // When a line in user pattern is clicked 
-    $bPhotoResponsePatternPhoto.on('bphotoresponsepatterncontextclick', function(event, ui) {
-        $bUserInfoList.bInfoList('setCurrentItemId', ui.photoResponses[0].userId);
-    });
-    // When a line in photo pattern is clicked 
+    // When a line in user pattern is clicked
     $bPhotoResponsePatternUser.on('bphotoresponsepatterncontextclick', function(event, ui) {
-        $bPhotoInfoList.bInfoList('setCurrentItemId', ui.photoResponses[0].photoId);
+        // Look at current id and select an id following it in the list of responses
+        var currentId = $bPhotoInfoList.bInfoList('option', 'currentId');
+        var ids = _.sortBy(_.map(ui.photoResponses, function(o){return o.photoId;}), function(n){ return n + 0;});
+        var currentIdIndex = _.indexOf(ids, currentId);
+        $bPhotoInfoList.bInfoList('setCurrentItemId', currentIdIndex == -1 ? ids[0] : ids[(currentIdIndex + 1) % ids.length]);
+    });
+
+    // When a line in photo pattern is clicked 
+    $bPhotoResponsePatternPhoto.on('bphotoresponsepatterncontextclick', function(event, ui) {
+        // Look at current id and select an id following it in the list of responses
+        var currentId = $bUserInfoList.bInfoList('option', 'currentId');
+        var ids = _.sortBy(_.map(ui.photoResponses, function(o){return o.userId;}), function(n){ return n + 0;});
+        var currentIdIndex = _.indexOf(ids, currentId);
+        $bUserInfoList.bInfoList('setCurrentItemId', currentIdIndex == -1 ? ids[0] : ids[(currentIdIndex + 1) % ids.length]);
     });
 
     var $bothPhotoresponsePatterns = $bPhotoResponsePatternUser.add($bPhotoResponsePatternPhoto);
