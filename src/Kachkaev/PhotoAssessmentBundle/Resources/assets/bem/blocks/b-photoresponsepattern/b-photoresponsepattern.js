@@ -26,6 +26,9 @@ var LANG_HINT_RESPONSE = ' selected';
 var LANG_HINT_RESPONSES = ' selected';
 var LANG_HINT_WITH = ' with ';
 var LANG_HINT_QAJOINT = ' = ';
+var LANG_HINT_WITH_DURATION = ' with duration = ';
+var LANG_HINT_SECS = ' s';
+var LANG_HINT_WITH_UNKNOWN_DURATION = ' with unknown duration';
 
 
 $.widget('ui.bphotoresponsepattern', {
@@ -61,16 +64,16 @@ $.widget('ui.bphotoresponsepattern', {
         
 		// SVG 
 		w.d3SvgCanvas = d3.select(w.$element.get(0))
-		    .append("svg:svg")
+		    .append('svg:svg')
     		.attr('width', w.$element.width())
     		.attr('height', w.$element.height());
-		w.d3SvgCanvas.append("g")
+		w.d3SvgCanvas.append('g')
 		    .attr('class', 'grid');
-        w.d3SvgCanvas.append("g")
+        w.d3SvgCanvas.append('g')
             .attr('class', 'photoResponses');
-        w.d3SvgCanvas.append("g")
+        w.d3SvgCanvas.append('g')
             .attr('class', 'photoResponseEdges');
-        w.d3SvgCanvas.append("g")
+        w.d3SvgCanvas.append('g')
             .attr('class', 'photoResponseNodes');
 
 		w.$svgCanvas = w.$element.find('svg');
@@ -98,7 +101,7 @@ $.widget('ui.bphotoresponsepattern', {
 		        //// xxx responses
 		        hintTextChunks.push(photoResponseIds.length);
 		        hintTextChunks.push(photoResponseIds.length == 1 ? LANG_HINT_RESPONSE : LANG_HINT_RESPONSES);
-		        //// "with question: answer"
+		        //// 'with question: answer'
 		        if (eventData.questionId !== undefined && eventData.answerId !== undefined) {
 		            var question = w.options.questions[eventData.questionId];
                     hintTextChunks.push(LANG_HINT_WITH);
@@ -108,6 +111,19 @@ $.widget('ui.bphotoresponsepattern', {
 		            var answer = pat.getAnswerSeq(question)[eventData.answerId];
 		            hintTextChunks.push(_.find(langHintAnswers, function(pair){ return pair[0] == answer;})[1]);
 		        }
+		        
+		        //// with duration = x s || with unknown duration
+		        if (photoResponseIds.length == 1 && w.options.timeScaling) {
+		            var duration = eventData.photoResponses[0].duration;
+		            if (duration >= 0) {
+		                hintTextChunks.push(LANG_HINT_WITH_DURATION);
+		                hintTextChunks.push(eventData.photoResponses[0].duration);
+		                hintTextChunks.push(LANG_HINT_SECS);
+		            } else {
+		                hintTextChunks.push(LANG_HINT_WITH_UNKNOWN_DURATION);
+		            }
+		        }
+		            
 		    } else {
 		        d3PhotoResponse.classed('selected', false);
 		    }
@@ -131,7 +147,7 @@ $.widget('ui.bphotoresponsepattern', {
        
 	    d3photoResponses.attr('width', function()  { return w.d3SvgCanvas.attr('width')  - CANVAS_PADDING[1] - CANVAS_PADDING[3];});
 	    d3photoResponses.attr('height', function() { return w.d3SvgCanvas.attr('height') - CANVAS_PADDING[0] - CANVAS_PADDING[2];});
-	    d3photoResponses.attr('transform', function() {return 'translate(' + CANVAS_PADDING[3] + "," + CANVAS_PADDING[0] + ')';});
+	    d3photoResponses.attr('transform', function() {return 'translate(' + CANVAS_PADDING[3] + ',' + CANVAS_PADDING[0] + ')';});
 	    d3photoResponseEdges.attr('transform', d3photoResponses.attr('transform'));
 	    d3photoResponseNodes.attr('transform', d3photoResponses.attr('transform'));
 
@@ -158,7 +174,7 @@ $.widget('ui.bphotoresponsepattern', {
         var line = d3.svg.line()
             .x(function(d){return x(d[0]);})
             .y(function(d){return y(d[1]);})
-            .interpolate("linear"); 
+            .interpolate('linear'); 
 	    
 
         // =====================================
@@ -171,35 +187,53 @@ $.widget('ui.bphotoresponsepattern', {
         // =====================================
         
         var makeInteractive = function(selection) {
-            selection.on("mouseover", function(d, i){
-                var triggerObj = {
-                        photoResponseIds: d.ids,
-                        photoResponses: _.map(d.ids, function(id) {return w.photoResponsesMap[id];})
+            selection.on('mouseover', function(d, i){
+                var triggerObj = null;
+                if (_.isArray(d.ids)) { // edges or nodes
+                    triggerObj = {
+                            photoResponseIds: d.ids,
+                            photoResponses: _.map(d.ids, function(id) {return w.photoResponsesMap[id];})
                     };
+                } else { // lines themselves
+                    triggerObj = {
+                            photoResponseIds: [d.id],
+                            photoResponses: [d]
+                    };
+                }
                 if (_.isNumber(d.questionId)) {
                     triggerObj.questionId = d.questionId;
                 };
                 if (_.isNumber(d.answerId)) {
                     triggerObj.answerId = d.answerId;
                 };
-                w._self._trigger("contexthover", null, triggerObj);
+                w._self._trigger('contexthover', null, triggerObj);
             })
-            .on("mouseout", function(d, i){
-                w._self._trigger("contexthover", null, {
+            .on('mouseout', function(d, i){
+                w._self._trigger('contexthover', null, {
                     photoResponseIds: [],
                     photoResponses: []
                 });
             })
-            .on("click", function(d, i){
-                w._self._trigger("contextclick", null, {
-                    photoResponseIds: d.ids,
-                    photoResponses: _.map(d.ids, function(id) {return w.photoResponsesMap[id];})
-                });
+            .on('click', function(d, i){
+                var triggerObj = null;
+                if (_.isArray(d.ids)) { // edges or nodes
+                    w._self._trigger('contextclick', null, {
+                        photoResponseIds: d.ids,
+                        photoResponses: _.map(d.ids, function(id) {return w.photoResponsesMap[id];})
+                    });
+                } else { // lines themselves
+                    triggerObj = {
+                            photoResponseIds: [d.id],
+                            photoResponses: [d]
+                    };
+                }
+                w._self._trigger('contextclick', null, triggerObj);
+
             });
         };
 
         var updateResponseLine = function(selection) {
-            return selection.attr("d", function(d) {
+            return selection.attr('d', function(d) {
                 var pts = [];
                 _.each(w.options.questions, function(question) {
                     var answerSeq = pat.getAnswerSeq(question);
@@ -226,16 +260,12 @@ $.widget('ui.bphotoresponsepattern', {
 
         // Enter
         d3responseLine.enter()
-           .append("svg:path")
-           .attr("class", "answer")
-           .on("click", function(d, i){
-               w._self._trigger("contextclick", null, {
-                   photoResponseIds: [d.id],
-                   photoResponses: [d]
-               });
-           })
+           .append('svg:path')
+           .attr('class', 'answer')
+           .call(makeInteractive)
         .each(function() {
             var s = d3.select(this);
+            s.style('opacity', null);
             var o = d3.select(this).style('opacity');
             s.style('opacity', 0)
                 .transition().duration(ANIMATION_LENGTH)
@@ -246,7 +276,7 @@ $.widget('ui.bphotoresponsepattern', {
 	    // Exit
         d3responseLine.exit()
            .transition().duration(ANIMATION_LENGTH)
-           .style("opacity",0)
+           .style('opacity',0)
            .remove();
        
         // There is nothing else to do if time scaling is on
@@ -318,7 +348,7 @@ $.widget('ui.bphotoresponsepattern', {
  
         // Enter
         d3responseEdge.enter()
-            .append("svg:line")
+            .append('svg:line')
             .call(makeInteractive)
             .each(function(d) {
                d3.select(this)
@@ -363,7 +393,7 @@ $.widget('ui.bphotoresponsepattern', {
  
         // Enter
         d3responseNode.enter()
-           .append("svg:rect")
+           .append('svg:rect')
            .call(makeInteractive)
            .each(function(d) {
                d3.select(this)

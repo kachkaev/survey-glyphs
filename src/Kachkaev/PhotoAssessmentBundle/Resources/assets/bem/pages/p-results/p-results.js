@@ -403,7 +403,7 @@ $(function(){
         var currentId = $bPhotoInfoList.bInfoList('option', 'currentId');
         var ids = _.sortBy(_.map(ui.photoResponses, function(o){return o.photoId;}), function(n){ return n + 0;});
         var currentIdIndex = _.indexOf(ids, currentId);
-        $bPhotoInfoList.bInfoList('setCurrentItemId', currentIdIndex == -1 ? ids[0] : ids[(currentIdIndex + 1) % ids.length]);
+        updateState({photoId: currentIdIndex == -1 ? ids[0] : ids[(currentIdIndex + 1) % ids.length]});
     });
 
     // When a line in photo pattern is clicked 
@@ -412,7 +412,7 @@ $(function(){
         var currentId = $bUserInfoList.bInfoList('option', 'currentId');
         var ids = _.sortBy(_.map(ui.photoResponses, function(o){return o.userId;}), function(n){ return n + 0;});
         var currentIdIndex = _.indexOf(ids, currentId);
-        $bUserInfoList.bInfoList('setCurrentItemId', currentIdIndex == -1 ? ids[0] : ids[(currentIdIndex + 1) % ids.length]);
+        updateState({userId: currentIdIndex == -1 ? ids[0] : ids[(currentIdIndex + 1) % ids.length]});
     });
 
     var $bothPhotoresponsePatterns = $bPhotoResponsePatternUser.add($bPhotoResponsePatternPhoto);
@@ -428,8 +428,7 @@ $(function(){
         
         switch (key) {
         case 27:
-            $bUserInfoList.bInfoList('setCurrentItemId', null);
-            $bPhotoInfoList.bInfoList('setCurrentItemId', null);
+            updateState({userId: null, photoId: null});
             return false;
             
         // p for toggling thumbnails (previews)
