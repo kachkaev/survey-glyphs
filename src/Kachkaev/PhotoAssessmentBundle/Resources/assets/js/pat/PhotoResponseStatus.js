@@ -7,6 +7,9 @@ pat.PhotoResponseStatus.COMPLETE = 2;
 
 pat.PhotoResponseStatus.PHOTO_PROBLEM = 0x10;
 
+/**
+ * @type pat.PhotoResponseStatus
+ */
 pat.PhotoResponseStatus.valueToString = function (status, lowerCase) {
 	var result = null;
 	$.each(pat.PhotoResponseStatus, function(k, v) {

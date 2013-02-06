@@ -33,20 +33,17 @@ var LANG_HINT_WITH_UNKNOWN_DURATION = ' with unknown duration';
 
 $.widget('ui.bphotoresponsepattern', {
 
+    options: {
+        answers: [],
+        questions: [],
+        timeScaling: false,
+        maxTime: 20,
+        photoResponseEqualityParameter: null,
+        photoResponses: []
+    },
+    
 	_init: function() {
         
-	    this.options = _.extend({
-	        answers: [],
-	        questions: [],
-	        timeScaling: false,
-	        maxTime: 20,
-	        photoResponseEqualityParameter: null
-	    }, this.options);
-	    
-	    if (!this.options.photoResponses) {
-	        this.options.photoResponses = [];
-	    };
-	    
 		var w = {
 				_self: this,
 				$element: this.element,

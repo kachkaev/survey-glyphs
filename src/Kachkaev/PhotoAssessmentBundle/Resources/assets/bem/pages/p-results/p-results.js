@@ -182,7 +182,7 @@ $(function(){
                 data.status = ajaxData.response.new_value;
                 if (data.type == 'user')
                     data.isUnread = false;
-                $infoList.bInfoList('updateItems', [data.id]);
+                $infoList.binfolist('updateItems', [data.id]);
             },
             error: function() {
                 console.log('Failed updating status', data);
@@ -218,7 +218,7 @@ $(function(){
     //// Users
     var $bUserInfoList = $('.b-infolist_user')
         .height(stateContainer.state.listHeight)
-        .bInfoList({
+        .binfolist({
             items: data.users,
             dblclickAction: toggleStatusFunction,
             sortModes: ['id', 'completed', 'problems', 'unread'],
@@ -252,7 +252,7 @@ $(function(){
     //// Photos
     var $bPhotoInfoList = $('.b-infolist_photo')
         .height(stateContainer.state.listHeight)
-        .bInfoList({
+        .binfolist({
             items: data.photos,
             dblclickAction: toggleStatusFunction,
             sortModes: ['id', 'completed', 'problems', 'suitability'],
@@ -331,7 +331,7 @@ $(function(){
         var userStatus = user.status;
         if (user.isUnread) {
             setTimeout(function() {
-                if ($bUserInfoList.bInfoList('option','currentId') == userId && userStatus == user.status) {
+                if ($bUserInfoList.binfolist('option','currentId') == userId && userStatus == user.status) {
                     setStatusFunction($bUserInfoList, user, user.status);
                 }
             }, MARK_AS_READ_DELAY);
@@ -368,7 +368,7 @@ $(function(){
     // When both info lists are resized
     var $bothInfoLists = $bUserInfoList.add($bPhotoInfoList);
     $bothInfoLists.on('resize', function(event, ui) {
-        $bothInfoLists.bInfoList('setHeight', ui.size.height);
+        $bothInfoLists.binfolist('setHeight', ui.size.height);
     });
 
     $bothInfoLists.on('resizestop', function(event, ui) {
@@ -379,28 +379,28 @@ $(function(){
 
     // When an item in user list is hovered
     $bUserInfoList.on('binfolisthoveroveritem', function(event, ui) {
-        $bPhotoInfoList.bInfoList('setHighlightedItemIds', ui.itemData ? _.map(ui.itemData.photoResponses, function(pr) {return pr.photoId;}) : null);
+        $bPhotoInfoList.binfolist('setHighlightedItemIds', ui.itemData ? _.map(ui.itemData.photoResponses, function(pr) {return pr.photoId;}) : null);
     });
     
     // When an item in photo list is hovered
     $bPhotoInfoList.on('binfolisthoveroveritem', function(event, ui) {
-        $bUserInfoList.bInfoList('setHighlightedItemIds', ui.itemData ? _.map(ui.itemData.photoResponses, function(pr) {return pr.userId;}) : null);
+        $bUserInfoList.binfolist('setHighlightedItemIds', ui.itemData ? _.map(ui.itemData.photoResponses, function(pr) {return pr.userId;}) : null);
     });
 
     // When a line in user pattern is hovered
     $bPhotoResponsePatternUser.on('bphotoresponsepatterncontexthover', function(event, ui) {
-        $bPhotoInfoList.bInfoList('setHighlightedItemIds', _.map(ui.photoResponses, function(pr) {return pr.photoId;}));
+        $bPhotoInfoList.binfolist('setHighlightedItemIds', _.map(ui.photoResponses, function(pr) {return pr.photoId;}));
     });
 
     // When a line in photo pattern is hovered
     $bPhotoResponsePatternPhoto.on('bphotoresponsepatterncontexthover', function(event, ui) {
-        $bUserInfoList.bInfoList('setHighlightedItemIds', _.map(ui.photoResponses, function(pr) {return pr.userId;}));
+        $bUserInfoList.binfolist('setHighlightedItemIds', _.map(ui.photoResponses, function(pr) {return pr.userId;}));
     });
 
     // When a line in user pattern is clicked
     $bPhotoResponsePatternUser.on('bphotoresponsepatterncontextclick', function(event, ui) {
         // Look at current id and select an id following it in the list of responses
-        var currentId = $bPhotoInfoList.bInfoList('option', 'currentId');
+        var currentId = $bPhotoInfoList.binfolist('option', 'currentId');
         var ids = _.sortBy(_.map(ui.photoResponses, function(o){return o.photoId;}), function(n){ return n + 0;});
         var currentIdIndex = _.indexOf(ids, currentId);
         updateState({photoId: currentIdIndex == -1 ? ids[0] : ids[(currentIdIndex + 1) % ids.length]});
@@ -409,7 +409,7 @@ $(function(){
     // When a line in photo pattern is clicked 
     $bPhotoResponsePatternPhoto.on('bphotoresponsepatterncontextclick', function(event, ui) {
         // Look at current id and select an id following it in the list of responses
-        var currentId = $bUserInfoList.bInfoList('option', 'currentId');
+        var currentId = $bUserInfoList.binfolist('option', 'currentId');
         var ids = _.sortBy(_.map(ui.photoResponses, function(o){return o.userId;}), function(n){ return n + 0;});
         var currentIdIndex = _.indexOf(ids, currentId);
         updateState({userId: currentIdIndex == -1 ? ids[0] : ids[(currentIdIndex + 1) % ids.length]});
@@ -492,10 +492,10 @@ $(function(){
     });
     
     var onStateUpdated = function() {
-        $bUserInfoList .bInfoList('setCurrentItemId', stateContainer.state.userId);
-        $bPhotoInfoList.bInfoList('setCurrentItemId', stateContainer.state.photoId);
-        $bothInfoLists.bInfoList('setHeight', stateContainer.state.listHeight);
-        $bothInfoLists.bInfoList('setDisableThumbnails', stateContainer.state.disableThumbnails);
+        $bUserInfoList .binfolist('setCurrentItemId', stateContainer.state.userId);
+        $bPhotoInfoList.binfolist('setCurrentItemId', stateContainer.state.photoId);
+        $bothInfoLists.binfolist('setHeight', stateContainer.state.listHeight);
+        $bothInfoLists.binfolist('setDisableThumbnails', stateContainer.state.disableThumbnails);
         $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling', stateContainer.state.timeScaling);
         $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', stateContainer.state.maxTime);
         localStorage[LOCALSTORAGE_STATE] = JSON.stringify(stateContainer.state);
