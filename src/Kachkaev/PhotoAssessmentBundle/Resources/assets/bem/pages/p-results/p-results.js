@@ -494,7 +494,7 @@ $(function(){
     var onStateUpdated = function() {
         $bUserInfoList .bInfoList('setCurrentItemId', stateContainer.state.userId);
         $bPhotoInfoList.bInfoList('setCurrentItemId', stateContainer.state.photoId);
-        $bothInfoLists.height(stateContainer.state.listHeight);
+        $bothInfoLists.bInfoList('setHeight', stateContainer.state.listHeight);
         $bothInfoLists.bInfoList('setDisableThumbnails', stateContainer.state.disableThumbnails);
         $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'timeScaling', stateContainer.state.timeScaling);
         $bothPhotoresponsePatterns.bphotoresponsepattern('option', 'maxTime', stateContainer.state.maxTime);
