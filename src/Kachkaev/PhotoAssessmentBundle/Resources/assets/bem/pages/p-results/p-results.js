@@ -229,7 +229,7 @@ $(function(){
         .binfolist({
             items: _.toArray(data.photos),
             dblclickAction: toggleStatusFunction,
-            sortModes: ['id', 'completed', 'problems', 'suitability'],
+            sortModes: ['id', 'completed', 'problems', 'duration', 'suitability'],
             sortMode: stateContainer.state.photoSortMode,
             sortOrderIsReverse: stateContainer.state.photoSortOrderIsReverse,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,

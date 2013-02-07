@@ -207,16 +207,19 @@ $.widget('pat.binfolist', {
 	    var newItems = _.sortBy(w.options.items, function(item) {
 	       var id = item.id < 0 ? 9999 : parseInt(item.id, 10);
 	       switch (mode) {
-	       case "completed":
+           case 'id':
+               return id;
+
+           case 'completed':
 	           return item.photoResponseCounts[pat.PhotoResponseStatus.COMPLETE] * 10000 + id;
 	           
-	       case "problems":
+	       case 'problems':
                return item.photoResponseCounts[pat.PhotoResponseStatus.PHOTO_PROBLEM] * -10000 + id;
 
-           case "unread":
+           case 'unread':
                return (item.isUnread ? -10000 : 0) + id;
 
-           case "suitability":
+           case 'suitability':
                var completeResponsesCount = 0;
                var sums = [];
                for (var i = pat.config.questions.length - 1; i >= 0; --i) {
@@ -241,8 +244,27 @@ $.widget('pat.binfolist', {
                    return result;
                }
 
-           case "id":
-               return id;
+           case 'duration':
+           case 'duration-med':
+               var durations = [];
+               for (var j = item.photoResponses.length - 1, pr = item.photoResponses[j]; j >=0; --j, pr = item.photoResponses[j]) {
+                   if (pr.duration > 0) {
+                       durations.push(pr.duration);
+                   }
+               };
+               return d3.median(durations);
+           
+           case 'duration-avg':
+               var completeResponsesCount = 0;
+               var sum = 0;
+               for (var j = item.photoResponses.length - 1, pr = item.photoResponses[j]; j >=0; --j, pr = item.photoResponses[j]) {
+                   if (pr.duration > 0) {
+                       sum += pr.duration;
+                       ++completeResponsesCount;
+                   }
+               }
+               return completeResponsesCount ? sum / completeResponsesCount : 0;
+
 	       default:
 	           throw new Error('Unknown sort mode ' + mode);
 	       }
