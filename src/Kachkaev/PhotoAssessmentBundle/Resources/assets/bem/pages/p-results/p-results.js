@@ -222,6 +222,37 @@ $(function(){
     // =====================================
 
     // Info lists
+    
+    //// Photos
+    var $bPhotoInfoList = $('.b-infolist_photo')
+        .height(stateContainer.state.infolistHeight)
+        .binfolist({
+            items: _.toArray(data.photos),
+            dblclickAction: toggleStatusFunction,
+            sortModes: ['id', 'completed', 'problems', 'suitability'],
+            sortMode: stateContainer.state.photoSortMode,
+            sortOrderIsReverse: stateContainer.state.photoSortOrderIsReverse,
+            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
+            customizeItem: function($item, id, data) {
+                $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.removeClass('status_0 status_1');
+                $item.addClass('status_' + data.status);
+                $item.addClass('source_' + data.source);
+                $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
+                $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
+    
+                var hint = 'Photo ' + id + ' (' + _.capitalize(data.source) + '): ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+                if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
+                    hint += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
+                    if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
+                        hint += 's';
+                    }
+                };
+                $item.data('hint', hint);
+            }
+        });
+    
     //// Users
     var $bUserInfoList = $('.b-infolist_user')
         .height(stateContainer.state.infolistHeight)
@@ -254,36 +285,7 @@ $(function(){
                 $item.data('hint', hint);
             }
         });
-    
-    //// Photos
-    var $bPhotoInfoList = $('.b-infolist_photo')
-        .height(stateContainer.state.infolistHeight)
-        .binfolist({
-            items: _.toArray(data.photos),
-            dblclickAction: toggleStatusFunction,
-            sortModes: ['id', 'completed', 'problems', 'suitability'],
-            sortMode: stateContainer.state.photoSortMode,
-            sortOrderIsReverse: stateContainer.state.photoSortOrderIsReverse,
-            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
-            viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
-            customizeItem: function($item, id, data) {
-                $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
-                $item.removeClass('status_0 status_1');
-                $item.addClass('status_' + data.status);
-                $item.addClass('source_' + data.source);
-                $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
-                $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
-    
-                var hint = 'Photo ' + id + ' (' + _.capitalize(data.source) + '): ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
-                if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
-                    hint += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
-                    if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
-                        hint += 's';
-                    }
-                };
-                $item.data('hint', hint);
-            }
-        });
+
     
     // Titles above captions
     var $bListCaptionUser = $('.p-results__listcaption__user');
@@ -519,22 +521,28 @@ $(function(){
     var onStateUpdated = function() {
         //console.log('onStateUpdated', stateContainer.state);
         
-        $bUserInfoList .binfolist('option', {
-            selectedItemId: stateContainer.state.userId,
-            sortMode: stateContainer.state.userSortMode,
-            sortOrderIsReverse: stateContainer.state.userSortOrderIsReverse
-        });
         $bPhotoInfoList .binfolist('option', {
             selectedItemId: stateContainer.state.photoId,
             sortMode: stateContainer.state.photoSortMode,
-            sortOrderIsReverse: stateContainer.state.photoSortOrderIsReverse
-        });
-        $bothInfoLists .binfolist('option', {
+            sortOrderIsReverse: stateContainer.state.photoSortOrderIsReverse,
+            
             height: stateContainer.state.infolistHeight,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeTimeScaling: stateContainer.state.timeScaling
         });
+
+        $bUserInfoList .binfolist('option', {
+            selectedItemId: stateContainer.state.userId,
+            sortMode: stateContainer.state.userSortMode,
+            sortOrderIsReverse: stateContainer.state.userSortOrderIsReverse,
+            
+            height: stateContainer.state.infolistHeight,
+            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
+            viewModeTimeScaling: stateContainer.state.timeScaling
+        });
+        
         $bothPhotoresponsePatterns.bphotoresponsepattern('option', {
             'timeScaling': stateContainer.state.timeScaling,
             'maxTime': stateContainer.state.maxTime

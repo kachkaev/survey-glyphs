@@ -10,10 +10,11 @@ pat.PatternThumbnailGenerator = function(options) {
     var obj = this;
     
     this.options = _.extend({
-        width: 15,
-        height: 15,
-        canvasPadding: [1, 1, 1, 1],
+        width: 17,
+        height: 17,
+        canvasPadding: [2, 2, 2, 2],
         threads: 30,
+        backgroundColor: '#fff',
 
         defaultLineStyle: {
                 strokeStyle: "rgba(0,0,0,0.15)",
@@ -84,6 +85,14 @@ pat.PatternThumbnailGenerator.prototype._render = function(thread, queueElement)
     
     thread[0] = true;
     thread[1].clearCanvas();
+    if (this.options.backgroundColor) {
+        thread[1].drawRect({
+           fillStyle: this.options.backgroundColor,
+           x: 0, y: 0,
+           width: this.options.width, height: this.options.height,
+           fromCenter: false
+        });
+    }
 
     var optionTimeScaling = queueElement[1] ? queueElement[1].timeScaling : false;
     
