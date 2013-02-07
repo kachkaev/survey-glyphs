@@ -4,16 +4,15 @@ $.widget('pat.binfolist', {
     options: {
         sortModes: ['id', 'completed', 'problems'],
         sortMode: 'id',
-        sortOrderIsDescending: false,
+        sortOrderIsReverse: false,
         items: [],
         selectedItemId: null,
         highlightedItemsIds: [],
 
         viewModeShowThumbnails: false,
         viewModeShowProblems: false,
+        height: 200,
         
-        disableThumbnails: true,
-
         customizeItem: null,  // function
         dblclickAction: null, // function
         mouseHoverDelay: 50,
@@ -47,13 +46,13 @@ $.widget('pat.binfolist', {
 		w.options.selectedItemId = null;
         w.mouseId = null;
 		w.mouseIdChangerHash = null;
-		w.$currentItem = null;
+		w.$selectedItem = null;
 		w.$highlightedItems = null;
 		
 		// Sorters events
 		w.$sorters.children().click(function() {
 		    var $this = $(this);
-		    w._self.sortItemsBy($this.data('mode'));
+		    w._self._resortItems($this.data('mode'));
 		});
 
 		// Item events
@@ -99,7 +98,7 @@ $.widget('pat.binfolist', {
 		// Click
 		var onItemClick = function() {
 		    var $this = $(this);
-		    w._self.setCurrentItemId($this.data('id'));
+		    w._self._setOption('selectedItemId', $this.data('id'));
         };
 
         // Populate items
@@ -128,9 +127,6 @@ $.widget('pat.binfolist', {
 		    }
 		});
 		
-		// sort items
-		w._self.sortItemsBy(w.options.sortMode, false, true);
-		
 		// Make the element resizable with constraints taken from css
 		w.$element.resizable({
 		    maxHeight: w.$element.css('maxHeight'),
@@ -146,32 +142,32 @@ $.widget('pat.binfolist', {
 		    }
 		});
 		
-        w._self.setCurrentItemId(defaultselectedItemId);
-        w._self.setHighlightedItemIds(defaulthighlightedItemsIds);
-        w._self.setDisableThumbnails(w.options.disableThumbnails, true);
+		w.$element.append(w.$percentage, w.$sorters, w.$items, w.$hint);
 
-        w.$element.append(w.$percentage, w.$sorters, w.$items, w.$hint);
-        
+		w._self._applySelectedItemId();
+        w._self._applyHighlightedItemsIds();
+        w._self._applyHeight();
+        w._self._updateViewMode('showThumbnails');
+        w._self._updateViewMode('showProblems');
+        w._self._resortItems(w.options.sortMode, w.options.sortOrderIsReverse, true);
         w._self._updateHintPos();
 	},
 	
-	sortItemsBy: function(mode, isDescending, forceNoAnimation) {
+	_resortItems: function(mode, isReverse, initialUse) {
 	    var w = this.w;
 	    
-	    var currentIsDescending = null;
-	    
-	    var actualIsDescending = isDescending;
+	    var currentIsReverse = null;
+	    var neededIsReverse = isReverse;
 	    
 	    // Check whether sort mode has been changed, update interface if needed and exit otherwise
 	    var $currentModeNode = w.$sorters.find('.ascending, .descending');
 	    if ($currentModeNode.length) {
-	        currentIsDescending = $currentModeNode.hasClass('descending');
-	        $currentModeNode.removeClass('ascending descending');
-	        if (_.isUndefined(actualIsDescending)) {
+	        currentIsReverse = $currentModeNode.hasClass('descending');
+	        if (_.isUndefined(neededIsReverse)) {
 	            if ($currentModeNode.data('mode') == mode) {
-	                actualIsDescending = !currentIsDescending;
+	                neededIsReverse = !currentIsReverse;
 	            } else {
-	                actualIsDescending = false;
+	                neededIsReverse = false;
 	            }
 	        } else {
 	            if ($currentModeNode.data('mode') == mode && $currentModeNode == $currentModeNode) {
@@ -179,9 +175,10 @@ $.widget('pat.binfolist', {
 	            }
 	        }
 	    }
-	    
+	    $currentModeNode.removeClass('ascending descending');
+        
 	    var $newModeNode = w.$sorters.find('[data-mode="' + mode + '"]');
-	    $newModeNode.addClass(actualIsDescending ? 'descending' : 'ascending');
+	    $newModeNode.addClass(neededIsReverse ? 'descending' : 'ascending');
 	    
         // Get list of new ids, if the sequence matches the old one, exit
 	    var oldIds = _.map(w.options.items, function(item) {
@@ -226,13 +223,13 @@ $.widget('pat.binfolist', {
                }
 
            case "id":
+               return id;
 	       default:
-	           return id;
-	       
+	           throw new Error('Unknown sort mode ' + mode);
 	       }
 	    });
 	    
-	    if (actualIsDescending) {
+	    if (neededIsReverse) {
 	        newItems.reverse();
 	    }
 	    
@@ -243,7 +240,7 @@ $.widget('pat.binfolist', {
 	    if (_.isEqual(oldIds, newIds))
 	        return;
 	    
-	    // Actual sorting 
+	    // Actual sorting of UI elements
         var oldScrollTop = w.$items.scrollTop();
         w.$items.detach();
         _.each(newIds, function(id) {
@@ -254,7 +251,16 @@ $.widget('pat.binfolist', {
         w.$items.appendTo(w.$element);
         w.$items.scrollTop(oldScrollTop);
 
-	    w.options.items = newItems;
+        if (!initialUse) {
+            var newOptions = {
+                    items: newItems,
+                    sortMode: mode,
+                    sortOrderIsReverse: neededIsReverse ? true : false
+            };
+            
+            w._self._setOptions(newOptions);
+            w._self._trigger('resortitems', this, newOptions);
+        }
 	},
 
 	/** 
@@ -279,58 +285,49 @@ $.widget('pat.binfolist', {
         w.$items.appendTo(w.$element);
 	},
 	
-	setCurrentItemId: function(newId) {
-		var w = this.w;
-
-		if (newId == w.options.selectedItemId)
-			return false;
-
-		if (w.$currentItem) {
-			w.$currentItem.removeClass('current');
-		}
-		
-		var $newCurrentItem = w.$itemsMap[newId];
-		
-		w.options.selectedItemId = newId;
-		if ($newCurrentItem) {
-		    $newCurrentItem.addClass('current');
-		    w.$currentItem = $newCurrentItem;
-		    w.$currentItem.scrollintoview();
-		}
-		w._self._trigger("changeitem", null, {id: newId, itemData: w.itemsMap[newId]});
-	},
-
-    setHighlightedItemIds: function(newIds) {
+	_applyHighlightedItemsIds: function() {
         var w = this.w;
-
-        if (_.isEqual(newIds, w.options.highlightedItemsIds))
-            return false;
 
         if (w.$highlightedItems) {
             w.$highlightedItems.removeClass('highlighted');
         }
         
         var $newHighlightedItemElements = [];
-        _.each(newIds, function(id) {
+        _.each(w.options.highlightedItemsIds, function(id) {
             $newHighlightedItemElements.push(w.$itemsMap[id][0]);  
         });
         var $newHighlightedItems = $($newHighlightedItemElements);
         $newHighlightedItems.addClass('highlighted');
-        w.options.highlightedItemsIds = newIds;
         w.$highlightedItems = $newHighlightedItems;
-        w._self._trigger("highlightitems", null, {ids: newIds});
     },
 	
-	setDisableThumbnails: function(disableThumbnails, force) {
+    _applySelectedItemId: function() {
         var w = this.w;
 
-        if (!force && w.options.disableThumbnails == disableThumbnails)
-            return;
+        if (w.$selectedItem) {
+            w.$selectedItem.removeClass('current');
+        }
         
-	    w.options.disableThumbnails = disableThumbnails;
-	    w.$element.toggleClass('b-infolist_thumbnails_enabled', !disableThumbnails);
-	    w.$element.toggleClass('b-infolist_thumbnails_disabled', disableThumbnails);
-	},
+        var $newSelectedItem = w.$itemsMap[w.options.selectedItemId];
+        
+        if ($newSelectedItem) {
+            $newSelectedItem.addClass('current');
+            w.$selectedItem = $newSelectedItem;
+            w.$selectedItem.scrollintoview();
+        }
+    },
+
+    _updateViewMode: function(parameter) {
+        var w = this.w;
+
+        if (parameter == 'showThumbnails') {
+            w.$element.toggleClass('b-infolist_thumbnails_enabled',   w.options.viewModeShowThumbnails);
+            w.$element.toggleClass('b-infolist_thumbnails_disabled', !w.options.viewModeShowThumbnails);
+        } else if (parameter == 'showProblems') {
+            w.$element.toggleClass('b-infolist_problems_enabled',   w.options.viewModeShowProblems);
+            w.$element.toggleClass('b-infolist_problems_disabled', !w.options.viewModeShowProblems);
+        }
+    },
     
     _updateHintUsingMouseData: function() {
         var w = this.w;
@@ -352,14 +349,10 @@ $.widget('pat.binfolist', {
         }
     },
 	
-    setHeight: function(newHeight) {
+    _applyHeight: function() {
         var w = this.w;
 
-        if (w.$element.height() == newHeight) {
-            return;
-        }
-        
-        w.$element.height(newHeight);
+        w.$element.height(w.options.height);
         w._self._updateHintPos();
     },
     
@@ -372,6 +365,57 @@ $.widget('pat.binfolist', {
 	        var $lastLi = w.$items.children().last();
 	        w.$hint.css('top', $lastLi.offset().top + $lastLi.outerHeight() - w.$element.offset().top);
 	    }
-	}
+	},
+    
+    _setOption: function (key, value) {
+        var w = this.w;
+        
+        // Check if such option exists, throw an error if not
+        if (_.isUndefined(w.options[key])) {
+            throw "Option " + key + " does not exist";
+        }
+        
+        // Check if value matches what it was, do nothing if yes
+        if (value === w.options[key] || (_.isArray(value) && _.isEqual(value, w.options[key]))) {
+            return;
+        }
+        
+        // Save old option value
+        var prev = w.options[key];
+        
+        // Apply the option
+        this._super(key, value);
+        
+        // Call corresponding update method depending on the option key
+        switch (key) {
+        
+        case 'height':
+            this._applyHeight();
+            break;
+
+        case 'selectedItemId':
+            this._applySelectedItemId();
+            break;
+        
+        case 'highlightedItemsIds':
+            this._applyHighlightedItemsIds();
+            break;
+            
+        case 'sortMode':
+        case 'sortOrderIsReverse':
+            this._resortItems(w.options.sortMode, w.options.sortOrderIsReverse);
+            break;
+            
+        case 'viewModeShowThumbnails':
+            this._updateViewMode('showThumbnails', value);
+            break;
+        case 'viewModeShowProblems':
+            this._updateViewMode('showProblems', value);
+            break;
+        }
+        
+        //console.log("event: change" + key.toLowerCase(), {newValue: value, prevValue: prev});
+        w._self._trigger("change" + key.toLowerCase(), null, {newValue: value, prevValue: prev});
+    }
 });
 }());

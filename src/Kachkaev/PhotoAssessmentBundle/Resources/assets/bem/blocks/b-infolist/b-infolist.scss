@@ -81,6 +81,7 @@
 	overflow: auto;
 }
 
+/** viewModeShowThumbnails */
 .b-infolist_thumbnails_disabled .b-infolist__item {
 	background-image: none !important;
 }
@@ -90,6 +91,12 @@
 .b-infolist_thumbnails_enabled .b-infolist__item.status_1 {
     background-color: #F7D9D9 !important;
 }
+
+/** viewModeShowProblems */
+.b-infolist_problems_disabled .b-infolist__item.photo_problem:before {
+    content: none !important;
+}
+
 
 .b-infolist__item {
 	color: #666;
