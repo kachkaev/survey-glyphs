@@ -3,7 +3,8 @@ namespace('pat');
 
 var INTERVAL_WAITING = 200;
 var INTERVAL_DRAWING = 10;
-    
+
+var MAX_TIME = 60;
 
 pat.PatternThumbnailGenerator = function(options) {
     var obj = this;
@@ -13,6 +14,7 @@ pat.PatternThumbnailGenerator = function(options) {
         height: 15,
         canvasPadding: [1, 1, 1, 1],
         threads: 30,
+
         defaultLineStyle: {
                 strokeStyle: "rgba(0,0,0,0.15)",
                 strokeWidth: 1,
@@ -53,20 +55,25 @@ pat.PatternThumbnailGenerator = function(options) {
                 clearInterval(drawingIntervalId);
                 drawingIntervalId = null;
             }
-            //console.log('aaaaa', obj.queue.length);
         }, INTERVAL_DRAWING);
-        //console.log('bbb');
     }, INTERVAL_WAITING);
 };
 
 /**
  * Add job to the rendering queue
- * @param photoResponses
+ * @param data
  * @param options
  * @param fallback function to be executed when the rendering has finished
  */
-pat.PatternThumbnailGenerator.prototype.addToQueue = function(photoResponses, options, fallback) {
-    this.queue.push([photoResponses, options, fallback]);
+pat.PatternThumbnailGenerator.prototype.appendToQueue = function(data, options, fallback) {
+    this.queue.push([data, options || {}, fallback]);
+};
+pat.PatternThumbnailGenerator.prototype.prependToQueue = function(data, options, fallback) {
+    this.queue.unshift([data, options || {}, fallback]);
+};
+
+pat.PatternThumbnailGenerator.prototype.resortQueue = function(priorityFunction) {
+    this.queue = _.sortBy(this.queue, priorityFunction);
 };
 
 /**
@@ -78,13 +85,14 @@ pat.PatternThumbnailGenerator.prototype._render = function(thread, queueElement)
     thread[0] = true;
     thread[1].clearCanvas();
 
+    var optionTimeScaling = queueElement[1] ? queueElement[1].timeScaling : false;
+    
     // Responses
-    _.each(queueElement[0], function(photoResponse, i) {
-        //if (i > 1) return;
+    _.each(queueElement[0].photoResponses, function(photoResponse, i) {
         // Get points of answers
         var pts = [];
         _.each(pat.config.questions, function(question) {
-            pts.push(obj._qaToCoords(photoResponse, question));
+            pts.push(obj._qaToCoords(photoResponse, question, optionTimeScaling));
         });
         
         // The drawLine() object
@@ -116,12 +124,19 @@ pat.PatternThumbnailGenerator.prototype._answerToX = function(answer, question) 
     return _.indexOf(pat.getAnswerSeq(question), answer) * dx + this.options.canvasPadding[3];
 };
     
-pat.PatternThumbnailGenerator.prototype._questionToY = function(question) {
+pat.PatternThumbnailGenerator.prototype._questionToY = function(question, timeScaling, duration) {
     var dy = (pat.config.questions.length === 1) ? 1 : (this.options.height - this.options.canvasPadding[0] - this.options.canvasPadding[2]) / (pat.config.questions.length - 1);
+    if (timeScaling) {
+        if (duration > 0) {
+            dy *= duration / MAX_TIME;
+        } else {
+            dy = 0;
+        }
+    }
     return _.indexOf(pat.config.questions, question) * dy + this.options.canvasPadding[0];
 };
 
-pat.PatternThumbnailGenerator.prototype._qaToCoords = function(photoResponse, question) {
-   return [this._answerToX(photoResponse[question], question), this._questionToY(question)];
+pat.PatternThumbnailGenerator.prototype._qaToCoords = function(photoResponse, question, timeScaling) {
+   return [this._answerToX(photoResponse[question], question), this._questionToY(question, timeScaling, photoResponse.duration)];
 };
 })();

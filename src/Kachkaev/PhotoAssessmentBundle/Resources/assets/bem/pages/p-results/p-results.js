@@ -217,8 +217,6 @@ $(function(){
             panoramio: new pat.photoInfoProvider.PanoramioPhotoInfoProvider()
         };
     
-    var patternThumbnailGenerator = new pat.PatternThumbnailGenerator();
-
     // =====================================
     // Objects with UI
     // =====================================
@@ -228,17 +226,18 @@ $(function(){
     var $bUserInfoList = $('.b-infolist_user')
         .height(stateContainer.state.infolistHeight)
         .binfolist({
-            items: data.users,
+            items: _.toArray(data.users),
             dblclickAction: toggleStatusFunction,
             sortModes: ['id', 'completed', 'problems', 'unread'],
             sortMode: stateContainer.state.userSortMode,
             sortOrderIsReverse: stateContainer.state.userSortOrderIsReverse,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
-            customizeItem: function($item, id, data) {
+            customizeItem: function($item, id, data, options) {
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                     return false;
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_USER[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
@@ -253,11 +252,6 @@ $(function(){
                         
                 };
                 $item.data('hint', hint);
-                
-                // Render thumbnail
-                patternThumbnailGenerator.addToQueue(data.photoResponses, null, function(img) {
-                    $item.css('background-image', 'url(' + img + ')');
-                });
             }
         });
     
@@ -265,7 +259,7 @@ $(function(){
     var $bPhotoInfoList = $('.b-infolist_photo')
         .height(stateContainer.state.infolistHeight)
         .binfolist({
-            items: data.photos,
+            items: _.toArray(data.photos),
             dblclickAction: toggleStatusFunction,
             sortModes: ['id', 'completed', 'problems', 'suitability'],
             sortMode: stateContainer.state.photoSortMode,
@@ -274,6 +268,7 @@ $(function(){
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             customizeItem: function($item, id, data) {
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
                 $item.addClass('source_' + data.source);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
@@ -287,11 +282,6 @@ $(function(){
                     }
                 };
                 $item.data('hint', hint);
-                
-                // Render thumbnail
-                patternThumbnailGenerator.addToQueue(data.photoResponses, null, function(img) {
-                    $item.css('background-image', 'url(' + img + ')');
-                });
             }
         });
     
@@ -543,6 +533,7 @@ $(function(){
             height: stateContainer.state.infolistHeight,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
+            viewModeTimeScaling: stateContainer.state.timeScaling
         });
         $bothPhotoresponsePatterns.bphotoresponsepattern('option', {
             'timeScaling': stateContainer.state.timeScaling,

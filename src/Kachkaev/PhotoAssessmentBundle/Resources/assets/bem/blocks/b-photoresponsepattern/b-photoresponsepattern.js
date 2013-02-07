@@ -30,7 +30,6 @@ var LANG_HINT_WITH_DURATION = ' with duration = ';
 var LANG_HINT_SECS = ' s';
 var LANG_HINT_WITH_UNKNOWN_DURATION = ' with unknown duration';
 
-
 $.widget('ui.bphotoresponsepattern', {
 
     options: {

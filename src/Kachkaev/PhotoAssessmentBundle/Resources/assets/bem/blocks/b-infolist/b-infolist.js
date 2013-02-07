@@ -1,4 +1,7 @@
 (function() {
+
+var patternThumbnailGenerator = new pat.PatternThumbnailGenerator();
+    
 $.widget('pat.binfolist', {
 
     options: {
@@ -11,6 +14,7 @@ $.widget('pat.binfolist', {
 
         viewModeShowThumbnails: false,
         viewModeShowProblems: false,
+        viewModeTimeScaling: false,
         height: 200,
         
         customizeItem: null,  // function
@@ -116,11 +120,26 @@ $.widget('pat.binfolist', {
 		    $item.attr('data-id', id);
 		    $item.data('data', itemData);
 		    if (_.isFunction(w.options.customizeItem)) {
-		        if (false === w.options.customizeItem($item, id, itemData)) {
+		        if (false === w.options.customizeItem($item, id, itemData, w.options)) {
 		            addItem = false;
 		        }
 		    }
 		    if (addItem) {
+		        
+                // Render thumbnails
+                patternThumbnailGenerator.prependToQueue(itemData, null, function(img) {
+                    $item.data('thumbnail-pattern', img);
+                    if (!w.options.viewModeTimeScaling) {
+                        $item.css('background-image', 'url(' + img + ')');
+                    }
+                });
+                patternThumbnailGenerator.prependToQueue(itemData, {timeScaling: true}, function(img) {
+                    $item.data('thumbnail-pattern-timescaling', img);
+                    if (w.options.viewModeTimeScaling) {
+                        $item.css('background-image', 'url(' + img + ')');
+                    }
+                });
+
 		        $item.appendTo(w.$items);
 		        w.itemsMap[id] = itemData;
 		        w.$itemsMap[id] = $item;
@@ -147,8 +166,8 @@ $.widget('pat.binfolist', {
 		w._self._applySelectedItemId();
         w._self._applyHighlightedItemsIds();
         w._self._applyHeight();
-        w._self._updateViewMode('showThumbnails');
-        w._self._updateViewMode('showProblems');
+        w._self._applyViewModeShowThumbnails();
+        w._self._applyViewModeShowProblems();
         w._self._resortItems(w.options.sortMode, w.options.sortOrderIsReverse, true);
         w._self._updateHintPos();
 	},
@@ -260,7 +279,31 @@ $.widget('pat.binfolist', {
             
             w._self._setOptions(newOptions);
             w._self._trigger('resortitems', this, newOptions);
+        } else {
+            w.options.items = newItems;
         }
+        w._self._resortRenderingQueue();
+	},
+	
+	_resortRenderingQueue: function() {
+        var w = this.w;
+
+        //console.log('w.options', w.options);
+        // update patternThumbnailGenerator queue order
+        patternThumbnailGenerator.resortQueue(function(queueElement /*[data, options, fallback]*/, i) {
+            // Elements with timeScaling not equal to the current one are put into the end of the queue
+            if (w.options.viewModeTimeScaling == !queueElement[1].timeScaling) {
+                return 100600;
+            }
+            var itemPos = _.indexOf(w.options.items, queueElement[0]);
+//            console.log(itemPos);
+            //console.log(itemPos, w.options.items, queueElement[0]);
+            // Elements with items from another infolists are put in the end of the queue
+            if (itemPos == -1)
+                return 100500;
+            else 
+                return itemPos;
+        });
 	},
 
 	/** 
@@ -274,15 +317,16 @@ $.widget('pat.binfolist', {
 		    idsToUpdate = _.keys(w.options.items);
 		}
 		
-		w.$items.detach();
+        var oldScrollTop = w.$items.scrollTop();
+        w.$items.detach();
         if (_.isFunction(w.options.customizeItem)) {
             _.each(idsToUpdate, function(id) {
                 var $item = w.$itemsMap[id];
-                w.options.customizeItem($item, id, w.itemsMap[id]);
+                w.options.customizeItem($item, id, w.itemsMap[id], w.options);
             });
         }
-
         w.$items.appendTo(w.$element);
+        w.$items.scrollTop(oldScrollTop);
 	},
 	
 	_applyHighlightedItemsIds: function() {
@@ -317,18 +361,28 @@ $.widget('pat.binfolist', {
         }
     },
 
-    _updateViewMode: function(parameter) {
+    _applyViewModeShowThumbnails: function() {
         var w = this.w;
-
-        if (parameter == 'showThumbnails') {
-            w.$element.toggleClass('b-infolist_thumbnails_enabled',   w.options.viewModeShowThumbnails);
-            w.$element.toggleClass('b-infolist_thumbnails_disabled', !w.options.viewModeShowThumbnails);
-        } else if (parameter == 'showProblems') {
-            w.$element.toggleClass('b-infolist_problems_enabled',   w.options.viewModeShowProblems);
-            w.$element.toggleClass('b-infolist_problems_disabled', !w.options.viewModeShowProblems);
-        }
+        w.$element.toggleClass('b-infolist_thumbnails_enabled',   w.options.viewModeShowThumbnails);
+        w.$element.toggleClass('b-infolist_thumbnails_disabled', !w.options.viewModeShowThumbnails);
     },
     
+    _applyViewModeShowProblems: function() {
+        var w = this.w;
+        w.$element.toggleClass('b-infolist_problems_enabled',   w.options.viewModeShowProblems);
+        w.$element.toggleClass('b-infolist_problems_disabled', !w.options.viewModeShowProblems);
+    },
+
+    _applyViewModeTimeScaling: function() {
+        var w = this.w;
+        w.$items.children().each(function() {
+           $this = $(this);
+           var imgData = $this.data(w.options.viewModeTimeScaling ? 'thumbnail-pattern-timescaling' : 'thumbnail-pattern');
+           $this.css('background-image', imgData ? 'url(' + imgData + ')' : '');
+        });
+        this._resortRenderingQueue();
+    },
+
     _updateHintUsingMouseData: function() {
         var w = this.w;
 
@@ -407,10 +461,13 @@ $.widget('pat.binfolist', {
             break;
             
         case 'viewModeShowThumbnails':
-            this._updateViewMode('showThumbnails', value);
+            this._applyViewModeShowThumbnails();
             break;
         case 'viewModeShowProblems':
-            this._updateViewMode('showProblems', value);
+            this._applyViewModeShowProblems();
+            break;
+        case 'viewModeTimeScaling':
+            this._applyViewModeTimeScaling();
             break;
         }
         
