@@ -233,6 +233,9 @@ $.widget('pat.binfolist', {
                return (item.isUnread ? -10000 : 0) + id;
 
            case 'suitability':
+           case 'suitability-med':
+               return pat.PhotoResponseListMeasurer.getMedSuitability(item.photoResponses);
+
            case 'suitability-avg':
                return pat.PhotoResponseListMeasurer.getAvgSuitability(item.photoResponses);
 
