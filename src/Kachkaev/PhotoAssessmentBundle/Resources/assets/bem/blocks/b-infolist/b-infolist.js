@@ -239,13 +239,16 @@ $.widget('pat.binfolist', {
            case 'suitability-avg':
                return pat.PhotoResponseListMeasurer.getAvgSuitability(item.photoResponses);
 
+           case 'agreement':
+               return pat.PhotoResponseListMeasurer.getAgreement(item.photoResponses);
+
            case 'duration':
            case 'duration-med':
                return pat.PhotoResponseListMeasurer.getMedDuration(item.photoResponses);
            
            case 'duration-avg':
                return pat.PhotoResponseListMeasurer.getAvgDuration(item.photoResponses);
-
+               
 	       default:
 	           throw new Error('Unknown sort mode ' + mode);
 	       }

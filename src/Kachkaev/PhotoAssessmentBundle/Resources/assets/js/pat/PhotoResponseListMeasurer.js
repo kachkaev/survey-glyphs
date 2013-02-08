@@ -35,20 +35,20 @@ pat.PhotoResponseListMeasurer.getMedDuration = function(photoResponses, options)
 
 /**
  * Returns average suitability of responses
- * If option.questionId is passed, the measurement is done only by a single question
+ * If option.questionIndex is passed, the measurement is done only by a single question
  * 
  * (average "distance" to the "most suitable" case, which is represented by a straight line aligned to the left)
  * @type pat.PhotoResponseListMeasurer
  * @return {Number}
  */
 pat.PhotoResponseListMeasurer.getAvgSuitability = function(photoResponses, options) {
-    var matrix = this._getAnswerIdMatrix(photoResponses, options);
+    var matrix = this._getAnswerIndexMatrix(photoResponses, options);
     if (matrix[0].length == 0) {
         return 100500; // photos with no responses are the least suitable are represented by a big number
     } else {
         var result = 0;
-        if (options && options.questionId) {
-            result = d3.mean(options.questionId);
+        if (options && options.questionIndex) {
+            result = d3.mean(options.questionIndex);
         } else {
             for (var i = pat.config.questions.length - 1; i >= 0; --i) {
                 result += d3.mean(matrix[i]);
@@ -61,20 +61,20 @@ pat.PhotoResponseListMeasurer.getAvgSuitability = function(photoResponses, optio
 /**
  * Returns median suitability of responses
  * Secondary ordering is done by average (mean)
- * If option.questionId is passed, the measurement is done only by a single question
+ * If option.questionIndex is passed, the measurement is done only by a single question
  *
  * (average "distance" to the "most suitable" case, which is represented by a straight line aligned to the left)
  * @type pat.PhotoResponseListMeasurer
  * @return {Number}
  */
 pat.PhotoResponseListMeasurer.getMedSuitability = function(photoResponses, options) {
-    var matrix = this._getAnswerIdMatrix(photoResponses, options);
+    var matrix = this._getAnswerIndexMatrix(photoResponses, options);
     if (matrix[0].length == 0) {
         return 100500; // photos with no responses are the least suitable are represented by a big number
     } else {
         var result = 0;
-        if (options && options.questionId) {
-            result = d3.median(matrix[options.questionId]) * 1024 + d3.mean(matrix[options.questionId]);
+        if (options && options.questionIndex) {
+            result = d3.median(matrix[options.questionIndex]) * 1024 + d3.mean(matrix[options.questionIndex]);
         } else {
             for (var i = pat.config.questions.length - 1; i >= 0; --i) {
                 result += d3.median(matrix[i]) * 1024 + d3.mean(matrix[i]);
@@ -86,19 +86,50 @@ pat.PhotoResponseListMeasurer.getMedSuitability = function(photoResponses, optio
 };
 
 /**
- * 
+ * Returns agreement which is represented by fleiss kappa value
+ * If option.questionIndex is passed, the measurement is done only by a single question
+ *
+ * @type pat.PhotoResponseListMeasurer
+ * @return {Number}
+ */
+pat.PhotoResponseListMeasurer.getAgreement = function(photoResponses, options) {
+    var matrix = this._getAnswerIndexMatrix(photoResponses, true, options);
+    var fleissKappaValue = fleissKappa(matrix);
+    //console.log(matrix, fleissKappaValue);
+    return -fleissKappaValue;
+};
+
+/**
+ * Depending on arrangeByClasses returns
+ * - a matrix of answer indexes of the responses (question count * response count)
+ *   this form of a matrix is used for calculating median, mean, standard deviation
+ * - a matrix of answer indexes classes with numbers of answers in each class (question count * answer sequences length)
+ *   this form of a matrix is used in the Fleiss' Kappa algorithm
  * @type pat.PhotoResponseListMeasurer
  * @return {Array}
  */
-pat.PhotoResponseListMeasurer._getAnswerIdMatrix = function(photoResponses, options) {
+pat.PhotoResponseListMeasurer._getAnswerIndexMatrix = function(photoResponses, arrangeByClasses, options) {
+    
     var matrix = [];
     for (var i = pat.config.questions.length - 1; i >= 0; --i) {
-        matrix.push([]);
+        var matrixElem = [];
+        if (arrangeByClasses) {
+            for (var j = pat.config.answerSequencesLength - 1; j >=0; --j) {
+                matrixElem.push(0);
+            }
+        }
+        matrix.push(matrixElem);
     }
+    
     for (var j = photoResponses.length - 1, pr = photoResponses[j]; j >=0; --j, pr = photoResponses[j]) {
         for (var i = pat.config.questions.length - 1; i >= 0; --i) {
             var question = pat.config.questions[i];
-            matrix[i].push(_.indexOf(pat.getAnswerSeq(question), pr[question]));
+            var answerIndex = _.indexOf(pat.getAnswerSeq(question), pr[question]);
+            if (arrangeByClasses) {
+                ++matrix[i][answerIndex];
+            } else {
+                matrix[i].push(answerIndex);
+            }
         };
     }
     return matrix;
