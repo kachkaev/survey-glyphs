@@ -162,6 +162,17 @@ $.widget('pat.binfolist', {
 		});
 		
 		w.$element.append(w.$percentage, w.$sorters, w.$items, w.$hint);
+		
+		// Thumbnail rendering queue gets updated when scrolling has stopped
+		// (we want to first render the thumbnails that are within the view)  
+		var scrollTimer;
+		var afterScrollFunction = function() {
+		    w._self._resortRenderingQueue();
+		};
+		w.$items.bind('scroll', function() {
+		    clearTimeout(scrollTimer);
+		    timer = setTimeout(afterScrollFunction, 500);
+		});
 
 		w._self._applySelectedItemId();
         w._self._applyHighlightedItemsIds();
@@ -310,21 +321,43 @@ $.widget('pat.binfolist', {
 	_resortRenderingQueue: function() {
         var w = this.w;
 
-        //console.log('w.options', w.options);
+        if (!patternThumbnailGenerator.queue.length) {
+            return;
+        }
+        
+        // find the index of the first item that is within the view
+        //// calculate offsets
+        var $firstItem = w.$itemsMap[w.options.items[0].id];
+        if (!$firstItem.length) {
+            return;
+        }
+        var minNeededOffset = w.$items.offset().top - $firstItem.outerWidth();
+        
+        //// do find the index of the item
+        var firstSeenItemIndex = 0;
+        w.$items.children().each(function(index){
+            if ($(this).offset().top >= minNeededOffset) {
+                firstSeenItemIndex = index;
+                return false;
+            };
+        });
+
+        
         // update patternThumbnailGenerator queue order
         patternThumbnailGenerator.resortQueue(function(queueElement /*[data, options, fallback]*/, i) {
             // Elements with timeScaling not equal to the current one are put into the end of the queue
             if (w.options.viewModeTimeScaling == !queueElement[1].timeScaling) {
                 return 100600;
             }
-            var itemPos = _.indexOf(w.options.items, queueElement[0]);
-//            console.log(itemPos);
-            //console.log(itemPos, w.options.items, queueElement[0]);
+            var itemIndex = _.indexOf(w.options.items, queueElement[0]);
+
             // Elements with items from another infolists are put in the end of the queue
-            if (itemPos == -1)
+            if (itemIndex == -1)
                 return 100500;
+            else if (itemIndex < firstSeenItemIndex)
+                return itemIndex + 10000;
             else 
-                return itemPos;
+                return itemIndex;
         });
 	},
 
