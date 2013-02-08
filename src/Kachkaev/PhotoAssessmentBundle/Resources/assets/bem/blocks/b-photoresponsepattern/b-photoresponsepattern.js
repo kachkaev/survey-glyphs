@@ -251,8 +251,17 @@ $.widget('ui.bphotoresponsepattern', {
 
         // Update (except enter)
         d3responseLine
-            .transition().duration(ANIMATION_LENGTH)
-            .call(updateResponseLine);
+            .each(function(){
+                var s = d3.select(this);
+                var currentO = s.style('opacity');
+                s.style('opacity', null);
+                var neededO = s.style('opacity');
+                s.style('opacity', currentO);
+                s.transition().duration(ANIMATION_LENGTH)
+                    .style('opacity', neededO)
+                    .call(updateResponseLine);
+
+            });
 
         // Enter
         d3responseLine.enter()
@@ -261,8 +270,9 @@ $.widget('ui.bphotoresponsepattern', {
            .call(makeInteractive)
         .each(function() {
             var s = d3.select(this);
+            s.transition().duration(0);
             s.style('opacity', null);
-            var o = d3.select(this).style('opacity');
+            var o = s.style('opacity');
             s.style('opacity', 0)
                 .transition().duration(ANIMATION_LENGTH)
                 .style('opacity', o)
