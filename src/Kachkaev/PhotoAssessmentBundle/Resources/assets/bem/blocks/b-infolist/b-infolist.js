@@ -125,18 +125,20 @@ $.widget('pat.binfolist', {
 		        }
 		    }
 		    if (addItem) {
-		        
+		        $item.addClass('thumbnail_rendering');
                 // Render thumbnails
                 patternThumbnailGenerator.prependToQueue(itemData, null, function(img) {
                     $item.data('thumbnail-pattern', img);
                     if (!w.options.viewModeTimeScaling) {
                         $item.css('background-image', 'url(' + img + ')');
+                        $item.removeClass('thumbnail_rendering');
                     }
                 });
                 patternThumbnailGenerator.prependToQueue(itemData, {timeScaling: true}, function(img) {
                     $item.data('thumbnail-pattern-timescaling', img);
                     if (w.options.viewModeTimeScaling) {
                         $item.css('background-image', 'url(' + img + ')');
+                        $item.removeClass('thumbnail_rendering');
                     }
                 });
 
@@ -434,6 +436,8 @@ $.widget('pat.binfolist', {
            $this = $(this);
            var imgData = $this.data(w.options.viewModeTimeScaling ? 'thumbnail-pattern-timescaling' : 'thumbnail-pattern');
            $this.css('background-image', imgData ? 'url(' + imgData + ')' : '');
+           $this.toggleClass('thumbnail_rendering', !imgData);
+
         });
         this._resortRenderingQueue();
     },

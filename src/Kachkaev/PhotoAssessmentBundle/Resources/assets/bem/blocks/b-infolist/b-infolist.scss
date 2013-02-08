@@ -86,8 +86,11 @@
 	background-image: none !important;
 }
 .b-infolist_thumbnails_enabled .b-infolist__item {
-    background-color: #f5f5f5 !important;
+    background-color: #fff !important;
     border-color: #fff;
+}
+.b-infolist_thumbnails_enabled .b-infolist__item.thumbnail_rendering {
+    background-color: #f5f5f5 !important;
 }
 .b-infolist_thumbnails_enabled .b-infolist__item.status_1 {
     background-color: #F7D9D9 !important;

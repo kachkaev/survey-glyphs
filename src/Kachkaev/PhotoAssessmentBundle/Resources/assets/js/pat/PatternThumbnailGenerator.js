@@ -14,7 +14,7 @@ pat.PatternThumbnailGenerator = function(options) {
         height: 17,
         canvasPadding: [2, 2, 2, 2],
         threads: 30,
-        backgroundColor: '#fff',
+        backgroundColor: null,
 
         defaultLineStyle: {
                 strokeStyle: "rgba(0,0,0,0.15)",
