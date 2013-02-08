@@ -35,6 +35,8 @@ pat.PhotoResponseListMeasurer.getMedDuration = function(photoResponses, options)
 
 /**
  * Returns average suitability of responses
+ * If option.questionId is passed, the measurement is done only by a single question
+ * 
  * (average "distance" to the "most suitable" case, which is represented by a straight line aligned to the left)
  * @type pat.PhotoResponseListMeasurer
  * @return {Number}
@@ -45,8 +47,12 @@ pat.PhotoResponseListMeasurer.getAvgSuitability = function(photoResponses, optio
         return 100500; // photos with no responses are the least suitable are represented by a big number
     } else {
         var result = 0;
-        for (var i = pat.config.questions.length - 1; i >= 0; --i) {
-            result += d3.mean(matrix[i]);
+        if (options && options.questionId) {
+            result = d3.mean(options.questionId);
+        } else {
+            for (var i = pat.config.questions.length - 1; i >= 0; --i) {
+                result += d3.mean(matrix[i]);
+            }
         }
         return result;
     }
@@ -54,6 +60,9 @@ pat.PhotoResponseListMeasurer.getAvgSuitability = function(photoResponses, optio
 
 /**
  * Returns median suitability of responses
+ * Secondary ordering is done by average (mean)
+ * If option.questionId is passed, the measurement is done only by a single question
+ *
  * (average "distance" to the "most suitable" case, which is represented by a straight line aligned to the left)
  * @type pat.PhotoResponseListMeasurer
  * @return {Number}
@@ -64,9 +73,14 @@ pat.PhotoResponseListMeasurer.getMedSuitability = function(photoResponses, optio
         return 100500; // photos with no responses are the least suitable are represented by a big number
     } else {
         var result = 0;
-        for (var i = pat.config.questions.length - 1; i >= 0; --i) {
-            result += d3.median(matrix[i]);
+        if (options && options.questionId) {
+            result = d3.median(matrix[options.questionId]) * 1024 + d3.mean(matrix[options.questionId]);
+        } else {
+            for (var i = pat.config.questions.length - 1; i >= 0; --i) {
+                result += d3.median(matrix[i]) * 1024 + d3.mean(matrix[i]);
+            }
         }
+
         return result;
     }
 };
