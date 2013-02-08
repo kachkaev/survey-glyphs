@@ -448,8 +448,8 @@ $(function(){
             updateState({userId: null, photoId: null});
             return false;
             
-        // e for toggling photo problems (errors) in lists
-        case 69:
+        // p for toggling photo problems in lists
+        case 80:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                 updateState({infolistViewModeShowProblems: !stateContainer.state.infolistViewModeShowProblems});
                 return false;
@@ -457,8 +457,8 @@ $(function(){
                 return;
             }
 
-        // p for toggling thumbnails (previews)
-        case 80:
+        // t for toggling thumbnails (previews)
+        case 84:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                 updateState({infolistViewModeShowThumbnails: !stateContainer.state.infolistViewModeShowThumbnails});
                 return false;
@@ -480,8 +480,8 @@ $(function(){
                 return;
             }
             
-        // t for toggling time/question scaling
-        case 84:
+        // d for toggling duration scaling
+        case 68:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                 updateState({timeScaling: !stateContainer.state.timeScaling});
                 return false;
