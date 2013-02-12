@@ -6,8 +6,7 @@ $.widget('pat.binfolist', {
 
     options: {
         sortModes: ['id', 'completed', 'problems'],
-        sortMode: 'id',
-        sortOrderIsReverse: false,
+        sortOrder: 'id',
         items: [],
         selectedItemId: null,
         highlightedItemsIds: [],
@@ -38,10 +37,10 @@ $.widget('pat.binfolist', {
 		this.w = w;
 
         w.$percentage = $('<div/>').addClass('b-infolist__percentage');
-		w.$sorters = $('<ul/>').addClass("b-infolist__sorters").disableSelection();
-		_.each(w.options.sortModes, function(sortMode) {
-		    w.$sorters.append($('<li/>').addClass('b-infolist__sorter').attr('data-mode', sortMode).append($('<i/>').text(sortMode)));
-		});
+		w.$soPickersContainer = $('<ul/>').addClass("b-infolist__sopickers-container").disableSelection();
+		w.$soPickersControls = $('<ul/>').addClass("b-infolist__sopickers-controls").disableSelection();
+		w.$soPickersAdder = $('<div/>').addClass("b-infolist__sopickers-adder").appendTo(w.$soPickersControls);
+		w.$soPickersRemover = $('<div/>').addClass("b-infolist__sopickers-remover").appendTo(w.$soPickersControls);
 		w.$items = $('<ul/>').addClass("b-infolist__items");
 		w.$resizeBlind = $('<div/>').addClass("b-infolist__resize-blind");
 		w.$hint = $('<div/>').addClass('b-infolist__hint');
@@ -54,10 +53,26 @@ $.widget('pat.binfolist', {
 		w.$highlightedItems = null;
 		
 		// Sorters events
-		w.$sorters.children().click(function() {
-		    var $this = $(this);
-		    w._self._resortItems($this.data('mode'));
+		//// This function is a listener of a changed value in one of sort order pickers
+		w.newSortOrderSelectedInSOPickerFunction = function() {
+		    var newSortOrderParts = [];
+		    w.$soPickersContainer.children().each(function() {
+		        newSortOrderParts.push($(this).binfolistsopicker('option', 'sortOrder'));
+		    });
+		    
+		    w._self._setOption('sortOrder', newSortOrderParts.join(','));
+		};
+		
+		/// Adder adds 'id' to existing sort order
+		w.$soPickersAdder.click(function() {
+		    w._self._setOption('sortOrder',w.options.sortOrder + ',' + w.options.sortModes[0]);
 		});
+
+		w.$soPickersRemover.click(function() {
+	        var sortOrderParts = w.options.sortOrder.split(',');
+	        sortOrderParts.pop();
+            w._self._setOption('sortOrder',sortOrderParts.join(','));
+        });
 
 		// Item events
 		//// Changes mouse id when hover
@@ -163,7 +178,7 @@ $.widget('pat.binfolist', {
 		    }
 		});
 		
-		w.$element.append(w.$percentage, w.$sorters, w.$items, w.$hint);
+		w.$element.append(w.$percentage, w.$soPickersContainer, w.$soPickersControls, w.$items, w.$hint);
 		
 		// Thumbnail rendering queue gets updated when scrolling has stopped
 		// (we want to first render the thumbnails that are within the view)  
@@ -179,38 +194,20 @@ $.widget('pat.binfolist', {
 		w._self._applySelectedItemId();
         w._self._applyHighlightedItemsIds();
         w._self._applyHeight();
+        w._self._applySortOrderOrModes();
         w._self._applyViewModeShowThumbnails();
         w._self._applyViewModeShowProblems();
-        w._self._resortItems(w.options.sortMode, w.options.sortOrderIsReverse, true);
         w._self._updateHintPos();
 	},
 	
-	_resortItems: function(mode, isReverse, initialUse) {
+	_resortItems: function(sortOrder, initialUse) {
 	    var w = this.w;
 	    
-	    var currentIsReverse = null;
-	    var neededIsReverse = isReverse;
+	    var sortOrderParts = sortOrder.split(',');
 	    
-	    // Check whether sort mode has been changed, update interface if needed and exit otherwise
-	    var $currentModeNode = w.$sorters.find('.ascending, .descending');
-	    if ($currentModeNode.length) {
-	        currentIsReverse = $currentModeNode.hasClass('descending');
-	        if (_.isUndefined(neededIsReverse)) {
-	            if ($currentModeNode.data('mode') == mode) {
-	                neededIsReverse = !currentIsReverse;
-	            } else {
-	                neededIsReverse = false;
-	            }
-	        } else {
-	            if ($currentModeNode.data('mode') == mode && $currentModeNode == $currentModeNode) {
-	                return;
-	            }
-	        }
+	    if (!sortOrderParts.length) {
+	        throw new Error('Wrong value for sortOrder' + sortOrder);
 	    }
-	    $currentModeNode.removeClass('ascending descending');
-        
-	    var $newModeNode = w.$sorters.find('[data-mode="' + mode + '"]');
-	    $newModeNode.addClass(neededIsReverse ? 'descending' : 'ascending');
 	    
         // Get list of new ids, if the sequence matches the old one, exit
 	    var oldIds = _.map(w.options.items, function(item) {
@@ -218,45 +215,75 @@ $.widget('pat.binfolist', {
 	    });
 	    
 	    var newItems = _.sortBy(w.options.items, function(item) {
-	       var id = item.id < 0 ? 9999 : parseInt(item.id, 10);
-	       switch (mode) {
-           case 'id':
-               return id;
+	        var measure = 0; 
+	        
+	        var sortOrderParts = sortOrder.split(',');
+	        sortOrderParts.push('id');
+	        
+	        for (var i = 0; i < sortOrderParts.length; ++i) {
+	            var currentSortOrder = sortOrderParts[i];
+	            var currentSortMode = currentSortOrder[0] == '-' ? currentSortOrder.substr(1) : currentSortOrder;
+	            var currentIsDescending = currentSortOrder[0] == '-';
+	            var currentMeasure = 0;
+	            switch (currentSortMode) {
+	            case 'id':
+	                currentMeasure = item.id < 0 ? -item.id + 0x1000 : item.id; // any photo with id < 0 is put to the end;
+	                break;
 
-           case 'completed':
-	           return item.photoResponseCounts[pat.PhotoResponseStatus.COMPLETE] * 10000 + id;
-	           
-	       case 'problems':
-               return item.photoResponseCounts[pat.PhotoResponseStatus.PHOTO_PROBLEM] * -10000 + id;
+	            case 'completed':
+	                currentMeasure = item.photoResponseCounts[pat.PhotoResponseStatus.COMPLETE];
+	                break;
+	                
+	            case 'problems':
+	                currentMeasure = item.photoResponseCounts[pat.PhotoResponseStatus.PHOTO_PROBLEM];
+	                break;
 
-           case 'unread':
-               return (item.isUnread ? -10000 : 0) + id;
+	            case 'unread':
+	                currentMeasure = item.isUnread ? -1 : 0;
+	                break;
 
-           case 'suitability':
-           case 'suitability-med':
-               return pat.PhotoResponseListMeasurer.getMedSuitability(item.photoResponses);
+	            case 'suitability':
+	                currentMeasure = pat.PhotoResponseListMeasurer.getMedSuitability(item.photoResponses);
+	                break;
+	                
+	            case 'suitability-med':
+	                currentMeasure = pat.PhotoResponseListMeasurer.getMedSuitability(item.photoResponses);
+	                break;
 
-           case 'suitability-avg':
-               return pat.PhotoResponseListMeasurer.getAvgSuitability(item.photoResponses);
+	            case 'suitability-avg':
+	                currentMeasure = pat.PhotoResponseListMeasurer.getAvgSuitability(item.photoResponses);
+	                break;
 
-           case 'agreement':
-               return pat.PhotoResponseListMeasurer.getAgreement(item.photoResponses);
+	            case 'agreement':
+	                currentMeasure = pat.PhotoResponseListMeasurer.getAgreement(item.photoResponses);
+	                break;
 
-           case 'duration':
-           case 'duration-med':
-               return pat.PhotoResponseListMeasurer.getMedDuration(item.photoResponses);
-           
-           case 'duration-avg':
-               return pat.PhotoResponseListMeasurer.getAvgDuration(item.photoResponses);
-               
-	       default:
-	           throw new Error('Unknown sort mode ' + mode);
-	       }
+	            case 'duration-med':
+	                currentMeasure = pat.PhotoResponseListMeasurer.getMedDuration(item.photoResponses);
+	                break;
+	            
+	            case 'duration-avg':
+	                currentMeasure = pat.PhotoResponseListMeasurer.getAvgDuration(item.photoResponses);
+	                break;
+	                
+	            default:
+	                throw new Error('Unknown sort mode ' + currentSortMode + ' in sort order ');
+	            }
+	            
+	            currentMeasure = currentMeasure + 0; // avoid having nulls
+	            if (currentIsDescending) {
+	                currentMeasure *= -1;
+	            };
+	            
+	            measure = measure * 0x10000 + currentMeasure;
+	            
+	            // Once items are sorted by id, all further measuring is skipped as it's pointless
+	            if (currentSortMode == 'id')
+	                break;
+	        };
+	        
+	        return measure;
 	    });
-	    
-	    if (neededIsReverse) {
-	        newItems.reverse();
-	    }
 	    
 	    var newIds = _.map(newItems, function(item) {
             return item.id;
@@ -279,8 +306,7 @@ $.widget('pat.binfolist', {
         if (!initialUse) {
             var newOptions = {
                     items: newItems,
-                    sortMode: mode,
-                    sortOrderIsReverse: neededIsReverse ? true : false
+                    sortOrder: sortOrder,
             };
             
             w._self._setOptions(newOptions);
@@ -301,7 +327,7 @@ $.widget('pat.binfolist', {
         // find the index of the first item that is within the view
         //// calculate offsets
         var $firstItem = w.$itemsMap[w.options.items[0].id];
-        if (!$firstItem.length) {
+        if (!$firstItem || !$firstItem.length) {
             return;
         }
         var minNeededOffset = w.$items.offset().top - $firstItem.outerWidth();
@@ -389,6 +415,35 @@ $.widget('pat.binfolist', {
         }
     },
 
+    _applySortOrderOrModes: function() {
+        var w = this.w;
+        var sortOrderParts = w.options.sortOrder.split(',');
+
+        // Add / amend sopickers according to
+        w.$soPickersContainer.children().each(function(index) {
+            var $soPicker = $(this);
+            if (!sortOrderParts[index]) {
+                $soPicker.remove();
+            };
+            $soPicker.binfolistsopicker('option', {
+                    'sortModes': w.options.sortModes,
+                    'sortOrder': sortOrderParts[index]
+                });
+        });
+        
+        for (var i = w.$soPickersContainer.children().length; i < sortOrderParts.length; ++i) {
+            var $newSOPicker = $('<div/>').binfolistsopicker({
+                'sortModes': w.options.sortModes,
+                'sortOrder': sortOrderParts[i],
+            });
+            
+            $newSOPicker.on('binfolistsopickerchangesortorder', w.newSortOrderSelectedInSOPickerFunction);
+            w.$soPickersContainer.append($newSOPicker);
+        };
+        
+        w._self._updateSOPickersControls();
+    },
+    
     _applyViewModeShowThumbnails: function() {
         var w = this.w;
         w.$element.toggleClass('b-infolist_thumbnails_enabled',   w.options.viewModeShowThumbnails);
@@ -440,6 +495,25 @@ $.widget('pat.binfolist', {
         w._self._updateHintPos();
     },
     
+    _updateSOPickersControls: function() {
+        var w = this.w;
+        var sortOrderParts = w.options.sortOrder.split(',');
+        
+        // Remover
+        if (sortOrderParts.length == 1) {
+            w.$soPickersRemover.detach();
+        } else if (!w.$soPickersRemover.parent().length){
+            w.$soPickersRemover.prependTo(w.$soPickersControls);
+        }
+        
+        // Adder
+        if (sortOrderParts.length > 3) {
+            w.$soPickersRemover.detach();
+        } else if (!w.$soPickersRemover.parent().length){
+            w.$soPickersRemover.prependTo(w.$soPickersControls);
+        }
+    },
+    
 	_updateHintPos: function() {
         var w = this.w;
 
@@ -455,7 +529,7 @@ $.widget('pat.binfolist', {
         var w = this.w;
         
         // Check if such option exists, throw an error if not
-        if (_.isUndefined(w.options[key])) {
+        if (!w.options.hasOwnProperty(key)) {
             throw "Option " + key + " does not exist";
         }
         
@@ -485,9 +559,10 @@ $.widget('pat.binfolist', {
             this._applyHighlightedItemsIds();
             break;
             
-        case 'sortMode':
-        case 'sortOrderIsReverse':
-            this._resortItems(w.options.sortMode, w.options.sortOrderIsReverse);
+        case 'sortModes':
+        case 'sortOrder':
+            this._applySortOrderOrModes();
+            this._resortItems(w.options.sortOrder);
             break;
             
         case 'viewModeShowThumbnails':

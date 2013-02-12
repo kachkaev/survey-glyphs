@@ -1,53 +1,88 @@
-function fleissKappa(matrix) {
-    var subjects = matrix.length;              // subjects
-    var categories = matrix[0].length;         // categories
-    var raters = d3.sum(matrix[0]);            // raters
+var arraySum = function(arr) {
+    var sum = 0;
+    for (var i = arr.length - 1; i >= 0; --i) {
+        sum += arr[i];
+    }
+    return sum;
+};
+
+function fleissKappa(matrix, checkMatrix) {
+    var N = matrix.length;              // subjects
+    var k = matrix[0].length;           // categories
+    var n = arraySum(matrix[0]);        // raters
  
-    for(var q = 1; q < matrix.length; q++){
- 
-        if(matrix[q].length != categories){
-            exit(0);
-            throw new Error('Number of categories must be equal');
+    // checking data matrix
+    if (checkMatrix) {
+        for(var i = matrix.length - 1; i >= 1 ; --i){
+            
+            if(matrix[i].length != k){
+                exit(0);
+                throw new Error('Number of categories must be equal');
+            }
+            
+            if(arraySum(matrix[i])!=n){
+                throw new Error('Number of raters must be equal');
+            }
         }
+    }
+    if (n <= 0) {
+        throw new Error('Number of raters should be more than 0');
+    }
  
-        if(d3.sum(matrix[q])!=raters){
-            throw new Error('Number of raters must be equal');
+    
+    // computing p[]
+    var p = [];
+    for(var j = k - 1; j >= 0; --j){
+        p.push(0);
+    }
+ 
+    for(var j = k - 1; j >=0; --j){
+        var tmp = 0;
+        for(var i = N - 1; i >= 0; --i){
+            tmp += matrix[i][j];
         }
- 
+        p[j] = tmp / (n*N);
     }
  
-    var pj = [];
-    var pi = [];
- 
-    for(var j = subjects - 1; j >= 0; --j){
-        pi.push(0);
+    // computing P[]
+    var P = [];
+    for(var i = N - 1; i >= 0; --i){
+        P.push(0);
     }
- 
-    for(var i = categories - 1; i >=0; --i){
- 
-        tpj = 0;
- 
-        for(var j = subjects - 1; j >= 0; --j){
-            tpj += matrix[j][i];
-            pi[j] +=  matrix[j][i]*matrix[j][i];
+
+    for(var i = N - 1; i >= 0; --i)
+    {
+        var tmp = 0;
+        for(var j = k - 1; j >= 0; --j) {
+            tmp += matrix[i][j] * matrix[i][j];
         }
- 
-        pj[i] = tpj/(raters*subjects);
+        P[i] = (tmp - n) / (n * (n - 1)) ;
+    };
+    
+    // Computing Pbar
+    var Pbar = arraySum(P) / N;
+
+    // Computing PbarE
+    var PbarE = 0;
+    for(var j = k - 1; j >= 0; --j){
+        PbarE += p[j] * p[j];
     }
- 
-    for(var j = 0; j < subjects; j++){
-        pi[j] = pi[j]-raters;
-        pi[j] = pi[j]*(1/(raters*(raters-1)));
-    }
- 
-    var pcarret = d3.sum(pi)/subjects;
-    var pecarret = 0;
- 
-    for(var i = pj.length - 1; i >=0; --i){
-        pecarret += pj[i]*pj[i];
-    }
- 
-    kappa = (pcarret-pecarret)/(1-pecarret);
- 
-    return kappa;
+
+    // FIXME return result instead of Pbar
+    return Pbar;
+    
+    result = (Pbar - PbarE) / (1 - PbarE);
+    
+    console.log({
+            matrix: matrix,
+            n: n,
+            N: N,
+            k: k,
+            p: p,
+            P: P,
+            Pbar: Pbar,
+            PbarE: PbarE,
+            result: result
+        }, result);
+    return result;
 };

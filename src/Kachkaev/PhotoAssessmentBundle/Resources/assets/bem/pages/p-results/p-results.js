@@ -59,10 +59,8 @@ $(function(){
     var defaultState = {
         infolistHeight: LIST_DEFAULT_HEIGHT,
         
-        userSortMode: 'id',
-        userSortOrderIsReverse: false,
-        photoSortMode: 'id',
-        photoSortOrderIsReverse: false,
+        userSortOrder: 'id',
+        photoSortOrder: 'id',
         
         disableThumbnails: true,
         timeScaling: false,
@@ -229,9 +227,8 @@ $(function(){
         .binfolist({
             items: _.toArray(data.photos),
             dblclickAction: toggleStatusFunction,
-            sortModes: ['id', 'completed', 'problems', 'duration', 'suitability', 'agreement'],
-            sortMode: stateContainer.state.photoSortMode,
-            sortOrderIsReverse: stateContainer.state.photoSortOrderIsReverse,
+            sortModes: ['id', 'completed', 'problems', 'duration-med', 'suitability-avg', 'agreement'],
+            sortOrder: stateContainer.state.photoSortOrder,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             customizeItem: function($item, id, data) {
@@ -260,8 +257,7 @@ $(function(){
             items: _.toArray(data.users),
             dblclickAction: toggleStatusFunction,
             sortModes: ['id', 'completed', 'problems', 'unread'],
-            sortMode: stateContainer.state.userSortMode,
-            sortOrderIsReverse: stateContainer.state.userSortOrderIsReverse,
+            sortOrder: stateContainer.state.userSortOrder,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             customizeItem: function($item, id, data, options) {
@@ -374,12 +370,12 @@ $(function(){
 
     // When sorting has hanged in the user info list
     $bUserInfoList.on('binfolistresortitems', function(event, ui) {
-        updateState({userSortMode: ui.sortMode, userSortOrderIsReverse: ui.sortOrderIsReverse});
+        updateState({userSortOrder: ui.sortOrder});
     });
     
     // When sorting has hanged in the photo info list
     $bPhotoInfoList.on('binfolistresortitems', function(event, ui) {
-        updateState({photoSortMode: ui.sortMode, photoSortOrderIsReverse: ui.sortOrderIsReverse});
+        updateState({photoSortOrder: ui.sortOrder});
     });
 
     // When both info lists are resized
@@ -523,8 +519,7 @@ $(function(){
         
         $bPhotoInfoList .binfolist('option', {
             selectedItemId: stateContainer.state.photoId,
-            sortMode: stateContainer.state.photoSortMode,
-            sortOrderIsReverse: stateContainer.state.photoSortOrderIsReverse,
+            sortOrder: stateContainer.state.photoSortOrder,
             
             height: stateContainer.state.infolistHeight,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
@@ -534,8 +529,7 @@ $(function(){
 
         $bUserInfoList .binfolist('option', {
             selectedItemId: stateContainer.state.userId,
-            sortMode: stateContainer.state.userSortMode,
-            sortOrderIsReverse: stateContainer.state.userSortOrderIsReverse,
+            sortOrder: stateContainer.state.userSortOrder,
             
             height: stateContainer.state.infolistHeight,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,

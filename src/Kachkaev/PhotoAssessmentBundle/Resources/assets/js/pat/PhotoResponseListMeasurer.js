@@ -60,7 +60,6 @@ pat.PhotoResponseListMeasurer.getAvgSuitability = function(photoResponses, optio
 
 /**
  * Returns median suitability of responses
- * Secondary ordering is done by average (mean)
  * If option.questionIndex is passed, the measurement is done only by a single question
  *
  * (average "distance" to the "most suitable" case, which is represented by a straight line aligned to the left)
@@ -77,7 +76,7 @@ pat.PhotoResponseListMeasurer.getMedSuitability = function(photoResponses, optio
             result = d3.median(matrix[options.questionIndex]) * 1024 + d3.mean(matrix[options.questionIndex]);
         } else {
             for (var i = pat.config.questions.length - 1; i >= 0; --i) {
-                result += d3.median(matrix[i]) * 1024 + d3.mean(matrix[i]);
+                result += d3.median(matrix[i]);
             }
         }
 
