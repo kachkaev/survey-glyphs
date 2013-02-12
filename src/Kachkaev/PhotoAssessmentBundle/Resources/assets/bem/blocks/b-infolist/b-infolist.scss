@@ -43,26 +43,26 @@
 .b-infolist__sopickers-adder,
 .b-infolist__sopickers-remover {
     float: left;
-    height: 20px;
+    height: 18px;
     width: 20px;
-    opacity: 0.3;
+    opacity: 0;
     transition:opacity 0.3s linear;
     cursor: pointer;
-    background: no-repeat center center url("data:image/gif;base64,R0lGODlhCgAKAIABALqsmf///yH5BAEAAAEALAAAAAAKAAoAAAISjANwi8qWHnQz2YvvipI/z4AFADs=");
+    background: no-repeat center center url("data:image/gif;base64,R0lGODlhCAAIAIABALqsmf///yH5BAEAAAEALAAAAAAIAAgAAAINjAGmgXv5kJxUNXdXLgA7");
 }
 
 .b-infolist__sopickers-remover {
-    
+    background-image: url("data:image/gif;base64,R0lGODlhCAACAIAAALqsmQAAACH5BAAAAAAALAAAAAAIAAIAAAIEhI8JBQA7");
 }
 
-.b-infolist__sopickers-controls:hover .b-infolist__sopickers-adder,
-.b-infolist__sopickers-controls:hover .b-infolist__sopickers-remover {
-	opacity: 0.5;
+.b-infolist:hover .b-infolist__sopickers-adder,
+.b-infolist:hover .b-infolist__sopickers-remover {
+    opacity: 0.5;
 }
 
-.b-infolist__sopickers-controls:hover .b-infolist__sopickers-adder:hover,
-.b-infolist__sopickers-controls:hover .b-infolist__sopickers-remover:hover {
-    opacity: 1;
+.b-infolist__sopickers-adder:hover,
+.b-infolist__sopickers-remover:hover {
+    opacity: 1 !important;
 }
 
 

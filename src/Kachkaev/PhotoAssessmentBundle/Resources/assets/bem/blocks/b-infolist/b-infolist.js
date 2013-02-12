@@ -10,6 +10,7 @@ $.widget('pat.binfolist', {
         items: [],
         selectedItemId: null,
         highlightedItemsIds: [],
+        maxSortLevels: 3,
 
         viewModeShowThumbnails: false,
         viewModeShowProblems: false,
@@ -39,8 +40,8 @@ $.widget('pat.binfolist', {
         w.$percentage = $('<div/>').addClass('b-infolist__percentage');
 		w.$soPickersContainer = $('<ul/>').addClass("b-infolist__sopickers-container").disableSelection();
 		w.$soPickersControls = $('<ul/>').addClass("b-infolist__sopickers-controls").disableSelection();
-		w.$soPickersAdder = $('<div/>').addClass("b-infolist__sopickers-adder").appendTo(w.$soPickersControls);
 		w.$soPickersRemover = $('<div/>').addClass("b-infolist__sopickers-remover").appendTo(w.$soPickersControls);
+		w.$soPickersAdder = $('<div/>').addClass("b-infolist__sopickers-adder").appendTo(w.$soPickersControls);
 		w.$items = $('<ul/>').addClass("b-infolist__items");
 		w.$resizeBlind = $('<div/>').addClass("b-infolist__resize-blind");
 		w.$hint = $('<div/>').addClass('b-infolist__hint');
@@ -227,7 +228,8 @@ $.widget('pat.binfolist', {
 	            var currentMeasure = 0;
 	            switch (currentSortMode) {
 	            case 'id':
-	                currentMeasure = item.id < 0 ? -item.id + 0x1000 : item.id; // any photo with id < 0 is put to the end;
+	                var id = parseInt(item.id, 10);
+	                currentMeasure = id < 0 ? -id + 0x1000 : id; // any photo with id < 0 is put to the end;
 	                break;
 
 	            case 'completed':
@@ -270,10 +272,14 @@ $.widget('pat.binfolist', {
 	                throw new Error('Unknown sort mode ' + currentSortMode + ' in sort order ');
 	            }
 	            
-	            currentMeasure = currentMeasure + 0; // avoid having nulls
 	            if (currentIsDescending) {
 	                currentMeasure *= -1;
-	            };
+	            } else {
+	                currentMeasure *= 1; // avoid having nulls
+	            }
+	            if (isNaN(currentMeasure)) {
+	                currentMeasure = 0; // avoid having NaNs
+	            }
 	            
 	            measure = measure * 0x10000 + currentMeasure;
 	            
@@ -424,6 +430,7 @@ $.widget('pat.binfolist', {
             var $soPicker = $(this);
             if (!sortOrderParts[index]) {
                 $soPicker.remove();
+                return;
             };
             $soPicker.binfolistsopicker('option', {
                     'sortModes': w.options.sortModes,
@@ -442,6 +449,7 @@ $.widget('pat.binfolist', {
         };
         
         w._self._updateSOPickersControls();
+        w._self._resortItems(w.options.sortOrder);
     },
     
     _applyViewModeShowThumbnails: function() {
@@ -507,10 +515,10 @@ $.widget('pat.binfolist', {
         }
         
         // Adder
-        if (sortOrderParts.length > 3) {
-            w.$soPickersRemover.detach();
-        } else if (!w.$soPickersRemover.parent().length){
-            w.$soPickersRemover.prependTo(w.$soPickersControls);
+        if (sortOrderParts.length >= w.options.maxSortLevels) {
+            w.$soPickersAdder.detach();
+        } else if (!w.$soPickersAdder.parent().length){
+            w.$soPickersAdder.appendTo(w.$soPickersControls);
         }
     },
     
@@ -562,7 +570,6 @@ $.widget('pat.binfolist', {
         case 'sortModes':
         case 'sortOrder':
             this._applySortOrderOrModes();
-            this._resortItems(w.options.sortOrder);
             break;
             
         case 'viewModeShowThumbnails':
@@ -576,7 +583,7 @@ $.widget('pat.binfolist', {
             break;
         }
         
-        //console.log("event: change" + key.toLowerCase(), {newValue: value, prevValue: prev});
+        // console.log("event: change" + key.toLowerCase(), {newValue: value, prevValue: prev});
         w._self._trigger("change" + key.toLowerCase(), null, {newValue: value, prevValue: prev});
     }
 });
