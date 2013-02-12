@@ -50,7 +50,7 @@
 	top: 20px;
 	left: 0px;
 	border: 1px solid #ccc;
-	z-index: 101;
+	z-index: 2001;
     -webkit-box-shadow:  0px 2px 5px 0px rgba(0, 0, 0, 0.3);
     box-shadow:  0px 2px 5px 0px rgba(0, 0, 0, 0.3);
 }
@@ -61,6 +61,7 @@
 	padding: 0 5px;
 	background: #fff;
     cursor: pointer;
+    white-space: nowrap;
 }
 .b-infolist-sopicker__list-item:hover {
     background: #ffd;
@@ -80,5 +81,5 @@
     bottom: 0;
     right: 0;
     background: rgba(0,0,0,0);
-    z-index: 100;
+    z-index: 2000;
 }

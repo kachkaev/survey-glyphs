@@ -104,7 +104,7 @@ $.widget('pat.binfolistsopicker', {
         };
         
         w.$list.addClass('b-infolist-sopicker__list_open');
-        w.$blind.appendTo('body');
+        w.$blind.appendTo(w.$element);
 	},
 	
 	_closeList: function() {

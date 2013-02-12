@@ -42,13 +42,13 @@ pat.PhotoResponseListMeasurer.getMedDuration = function(photoResponses, options)
  * @return {Number}
  */
 pat.PhotoResponseListMeasurer.getAvgSuitability = function(photoResponses, options) {
-    var matrix = this._getAnswerIndexMatrix(photoResponses, options);
+    var matrix = this._getAnswerIndexMatrix(photoResponses, false, options);
     if (matrix[0].length == 0) {
         return 100500; // photos with no responses are the least suitable are represented by a big number
     } else {
         var result = 0;
         if (options && options.questionIndex) {
-            result = d3.mean(options.questionIndex);
+            result = d3.mean(matrix[options.questionIndex]);
         } else {
             for (var i = pat.config.questions.length - 1; i >= 0; --i) {
                 result += d3.mean(matrix[i]);
@@ -67,13 +67,14 @@ pat.PhotoResponseListMeasurer.getAvgSuitability = function(photoResponses, optio
  * @return {Number}
  */
 pat.PhotoResponseListMeasurer.getMedSuitability = function(photoResponses, options) {
-    var matrix = this._getAnswerIndexMatrix(photoResponses, options);
+    var matrix = this._getAnswerIndexMatrix(photoResponses, false, options);
     if (matrix[0].length == 0) {
         return 100500; // photos with no responses are the least suitable are represented by a big number
     } else {
         var result = 0;
         if (options && options.questionIndex) {
-            result = d3.median(matrix[options.questionIndex]) * 1024 + d3.mean(matrix[options.questionIndex]);
+            //console.log(options.questionIndex, matrix[options.questionIndex], matrix);
+            result = d3.median(matrix[options.questionIndex]);
         } else {
             for (var i = pat.config.questions.length - 1; i >= 0; --i) {
                 result += d3.median(matrix[i]);

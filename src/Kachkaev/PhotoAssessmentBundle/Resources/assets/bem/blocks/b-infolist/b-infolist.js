@@ -240,34 +240,54 @@ $.widget('pat.binfolist', {
 	                currentMeasure = item.photoResponseCounts[pat.PhotoResponseStatus.PHOTO_PROBLEM];
 	                break;
 
+                case 'exclusion':
+                    currentMeasure = -item.status;
+                    break;
+                    
 	            case 'unread':
 	                currentMeasure = item.isUnread ? -1 : 0;
 	                break;
 
-	            case 'suitability':
-	                currentMeasure = pat.PhotoResponseListMeasurer.getMedSuitability(item.photoResponses);
+	            case 'suitability-avg':
+	                currentMeasure = pat.PhotoResponseListMeasurer.getAvgSuitability(item.photoResponses);
 	                break;
 	                
 	            case 'suitability-med':
 	                currentMeasure = pat.PhotoResponseListMeasurer.getMedSuitability(item.photoResponses);
 	                break;
 
-	            case 'suitability-avg':
-	                currentMeasure = pat.PhotoResponseListMeasurer.getAvgSuitability(item.photoResponses);
-	                break;
+                case 'suitability-q0-avg':
+                case 'suitability-q1-avg':
+                case 'suitability-q2-avg':
+                case 'suitability-q3-avg':
+                case 'suitability-q4-avg':
+                case 'suitability-q5-avg':
+                case 'suitability-q6-avg':
+                    currentMeasure = pat.PhotoResponseListMeasurer.getAvgSuitability(item.photoResponses, {questionIndex: parseInt(currentSortMode[13], 10)});
+                    break;
 
-	            case 'agreement':
+                case 'suitability-q0-med':
+                case 'suitability-q1-med':
+                case 'suitability-q2-med':
+                case 'suitability-q3-med':
+                case 'suitability-q4-med':
+                case 'suitability-q5-med':
+                case 'suitability-q6-med':
+                    currentMeasure = pat.PhotoResponseListMeasurer.getMedSuitability(item.photoResponses, {questionIndex: parseInt(currentSortMode[13], 10)});
+                    break;
+
+                case 'agreement':
 	                currentMeasure = pat.PhotoResponseListMeasurer.getAgreement(item.photoResponses);
 	                break;
 
-	            case 'duration-med':
-	                currentMeasure = pat.PhotoResponseListMeasurer.getMedDuration(item.photoResponses);
-	                break;
-	            
 	            case 'duration-avg':
 	                currentMeasure = pat.PhotoResponseListMeasurer.getAvgDuration(item.photoResponses);
 	                break;
 	                
+	            case 'duration-med':
+	                currentMeasure = pat.PhotoResponseListMeasurer.getMedDuration(item.photoResponses);
+	                break;
+	            
 	            default:
 	                throw new Error('Unknown sort mode ' + currentSortMode + ' in sort order ');
 	            }
@@ -320,7 +340,9 @@ $.widget('pat.binfolist', {
         } else {
             w.options.items = newItems;
         }
-        w._self._resortRenderingQueue();
+        setTimeout(function() {
+            w._self._resortRenderingQueue();
+        }, 100);
 	},
 	
 	_resortRenderingQueue: function() {
