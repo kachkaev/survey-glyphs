@@ -5,6 +5,34 @@
  */
 (function() {
 
+var LANG_SORT_MODES = {
+        'id': 'id',
+        'completed': 'completed',
+        'problems': 'problems',
+        'exclusion': 'exclusion',
+        'duration-avg': 'avg duration',
+        'duration-med': 'med duration',
+        'agreement': 'agreement',
+        
+        'suitability-avg': 'avg suitability',
+        'suitability-q0-avg': 'avg suitability (real photo)',
+        'suitability-q1-avg': 'avg suitability (outdoors)',
+        'suitability-q2-avg': 'avg suitability (daytime)',
+        'suitability-q3-avg': 'avg suitability (temporal)',
+        'suitability-q4-avg': 'avg suitability (people)',
+        'suitability-q5-avg': 'avg suitability (by pedestrian)',
+        'suitability-q6-avg': 'avg suitability (attractive)',
+        
+        'suitability-med': 'med suitability',
+        'suitability-q0-med': 'med suitability (real photo)',
+        'suitability-q1-med': 'med suitability (outdoors)',
+        'suitability-q2-med': 'med suitability (daytime)',
+        'suitability-q3-med': 'med suitability (temporal)',
+        'suitability-q4-med': 'med suitability (people)',
+        'suitability-q5-med': 'med suitability (by pedestrian)',
+        'suitability-q6-med': 'med suitability (attractive)',
+};
+
 /**
  * Removes "descending" mark from the given sort mode and returns a clean sort mode name
  * Example: -id → id
@@ -16,8 +44,7 @@ var getSortModeName = function(sortMode) {
 }; 
 
 var getSortModeTitle = function(sortMode) {
-    // TODO replace with language
-    return getSortModeName(sortMode);
+    return LANG_SORT_MODES[getSortModeName(sortMode)] || getSortModeName(sortMode);
 };
     
 $.widget('pat.binfolistsopicker', {
