@@ -196,7 +196,7 @@ $.widget('pat.binfolist', {
 		w._self._applySelectedItemId();
         w._self._applyHighlightedItemsIds();
         w._self._applyHeight();
-        w._self._applySortOrderOrModes();
+        w._self._applySortOrderOrModes(true);
         w._self._applyViewModeShowThumbnails();
         w._self._applyViewModeShowProblems();
         w._self._applyViewModeShowUnread();
@@ -338,7 +338,6 @@ $.widget('pat.binfolist', {
             };
             
             w._self._setOptions(newOptions);
-            w._self._trigger('resortitems', this, newOptions);
         } else {
             w.options.items = newItems;
         }
@@ -445,7 +444,7 @@ $.widget('pat.binfolist', {
         }
     },
 
-    _applySortOrderOrModes: function() {
+    _applySortOrderOrModes: function(initialUse) {
         var w = this.w;
         var sortOrderParts = w.options.sortOrder.split(',');
 
@@ -474,6 +473,9 @@ $.widget('pat.binfolist', {
         
         w._self._updateSOPickersControls();
         w._self._resortItems(w.options.sortOrder);
+        if (!initialUse) {
+            w._self._trigger('resortitems', this, {sortOrder: w.options.sortOrder});
+        }
     },
     
     _applyViewModeShowThumbnails: function() {
