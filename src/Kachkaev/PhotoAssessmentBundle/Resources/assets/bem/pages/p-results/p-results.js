@@ -253,7 +253,7 @@ $(function(){
                         'suitability-q3-med',
                         'suitability-q4-med',
                         'suitability-q5-med',
-                        'suitability-q6-med',
+                        'suitability-q6-med'
                     ],
             sortOrder: stateContainer.state.photoSortOrder,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
@@ -291,7 +291,7 @@ $(function(){
                         'unread',
                         'duration-avg',
                         'duration-med',
-                        'agreement',
+                        'agreement'
                     ],
 
             sortOrder: stateContainer.state.userSortOrder,
