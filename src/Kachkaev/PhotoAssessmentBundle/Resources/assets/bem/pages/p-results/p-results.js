@@ -68,7 +68,8 @@ $(function(){
         userId: null,
         photoId: null,
         infolistViewModeShowThumbnails: false,
-        infolistViewModeShowProblems: true
+        infolistViewModeShowProblems: true,
+        infolistViewModeShowUnread: true
     };
     
     if (localStorage[LOCALSTORAGE_STATE]) {
@@ -258,6 +259,7 @@ $(function(){
             sortOrder: stateContainer.state.photoSortOrder,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
+            viewModeShowUnread: stateContainer.state.infolistViewModeShowUnread,
             customizeItem: function($item, id, data) {
                 $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
                 $item.removeClass('status_0 status_1');
@@ -297,6 +299,7 @@ $(function(){
             sortOrder: stateContainer.state.userSortOrder,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
+            viewModeShowUnread: stateContainer.state.infolistViewModeShowUnread,
             customizeItem: function($item, id, data, options) {
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                     return false;
@@ -474,7 +477,7 @@ $(function(){
 
     $(document.body).bind("keydown", function(event) {
         var key = event.keyCode || event.which;
-        //console.log('key pressed', key);
+        // console.log('key pressed', key);
         
         switch (key) {
         case 27:
@@ -485,6 +488,15 @@ $(function(){
         case 80:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                 updateState({infolistViewModeShowProblems: !stateContainer.state.infolistViewModeShowProblems});
+                return false;
+            } else {
+                return;
+            }
+
+        // u for toggling unread state in lists
+        case 85:
+            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                updateState({infolistViewModeShowUnread: !stateContainer.state.infolistViewModeShowUnread});
                 return false;
             } else {
                 return;
@@ -561,6 +573,7 @@ $(function(){
             height: stateContainer.state.infolistHeight,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
+            viewModeShowUnread: stateContainer.state.infolistViewModeShowUnread,
             viewModeTimeScaling: stateContainer.state.timeScaling
         });
 
@@ -571,6 +584,7 @@ $(function(){
             height: stateContainer.state.infolistHeight,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
+            viewModeShowUnread: stateContainer.state.infolistViewModeShowUnread,
             viewModeTimeScaling: stateContainer.state.timeScaling
         });
         

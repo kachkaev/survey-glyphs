@@ -14,6 +14,7 @@ $.widget('pat.binfolist', {
 
         viewModeShowThumbnails: false,
         viewModeShowProblems: false,
+        viewModeShowUnread: false,
         viewModeTimeScaling: false,
         height: 200,
         
@@ -198,6 +199,7 @@ $.widget('pat.binfolist', {
         w._self._applySortOrderOrModes();
         w._self._applyViewModeShowThumbnails();
         w._self._applyViewModeShowProblems();
+        w._self._applyViewModeShowUnread();
         w._self._updateHintPos();
 	},
 	
@@ -486,6 +488,12 @@ $.widget('pat.binfolist', {
         w.$element.toggleClass('b-infolist_problems_disabled', !w.options.viewModeShowProblems);
     },
 
+    _applyViewModeShowUnread: function() {
+        var w = this.w;
+        w.$element.toggleClass('b-infolist_unread_enabled',   w.options.viewModeShowUnread);
+        w.$element.toggleClass('b-infolist_unread_disabled', !w.options.viewModeShowUnread);
+    },
+
     _applyViewModeTimeScaling: function() {
         var w = this.w;
         w.$items.children().each(function() {
@@ -599,6 +607,9 @@ $.widget('pat.binfolist', {
             break;
         case 'viewModeShowProblems':
             this._applyViewModeShowProblems();
+            break;
+        case 'viewModeShowUnread':
+            this._applyViewModeShowUnread();
             break;
         case 'viewModeTimeScaling':
             this._applyViewModeTimeScaling();
