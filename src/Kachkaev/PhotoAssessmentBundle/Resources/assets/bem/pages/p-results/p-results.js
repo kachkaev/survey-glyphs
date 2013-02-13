@@ -68,7 +68,7 @@ $(function(){
         userId: null,
         photoId: null,
         infolistViewModeShowThumbnails: false,
-        infolistViewModeShowProblems: true,
+        infolistViewModeShowProblems: true
     };
     
     if (localStorage[LOCALSTORAGE_STATE]) {

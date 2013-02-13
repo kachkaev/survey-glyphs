@@ -19,7 +19,7 @@ $.widget('pat.binfolist', {
         
         customizeItem: null,  // function
         dblclickAction: null, // function
-        mouseHoverDelay: 50,
+        mouseHoverDelay: 50
     },
     
     /**
@@ -332,7 +332,7 @@ $.widget('pat.binfolist', {
         if (!initialUse) {
             var newOptions = {
                     items: newItems,
-                    sortOrder: sortOrder,
+                    sortOrder: sortOrder
             };
             
             w._self._setOptions(newOptions);
@@ -463,7 +463,7 @@ $.widget('pat.binfolist', {
         for (var i = w.$soPickersContainer.children().length; i < sortOrderParts.length; ++i) {
             var $newSOPicker = $('<div/>').binfolistsopicker({
                 'sortModes': w.options.sortModes,
-                'sortOrder': sortOrderParts[i],
+                'sortOrder': sortOrderParts[i]
             });
             
             $newSOPicker.on('binfolistsopickerchangesortorder', w.newSortOrderSelectedInSOPickerFunction);
