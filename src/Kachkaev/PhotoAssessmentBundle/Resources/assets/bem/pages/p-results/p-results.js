@@ -4,8 +4,8 @@ var LOCALSTORAGE_PREFIX = 'interface.p-results.';
 var LOCALSTORAGE_STATE = LOCALSTORAGE_PREFIX + 'state';
 var LIST_DEFAULT_HEIGHT = 300;
 
-var USER_SPECTRUM_MAX = 20;
-var PHOTO_SPECTRUM_MAX = 5;
+var USER_SPECTRUM_MAX = 50;
+var PHOTO_SPECTRUM_MAX = 10;
 var DEFAULT_MAX_TIME = 60;
 
 var PHOTO_RESPONSE_ALL = -42; // used as key for all response counts
