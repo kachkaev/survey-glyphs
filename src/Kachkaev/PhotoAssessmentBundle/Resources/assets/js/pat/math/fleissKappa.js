@@ -1,18 +1,12 @@
-var arraySum = function(arr) {
-    var sum = 0;
-    for (var i = arr.length - 1; i >= 0; --i) {
-        sum += arr[i];
-    }
-    return sum;
-};
+namespace('pat.math');
 
-function fleissKappa(matrix, checkMatrix) {
+pat.math.fleissKappa = function(matrix, needToCheckMatrix) {
     var N = matrix.length;              // subjects
     var k = matrix[0].length;           // categories
-    var n = arraySum(matrix[0]);        // raters
+    var n = pat.math.arraySum(matrix[0]);        // raters
  
     // checking data matrix
-    if (checkMatrix) {
+    if (needToCheckMatrix) {
         for(var i = matrix.length - 1; i >= 1 ; --i){
             
             if(matrix[i].length != k){
@@ -20,7 +14,7 @@ function fleissKappa(matrix, checkMatrix) {
                 throw new Error('Number of categories must be equal');
             }
             
-            if(arraySum(matrix[i])!=n){
+            if(pat.math.arraySum(matrix[i])!=n){
                 throw new Error('Number of raters must be equal');
             }
         }
@@ -60,7 +54,7 @@ function fleissKappa(matrix, checkMatrix) {
     };
     
     // Computing Pbar
-    var Pbar = arraySum(P) / N;
+    var Pbar = pat.math.arraySum(P) / N;
 
     // Computing PbarE
     var PbarE = 0;
@@ -69,9 +63,15 @@ function fleissKappa(matrix, checkMatrix) {
     }
 
     // FIXME return result instead of Pbar
-    return Pbar;
+    //return Pbar;
     
-    result = (Pbar - PbarE) / (1 - PbarE);
+    if (PbarE == 1) {
+        result = 1;
+        //console.log('spec. case')
+    } else {
+        result = (Pbar - PbarE) / (1 - PbarE);
+    }
+    return result;
     
     console.log({
             matrix: matrix,
