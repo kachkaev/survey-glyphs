@@ -282,7 +282,11 @@ $.widget('pat.binfolist', {
 	                currentMeasure = pat.PhotoResponseListMeasurer.getAgreement(item.photoResponses);
 	                break;
 
-	            case 'duration-avg':
+                case 'entropy':
+                    currentMeasure = pat.PhotoResponseListMeasurer.getWeightedEntropy(item.photoResponses);
+                    break;
+
+                case 'duration-avg':
 	                currentMeasure = pat.PhotoResponseListMeasurer.getAvgDuration(item.photoResponses);
 	                break;
 	                

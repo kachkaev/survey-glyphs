@@ -236,6 +236,7 @@ $(function(){
                         'duration-avg',
                         'duration-med',
                         'agreement',
+                        'entropy',
                         'suitability-avg',
                         
                         'suitability-q0-avg',
@@ -293,7 +294,8 @@ $(function(){
                         'unread',
                         'duration-avg',
                         'duration-med',
-                        'agreement'
+                        'agreement',
+                        'entropy'
                     ],
 
             sortOrder: stateContainer.state.userSortOrder,

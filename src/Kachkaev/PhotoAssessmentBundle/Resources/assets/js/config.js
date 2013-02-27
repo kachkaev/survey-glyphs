@@ -1,6 +1,6 @@
 namespace('pat.config');
 
-pat.config.apiBaseURL = (document.URL.indexOf('p_app_dev.php') != -1) ? "/p_app_dev.php/api/" : "/api/";
+pat.config.apiBaseURL = (document.URL.indexOf('p_app_dev.php') != -1) ? '/p_app_dev.php/api/' : '/api/';
 
 pat.config.answerSequencesLength = 7;
 pat.config.answerSequences = {};
@@ -37,15 +37,36 @@ pat.config.answerSequences['qTimeOfDay'] = [
         null  // n/a
     ];
 
+pat.config.answerNA = null;
+
 pat.config.questions = [
-         "qIsRealPhoto",
-         "qIsOutdoors",
-         "qTimeOfDay",
-         "qSubjectTemporal",
-         "qSubjectPeople",
-         "qIsByPedestrian",
-         "qIsSpaceAttractive"
+         'qIsRealPhoto',
+         'qIsOutdoors',
+         'qTimeOfDay',
+         'qSubjectTemporal',
+         'qSubjectPeople',
+         'qIsByPedestrian',
+         'qIsSpaceAttractive'
      ];
+
+pat.config.answers = {
+        'qIsRealPhoto':       [-1, 0, 1],
+        'qIsOutdoors':        [-1, 0, 1],
+        'qTimeOfDay':         [-1, 0, 1, 2],
+        'qSubjectTemporal':   [-1, 0, 1],
+        'qSubjectPeople':     [-1, 0, 1],
+        'qIsByPedestrian':    [-1, 0, 1],
+        'qIsSpaceAttractive': [-1, 0, 1],
+    };
+
+//pat.config.dependentQuestionDisabling = {
+//        qIsRealPhoto: {
+//            '0': ['qIsOutdoors', 'qTimeOfDay', 'qTimeOfYear', 'qSubjectTemporal', 'qSubjectPeople', 'qIsLocationCorrect', 'qIsByPedestrian', 'qIsSpaceAttractive']
+//        },
+//        qIsOutdoors: {
+//            '0': ['qDuringEvent', 'qTimeOfDay', 'qTimeOfYear', 'qSubjectTemporal', 'qIsLocationCorrect', 'qIsByPedestrian', 'qIsSpaceAttractive']
+//        }
+//    };
 
 pat.getAnswerSeq = function(question) {
     return pat.config.answerSequences[question] || pat.config.answerSequences['_default'];

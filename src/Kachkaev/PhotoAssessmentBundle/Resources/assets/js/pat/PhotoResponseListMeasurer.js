@@ -98,6 +98,26 @@ pat.PhotoResponseListMeasurer.getAgreement = function(photoResponses, options) {
     return -fleissKappaValue;
 };
 
+
+pat.PhotoResponseListMeasurer.getWeightedEntropy = function(photoResponses, options) {
+    var series = this._getSeriesForWeightedEntropy(photoResponses, options);
+    var weightedEntropyNumerator = 0;
+    var weightedEntropyDenominator = 0;
+    var weightedEntropyValue = 0;
+    for (var k = series.length - 1; k >= 0; --k) {
+        var NofUsersk = pat.math.arraySum(series[k]);
+        if (NofUsersk) {
+            weightedEntropyNumerator += NofUsersk * pat.math.entropy(series[k]);
+            weightedEntropyDenominator += NofUsersk;
+        }
+    }
+    weightedEntropyValue = weightedEntropyDenominator
+                                ? weightedEntropyNumerator / weightedEntropyDenominator
+                                : 1;
+    
+    return -weightedEntropyValue;
+};
+
 /**
  * Depending on arrangeByClasses returns
  * - a matrix of answer indexes of the responses (question count * response count)
@@ -133,3 +153,37 @@ pat.PhotoResponseListMeasurer._getAnswerIndexMatrix = function(photoResponses, a
     }
     return matrix;
 };
+
+/**
+ * Returns an array of length k = number of questions
+ * and each element of it is an array of length equal to the number of possible answers (excluding n/a)
+ * and the values are equal to the counts of responses having that answers.
+ * If the answer is n/a (the question was disabled by another question, count of responses for that question is simply not incremented)
+ * 
+ * @param photoResponses
+ * @param options
+ * @returns {Array}
+ */
+pat.PhotoResponseListMeasurer._getSeriesForWeightedEntropy = function(photoResponses, options) {
+    
+    var series = [];
+    for (var k = pat.config.questions.length - 1; k >= 0; --k) {
+        var seriesElem = [];
+        for (var i = pat.config.answers[pat.config.questions[k]].length - 1; i >=0; --i) {
+            seriesElem.push(0);
+        }
+        series.unshift(seriesElem);
+    };
+    
+    for (var j = photoResponses.length - 1, pr = photoResponses[j]; j >=0; --j, pr = photoResponses[j]) {
+        for (var k = pat.config.questions.length - 1; k >= 0; --k) {
+            var question = pat.config.questions[k];
+            var answerIndex = _.indexOf(pat.config.answers[question], pr[question], true);
+            if (answerIndex !== -1) {
+                ++series[k][answerIndex];
+            }
+        };
+    }
+    return series;
+};
+

@@ -12,7 +12,8 @@ var LANG_SORT_MODES = {
         'exclusion': 'exclusion',
         'duration-avg': 'avg duration',
         'duration-med': 'med duration',
-        'agreement': 'agreement',
+        'agreement': 'agreement (Fleiss Kappa)',
+        'entropy': 'agreement (entropy)',
         
         'suitability-avg': 'avg suitability',
         'suitability-q0-avg': 'avg suitability (real photo)',
