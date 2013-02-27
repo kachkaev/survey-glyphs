@@ -59,14 +59,14 @@ pat.config.answers = {
         'qIsSpaceAttractive': [-1, 0, 1],
     };
 
-//pat.config.dependentQuestionDisabling = {
-//        qIsRealPhoto: {
-//            '0': ['qIsOutdoors', 'qTimeOfDay', 'qTimeOfYear', 'qSubjectTemporal', 'qSubjectPeople', 'qIsLocationCorrect', 'qIsByPedestrian', 'qIsSpaceAttractive']
-//        },
-//        qIsOutdoors: {
-//            '0': ['qDuringEvent', 'qTimeOfDay', 'qTimeOfYear', 'qSubjectTemporal', 'qIsLocationCorrect', 'qIsByPedestrian', 'qIsSpaceAttractive']
-//        }
-//    };
+pat.config.dependentQuestionDisabling = {
+        qIsRealPhoto: {
+            '0': ['qIsOutdoors', 'qTimeOfDay', 'qTimeOfYear', 'qSubjectTemporal', 'qSubjectPeople', 'qIsLocationCorrect', 'qIsByPedestrian', 'qIsSpaceAttractive']
+        },
+        qIsOutdoors: {
+            '0': ['qDuringEvent', 'qTimeOfDay', 'qTimeOfYear', 'qSubjectTemporal', 'qIsLocationCorrect', 'qIsByPedestrian', 'qIsSpaceAttractive']
+        }
+    };
 
 pat.getAnswerSeq = function(question) {
     return pat.config.answerSequences[question] || pat.config.answerSequences['_default'];

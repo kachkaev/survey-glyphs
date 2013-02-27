@@ -98,6 +98,25 @@ $(function(){
         stateContainer.stateManager.capture();
     };
     
+    // =====================================
+    // “Fix” some answers
+    // =====================================
+    // If there is a question answer restricting another question,
+    // make sure that dependent questions are all answered as N/A
+    _.each(data.photoResponses, function(photoResponse) {
+        _.each(questions, function(question) {
+           if (pat.config.dependentQuestionDisabling[question]) {
+               var answerAsString = '' + photoResponse[question];
+               var questionsToDisable = pat.config.dependentQuestionDisabling[question][answerAsString];
+               _.each(questionsToDisable, function(questionsToDisable) {
+                   photoResponse[questionsToDisable] = null;
+               });
+           };
+           if (photoResponse[question] !== null) {
+               photoResponse[question] = parseInt(photoResponse[question]);
+           }
+       });
+    });
 
     // =====================================
     // Supplement data with stats
