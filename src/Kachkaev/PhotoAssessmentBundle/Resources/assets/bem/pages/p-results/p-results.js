@@ -86,7 +86,7 @@ $(function(){
         stateContainer.state.userId = null;
     }
     
-    if (!data.users[stateContainer.state.photoId]) {
+    if (!data.photos[stateContainer.state.photoId]) {
         stateContainer.state.photoId = null;
     }
     
