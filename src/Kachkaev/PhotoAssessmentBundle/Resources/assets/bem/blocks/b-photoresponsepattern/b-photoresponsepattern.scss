@@ -1,7 +1,9 @@
 .b-photoresponsepattern {
 	position: relative;
-	width: 300px;
-	height: 350px;
+	width: 200px;
+	height: 200px;
+/*    width: 400px;
+    height: 400px; */
 }
 
 .b-photoresponsepattern__hint {
@@ -20,11 +22,13 @@
 	stroke: black;
 	cursor: pointer;
 /* 	interpolate: basis; */
+/* 	stroke-width: 12; */
 }
 
 .b-photoresponsepattern .answer.selected {
 /*    opacity: 0.5 !important;*/
     stroke-width: 8;
+/*     stroke-width: 20; */
 }
 
 .b-photoresponsepattern .photoResponses {

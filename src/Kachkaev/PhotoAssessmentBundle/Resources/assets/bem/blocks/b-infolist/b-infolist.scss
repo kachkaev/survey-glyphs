@@ -9,7 +9,8 @@
 }
 
 .b-infolist_photo {
-    width: 700px;
+    width: 585px; /* to fit 30 photos in a row on MacOS 10.8 / Firefox */
+    width: 775px; /* to fit 40 photos in a row on MacOS 10.8 / Firefox */
 }
 
 /* hint */

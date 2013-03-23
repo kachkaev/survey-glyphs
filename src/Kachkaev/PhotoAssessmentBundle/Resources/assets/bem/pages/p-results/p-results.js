@@ -16,29 +16,36 @@ var PHOTO_RESPONSE_PHOTO_PROBLEM = 0x10;
 
 var MARK_AS_READ_DELAY = 2000;
 
-// TODO replace with D3 palletess
+// TODO replace with D3 palettes
 // Info lists colouring
-var COLORSCHEME_USER = {
-        0: ['ebf7fa', new Rainbow().setNumberRange(0, USER_SPECTRUM_MAX).setSpectrum('c0e0e8', '7ab1bf', '428696')],
-        1: ['faeeee', new Rainbow().setNumberRange(0, USER_SPECTRUM_MAX).setSpectrum('F7D9D9', 'd88282')]
-};
+var SMALL_NUMBER = 0.00000001;
 
-var COLORSCHEME_PHOTO = {
-        0: ['ebfaef', new Rainbow().setNumberRange(0, PHOTO_SPECTRUM_MAX).setSpectrum('c0e8c2', '7abf8a', '429756')],
-        1: ['faeeee', new Rainbow().setNumberRange(0, PHOTO_SPECTRUM_MAX).setSpectrum('F7D9D9', 'd88282')]
+var COLORSCHEME_USER_COMPLETED = {
+        0: d3.scale.linear()
+            .domain([0, SMALL_NUMBER, USER_SPECTRUM_MAX/2, USER_SPECTRUM_MAX])
+            .range(['#ebf7fa', '#c0e0e8', '#7ab1bf', '#428696']),
+        1: d3.scale.linear()
+            .domain([0, SMALL_NUMBER, USER_SPECTRUM_MAX])
+            .range(['#faeeee', '#F7D9D9', '#d88282'])
 };
-
-// List of parameters in PhotoResponse that are answers to questions
-// (projected on y axis in b-photoresponsepattern)
-var questions = [
-    "qIsRealPhoto",
-    "qIsOutdoors",
-    "qTimeOfDay",
-    "qSubjectTemporal",
-    "qSubjectPeople",
-    "qIsByPedestrian",
-    "qIsSpaceAttractive"
-];
+var COLORSCHEME_PHOTO_COMPLETED = {
+        0: d3.scale.linear()
+            .domain([0, SMALL_NUMBER, PHOTO_SPECTRUM_MAX/2, PHOTO_SPECTRUM_MAX])
+            .range(['#ebfaef', '#c0e8c2', '#7abf8a', '#429756']),
+        1: d3.scale.linear()
+            .domain([0, SMALL_NUMBER, PHOTO_SPECTRUM_MAX])
+            .range(['#faeeee', '#F7D9D9', '#d88282'])
+};
+var COLORSCHEME_PHOTO_LUMINANCE = {
+        0: d3.scale.linear()
+            .domain([0, SMALL_NUMBER, 0.5, 10])
+            .range(['#eee', 'hsl(265, 31%, 35%)', 'hsl(0, 0, 65%)', 'rgb(255,255,204)'])
+            .clamp(true)
+            ,
+        1: d3.scale.linear()
+            .domain([0, SMALL_NUMBER, 1, 10])
+            .range(['#eee', 'hsl(265, 31%, 35%)', 'hsl(0, 0, 65%)', 'hsl(64, 39%, 78%)']),
+};
 
 $(function(){
     if (!$(document.body).hasClass("p-results"))
@@ -104,7 +111,7 @@ $(function(){
     // If there is a question answer restricting another question,
     // make sure that dependent questions are all answered as N/A
     _.each(data.photoResponses, function(photoResponse) {
-        _.each(questions, function(question) {
+        _.each(pat.config.questions, function(question) {
            if (pat.config.dependentQuestionDisabling[question]) {
                var answerAsString = '' + photoResponse[question];
                var questionsToDisable = pat.config.dependentQuestionDisabling[question][answerAsString];
@@ -163,7 +170,7 @@ $(function(){
        
         // Answers string → int
         // TODO check why we've got strings, not ints
-        _.each(questions, function(question) {
+        _.each(pat.config.questions, function(question) {
            if (photoResponse[question] !== null) {
                photoResponse[question] = parseInt(photoResponse[question]);
            }
@@ -191,14 +198,6 @@ $(function(){
     // Helpers
     // =====================================
 
-    // Finds the color in the pallete matching n and returns it
-    var numberToColor = function(pallete, n) {
-        if (!n)
-            return '#' + pallete[0];
-        return '#' + pallete[1].colorAt(n);
-    };
-
-    
     // Sends a new value of status for a photo / user / photoresponse to the server
     var setStatusFunction = function($infoList, data, status) {
         $.ajax({
@@ -247,6 +246,7 @@ $(function(){
         .binfolist({
             items: _.toArray(data.photos),
             dblclickAction: toggleStatusFunction,
+            maxSortLevels: 6,
             sortModes: [
                         'id',
                         'completed',
@@ -274,14 +274,20 @@ $(function(){
                         'suitability-q3-med',
                         'suitability-q4-med',
                         'suitability-q5-med',
-                        'suitability-q6-med'
+                        'suitability-q6-med',
+                        'source',
+                        'time-of-day',
+                        'time-from-noon',
+                        'luminance'
+
                     ],
             sortOrder: stateContainer.state.photoSortOrder,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnread: stateContainer.state.infolistViewModeShowUnread,
             customizeItem: function($item, id, data) {
-                $item.css('backgroundColor', numberToColor(COLORSCHEME_PHOTO[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.css('backgroundColor', COLORSCHEME_PHOTO_LUMINANCE[data.status](data.luminance));
+                //$item.css('backgroundColor', COLORSCHEME_PHOTO_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
                 $item.addClass('source_' + data.source);
@@ -324,7 +330,7 @@ $(function(){
             customizeItem: function($item, id, data, options) {
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                     return false;
-                $item.css('backgroundColor', numberToColor(COLORSCHEME_USER[data.status], data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                $item.css('backgroundColor', COLORSCHEME_USER_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
@@ -352,14 +358,14 @@ $(function(){
     // Patterns
     //// Users
     var $bPhotoResponsePatternUser = $('.b-photoresponsepattern_user').bphotoresponsepattern({
-        questions: questions,
+        questions: pat.config.questions,
         photoResponseEqualityParameter: 'photoId',
         timeScaling: stateContainer.state.timeScaling,
         maxTime: stateContainer.state.maxTime
     });
     //// Photos
     var $bPhotoResponsePatternPhoto = $('.b-photoresponsepattern_photo').bphotoresponsepattern({
-        questions: questions,
+        questions: pat.config.questions,
         photoResponseEqualityParameter: 'userId',
         timeScaling: stateContainer.state.timeScaling,
         maxTime: stateContainer.state.maxTime

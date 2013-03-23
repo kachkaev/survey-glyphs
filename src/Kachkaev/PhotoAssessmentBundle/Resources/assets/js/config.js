@@ -4,6 +4,29 @@ pat.config.apiBaseURL = (document.URL.indexOf('p_app_dev.php') != -1) ? '/p_app_
 
 pat.config.answerSequencesLength = 7;
 pat.config.answerSequences = {};
+
+/* 
+pat.config.answerSequences['_default'] = [
+          0,    // no
+          -42,
+          -1,   // hard to say
+          -43,
+          1,    // yes
+          -44,
+          null  // n/a
+      ];
+
+ // Special case: time of day
+ pat.config.answerSequences['qTimeOfDay'] = [
+         2,    // night
+         1,    // twilight
+         -1,   // hard to say
+         -42,
+         0,    // day
+         -43,
+         null  // n/a
+     ];
+*/
 pat.config.answerSequences['_default'] = [
          1,    // yes
          -42,
@@ -41,20 +64,20 @@ pat.config.answerNA = null;
 
 pat.config.questions = [
          'qIsRealPhoto',
+         'qSubjectPeople',
          'qIsOutdoors',
          'qTimeOfDay',
          'qSubjectTemporal',
-         'qSubjectPeople',
          'qIsByPedestrian',
          'qIsSpaceAttractive'
      ];
 
 pat.config.answers = {
         'qIsRealPhoto':       [-1, 0, 1],
+        'qSubjectPeople':     [-1, 0, 1],
         'qIsOutdoors':        [-1, 0, 1],
         'qTimeOfDay':         [-1, 0, 1, 2],
         'qSubjectTemporal':   [-1, 0, 1],
-        'qSubjectPeople':     [-1, 0, 1],
         'qIsByPedestrian':    [-1, 0, 1],
         'qIsSpaceAttractive': [-1, 0, 1],
     };

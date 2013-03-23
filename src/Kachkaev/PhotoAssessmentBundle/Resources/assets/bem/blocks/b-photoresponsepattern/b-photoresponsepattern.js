@@ -1,6 +1,7 @@
 (function(){
 
 var CANVAS_PADDING = [10, 20, 5, 4]; // top right bottom left
+//var CANVAS_PADDING = [10, 20, 5, 12]; // top right bottom left
 
 var NODE_SIZE = 14;
 
