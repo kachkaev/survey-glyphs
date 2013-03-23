@@ -58,9 +58,17 @@ class Photo extends AbstractStandardEntity {
 	 */
 	protected $priority;
 	
+	/** @ORM\Column(type="float")
+	 */
+	protected $luminance;
+
+	/** @ORM\Column(type="integer")
+	 */
+	protected $dateTaken;
+	
 	public function getId() {    
         return $this->id;        
-    }     
+    }
     
     public function __construct()
 	{
