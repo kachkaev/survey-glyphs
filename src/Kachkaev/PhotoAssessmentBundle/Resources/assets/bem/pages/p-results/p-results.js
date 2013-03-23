@@ -164,9 +164,12 @@ $(function(){
         user.photoResponseCounts[PHOTO_RESPONSE_ALL] += 1;
         user.photoResponseCounts[photoResponse.status] += 1;
        
-        photo.photoResponses.push(photoResponse);
-        photo.photoResponseCounts[PHOTO_RESPONSE_ALL] += 1;
-        photo.photoResponseCounts[photoResponse.status] += 1;
+        // Responses by banned users are not shown and counted for the photos
+        if (photoResponse.status != PHOTO_RESPONSE_COMPLETE || user.status != 1) {
+            photo.photoResponses.push(photoResponse);
+            photo.photoResponseCounts[PHOTO_RESPONSE_ALL] += 1;
+            photo.photoResponseCounts[photoResponse.status] += 1;
+        }
        
         // Answers string → int
         // TODO check why we've got strings, not ints
