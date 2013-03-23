@@ -31,7 +31,11 @@ var LANG_SORT_MODES = {
         'suitability-q3-med': 'med suitability (temporal)',
         'suitability-q4-med': 'med suitability (people)',
         'suitability-q5-med': 'med suitability (by pedestrian)',
-        'suitability-q6-med': 'med suitability (attractive)'
+        'suitability-q6-med': 'med suitability (attractive)',
+        
+        'time-of-day': 'daytime',
+        'time-from-noon': 'time from noon',
+        'luminance': 'luminance'
 };
 
 /**

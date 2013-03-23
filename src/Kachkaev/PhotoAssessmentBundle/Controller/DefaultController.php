@@ -121,8 +121,11 @@ class DefaultController extends Controller
             "source"             => "string",
             "photoId"            => "string",
             "userId"             => "string",
+            "userName"           => "string",
             "status"             => "int",
             "priority"           => "int",
+            "dateTaken"          => "int",
+            "luminance"          => "double",
     	];
         $photosStmt = $em->getConnection()->query(sprintf("SELECT %s FROM Photo where id > 0 ORDER BY id", implode(',', array_keys($photosColumnTypes))));
         $photosStmt->execute();
@@ -232,6 +235,12 @@ class DefaultController extends Controller
                 case "int":
                     if ($v !== null) {
                         $row[$k] = (int)$v;
+                    }
+                    break;
+                case "double":
+                case "float":
+                    if ($v !== null) {
+                        $row[$k] = (float)$v;
                     }
                     break;
             }

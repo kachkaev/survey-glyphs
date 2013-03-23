@@ -294,6 +294,22 @@ $.widget('pat.binfolist', {
 	                currentMeasure = pat.PhotoResponseListMeasurer.getMedDuration(item.photoResponses);
 	                break;
 	            
+	            case 'source':
+	                currentMeasure = item.source.charCodeAt(0);
+	                break;
+
+	            case 'luminance':
+                    currentMeasure = item.luminance;
+                    break;
+
+	            case 'time-of-day':
+                    currentMeasure = (item.dateTaken % 86400) / 60;
+                    break;
+
+	            case 'time-from-noon':
+                    currentMeasure = Math.abs(item.dateTaken % 86400 - 43200) / 60;
+                    break;
+	                
 	            default:
 	                throw new Error('Unknown sort mode ' + currentSortMode + ' in sort order ');
 	            }
