@@ -566,12 +566,18 @@ $(function(){
         case KEY_PLUS:
         case KEY_EQUALS:
         case KEY_EQUALS2:
+            if (event.metaKey || event.ctrlKey || evn.shiftKey) {
+                return;
+            }
             updateState({maxTime: stateContainer.state.maxTime * 1.25});
             return false;
         case KEY_MINUS:
         case KEY_DASH:
         case KEY_DASH2:
         case KEY_UNDERSCORE:
+            if (event.metaKey || event.ctrlKey || evn.shiftKey) {
+                return;
+            }
             updateState({maxTime: stateContainer.state.maxTime * 0.8});
             return false;
             
