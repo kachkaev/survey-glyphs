@@ -138,6 +138,7 @@ $.widget('ui.bphotoresponsepattern', {
 	_redraw: function() {
 	    var w = this.w;
 	    
+	    var d3grid = w.d3SvgCanvas.select('g.grid');
 	    var d3photoResponses = w.d3SvgCanvas.select('g.photoResponses');
 	    var d3photoResponseEdges = w.d3SvgCanvas.select('g.photoResponseEdges');
 	    var d3photoResponseNodes = w.d3SvgCanvas.select('g.photoResponseNodes');
@@ -147,6 +148,7 @@ $.widget('ui.bphotoresponsepattern', {
 	    d3photoResponses.attr('transform', function() {return 'translate(' + CANVAS_PADDING[3] + ',' + CANVAS_PADDING[0] + ')';});
 	    d3photoResponseEdges.attr('transform', d3photoResponses.attr('transform'));
 	    d3photoResponseNodes.attr('transform', d3photoResponses.attr('transform'));
+	    d3grid.attr('transform', d3photoResponses.attr('transform'));
 
 	    // Scaling
 	    // x - always the same
@@ -177,7 +179,49 @@ $.widget('ui.bphotoresponsepattern', {
         // =====================================
         // Draw grid
         // =====================================
-
+        // Baseline
+        var gridElems = [];
+        if (w.options.timeScaling && pat.config.flatLinesInTimeScaling) {
+            gridElems.push(['h', 0, 'baseline']);
+        }
+        var d3gridElem = d3grid.selectAll('line').data(gridElems, function(d) {
+            return JSON.stringify(d);
+        });
+ 
+        d3gridElem.enter()
+            .append('svg:line')
+         .each(function(d) {
+             var s = d3.select(this);
+             s.transition().duration(0);
+             s.style('opacity', null);
+             if (d[0] == 'h') {
+                 s.attr({
+                     'x1': x(0),
+                     'x2': x(pat.config.answerSequencesLength),
+                     'y1': d[1],
+                     'y2': d[1],
+                     'class': d[2]
+                 });
+             } else {
+                 s.attr({
+                     'x2': d[1],
+                     'x1': d[1],
+                     'y1': y(0),
+                     'y2': y(w.options.questions.length - 1),
+                     'class': d[2]
+                 });
+             }
+             var o = s.style('opacity');
+             s.style('opacity', 0)
+                 .transition().duration(ANIMATION_LENGTH)
+                 .style('opacity', o);
+         });
+         
+         // Exit
+         d3gridElem.exit()
+            .transition().duration(ANIMATION_LENGTH)
+            .style('opacity',0)
+            .remove();
         
         // =====================================
         // Draw response lines
@@ -236,7 +280,6 @@ $.widget('ui.bphotoresponsepattern', {
                     var y = (w.options.questions.length - 1) * Math.max(0, d.duration);
                     pts.push([0, y]);
                     pts.push([7, y]);
-                    console.log(pts);
                 } else {
                     _.each(w.options.questions, function(question) {
                         var answerSeq = pat.getAnswerSeq(question);

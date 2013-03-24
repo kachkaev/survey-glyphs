@@ -22,7 +22,7 @@ pat.PatternThumbnailGenerator = function(options) {
                 rounded: true
             },
         
-        defaultTimeBaselineStyle: {
+        defaultBaselineStyle: {
             strokeStyle: "#6273c0",
             strokeWidth: 2,
             rounded: true
@@ -107,7 +107,7 @@ pat.PatternThumbnailGenerator.prototype._render = function(thread, queueElement)
         var baselineObj = _.extend({
             x1: obj.options.canvasPadding[3], y1: 0,
             x2: obj.options.width - obj.options.canvasPadding[1], y2: 0
-        }, obj.options.defaultTimeBaselineStyle);
+        }, obj.options.defaultBaselineStyle);
         thread[1].drawLine(baselineObj);
     }
     
