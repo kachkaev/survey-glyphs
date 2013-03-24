@@ -4,7 +4,7 @@ namespace('pat');
 var INTERVAL_WAITING = 200;
 var INTERVAL_DRAWING = 10;
 
-var MAX_TIME = 60;
+var MAX_TIME = 30;
 
 pat.PatternThumbnailGenerator = function(options) {
     var obj = this;
@@ -20,7 +20,13 @@ pat.PatternThumbnailGenerator = function(options) {
                 strokeStyle: "rgba(0,0,0,0.15)",
                 strokeWidth: 1,
                 rounded: true
-            }
+            },
+        
+        defaultTimeBaselineStyle: {
+            strokeStyle: "#6273c0",
+            strokeWidth: 2,
+            rounded: true
+        }
     }, options);
     
     var threads = [];
@@ -96,22 +102,48 @@ pat.PatternThumbnailGenerator.prototype._render = function(thread, queueElement)
 
     var optionTimeScaling = queueElement[1] ? queueElement[1].timeScaling : false;
     
+    // Drow baseline
+    if (optionTimeScaling && pat.config.flatLinesInTimeScaling) {
+        var baselineObj = _.extend({
+            x1: obj.options.canvasPadding[3], y1: 0,
+            x2: obj.options.width - obj.options.canvasPadding[1], y2: 0
+        }, obj.options.defaultTimeBaselineStyle);
+        thread[1].drawLine(baselineObj);
+    }
+    
     // Responses
     _.each(queueElement[0].photoResponses, function(photoResponse, i) {
-        // Get points of answers
-        var pts = [];
-        _.each(pat.config.questions, function(question) {
-            pts.push(obj._qaToCoords(photoResponse, question, optionTimeScaling));
-        });
-        
         // The drawLine() object
         var drawObj = _.extend({}, obj.options.defaultLineStyle);
-        //Add the points from the array to the object
-        for (var p=0; p<pts.length; p+=1) {
-          drawObj['x'+(p+1)] = pts[p][0];
-          drawObj['y'+(p+1)] = pts[p][1];
-        }
 
+        // Drawing flat lines in time scaling
+        if (optionTimeScaling && pat.config.flatLinesInTimeScaling) {
+            
+            // Calculate y of the line
+            var y = obj._questionToY(pat.config.questions[pat.config.questions.length - 1], true, photoResponse.duration);
+            if (y > obj.options.height - obj.options.canvasPadding[2]) {
+                y = obj.options.height - obj.options.canvasPadding[2];
+            }
+            drawObj['x1'] = obj.options.canvasPadding[3];
+            drawObj['y1'] = y;
+            drawObj['x2'] = obj.options.width - obj.options.canvasPadding[1];
+            drawObj['y2'] = y;
+        // Drawing zigzags
+        } else {
+            // Get points of answers
+            var pts = [];
+                
+            _.each(pat.config.questions, function(question) {
+                pts.push(obj._qaToCoords(photoResponse, question, optionTimeScaling));
+            });
+            
+            //Add the points from the array to the object
+            for (var p=0; p<pts.length; p+=1) {
+              drawObj['x'+(p+1)] = pts[p][0];
+              drawObj['y'+(p+1)] = pts[p][1];
+            }
+        }
+        
         // Draw the line
         thread[1].drawLine(drawObj);
     });

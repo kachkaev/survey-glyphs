@@ -94,3 +94,4 @@ pat.config.dependentQuestionDisabling = {
 pat.getAnswerSeq = function(question) {
     return pat.config.answerSequences[question] || pat.config.answerSequences['_default'];
 };
+pat.config.flatLinesInTimeScaling = true;

@@ -232,13 +232,20 @@ $.widget('ui.bphotoresponsepattern', {
         var updateResponseLine = function(selection) {
             return selection.attr('d', function(d) {
                 var pts = [];
-                _.each(w.options.questions, function(question) {
-                    var answerSeq = pat.getAnswerSeq(question);
-                    pts.push([
-                              _.indexOf(answerSeq, d[question]),
-                              _.indexOf(w.options.questions, question) * (w.options.timeScaling ? Math.max(0, d.duration) : 1)
-                          ]);
-                });
+                if (w.options.timeScaling && pat.config.flatLinesInTimeScaling) {
+                    var y = (w.options.questions.length - 1) * Math.max(0, d.duration);
+                    pts.push([0, y]);
+                    pts.push([7, y]);
+                    console.log(pts);
+                } else {
+                    _.each(w.options.questions, function(question) {
+                        var answerSeq = pat.getAnswerSeq(question);
+                        pts.push([
+                                  _.indexOf(answerSeq, d[question]),
+                                  _.indexOf(w.options.questions, question) * (w.options.timeScaling ? Math.max(0, d.duration) : 1)
+                                  ]);
+                    });
+                }
                 return line(pts);
             });
 
