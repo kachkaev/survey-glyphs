@@ -44,7 +44,7 @@ var COLORSCHEME_PHOTO_LUMINANCE = {
             ,
         1: d3.scale.linear()
             .domain([0, SMALL_NUMBER, 1, 10])
-            .range(['#eee', 'hsl(265, 31%, 35%)', 'hsl(0, 0, 65%)', 'hsl(64, 39%, 78%)']),
+            .range(['#eee', 'hsl(265, 31%, 35%)', 'hsl(0, 0, 65%)', 'hsl(64, 39%, 78%)'])
 };
 
 $(function(){

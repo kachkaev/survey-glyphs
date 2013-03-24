@@ -79,7 +79,7 @@ pat.config.answers = {
         'qTimeOfDay':         [-1, 0, 1, 2],
         'qSubjectTemporal':   [-1, 0, 1],
         'qIsByPedestrian':    [-1, 0, 1],
-        'qIsSpaceAttractive': [-1, 0, 1],
+        'qIsSpaceAttractive': [-1, 0, 1]
     };
 
 pat.config.dependentQuestionDisabling = {
