@@ -105,8 +105,8 @@ pat.PatternThumbnailGenerator.prototype._render = function(thread, queueElement)
     // Drow baseline
     if (optionTimeScaling && pat.config.flatLinesInTimeScaling) {
         var baselineObj = _.extend({
-            x1: obj.options.canvasPadding[3], y1: 0,
-            x2: obj.options.width - obj.options.canvasPadding[1], y2: 0
+            x1: pat.config.applyPaddingToTimeBaseline ? obj.options.canvasPadding[3] : 0, y1: 0,
+            x2: pat.config.applyPaddingToTimeBaseline ? obj.options.width - obj.options.canvasPadding[1] : obj.options.width, y2: 0
         }, obj.options.defaultBaselineStyle);
         thread[1].drawLine(baselineObj);
     }
@@ -125,8 +125,8 @@ pat.PatternThumbnailGenerator.prototype._render = function(thread, queueElement)
                 y = obj.options.height - obj.options.canvasPadding[2];
             }
             drawObj['x1'] = obj.options.canvasPadding[3];
-            drawObj['y1'] = y;
             drawObj['x2'] = obj.options.width - obj.options.canvasPadding[1];
+            drawObj['y1'] = y;
             drawObj['y2'] = y;
         // Drawing zigzags
         } else {
