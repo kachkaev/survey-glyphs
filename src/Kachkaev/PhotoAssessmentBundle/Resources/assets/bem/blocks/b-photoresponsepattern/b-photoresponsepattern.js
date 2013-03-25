@@ -197,7 +197,7 @@ $.widget('ui.bphotoresponsepattern', {
              if (d[0] == 'h') {
                  s.attr({
                      'x1': x(0),
-                     'x2': x(pat.config.answerSequencesLength),
+                     'x2': x(pat.config.answerSequencesLength - 1),
                      'y1': d[1],
                      'y2': d[1],
                      'class': d[2]
@@ -278,8 +278,9 @@ $.widget('ui.bphotoresponsepattern', {
                 var pts = [];
                 if (w.options.timeScaling && pat.config.flatLinesInTimeScaling) {
                     var y = (w.options.questions.length - 1) * Math.max(0, d.duration);
-                    pts.push([0, y]);
-                    pts.push([7, y]);
+                    for (var i = 0; i < 7; ++i) {
+                        pts.push([i, y]);
+                    }
                 } else {
                     _.each(w.options.questions, function(question) {
                         var answerSeq = pat.getAnswerSeq(question);
