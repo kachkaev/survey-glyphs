@@ -229,6 +229,9 @@ $.widget('pat.binfolist', {
 	        
 	        var sortOrderParts = sortOrder.split(',');
 	        sortOrderParts.push('id');
+	        var responsesWithoutPhotoProblems = _.filter(item.photoResponses, function(photoResponse) {
+	                return photoResponse.status == pat.PhotoResponseStatus.COMPLETE;
+                });
 	        
 	        for (var i = 0; i < sortOrderParts.length; ++i) {
 	            var currentSortOrder = sortOrderParts[i];
@@ -258,11 +261,11 @@ $.widget('pat.binfolist', {
 	                break;
 
 	            case 'suitability-avg':
-	                currentMeasure = pat.PhotoResponseListMeasurer.getAvgSuitability(item.photoResponses);
+	                currentMeasure = 1000*pat.PhotoResponseListMeasurer.getAvgSuitability(responsesWithoutPhotoProblems);
 	                break;
 	                
 	            case 'suitability-med':
-	                currentMeasure = pat.PhotoResponseListMeasurer.getMedSuitability(item.photoResponses);
+	                currentMeasure = 1000*pat.PhotoResponseListMeasurer.getMedSuitability(responsesWithoutPhotoProblems);
 	                break;
 
                 case 'suitability-q0-avg':
@@ -272,7 +275,7 @@ $.widget('pat.binfolist', {
                 case 'suitability-q4-avg':
                 case 'suitability-q5-avg':
                 case 'suitability-q6-avg':
-                    currentMeasure = pat.PhotoResponseListMeasurer.getAvgSuitability(item.photoResponses, {questionIndex: parseInt(currentSortMode[13], 10)});
+                    currentMeasure = 1000*pat.PhotoResponseListMeasurer.getAvgSuitability(responsesWithoutPhotoProblems, {questionIndex: parseInt(currentSortMode[13], 10)});
                     break;
 
                 case 'suitability-q0-med':
@@ -282,23 +285,23 @@ $.widget('pat.binfolist', {
                 case 'suitability-q4-med':
                 case 'suitability-q5-med':
                 case 'suitability-q6-med':
-                    currentMeasure = pat.PhotoResponseListMeasurer.getMedSuitability(item.photoResponses, {questionIndex: parseInt(currentSortMode[13], 10)});
+                    currentMeasure = 1000*pat.PhotoResponseListMeasurer.getMedSuitability(responsesWithoutPhotoProblems, {questionIndex: parseInt(currentSortMode[13], 10)});
                     break;
 
                 case 'agreement':
-	                currentMeasure = pat.PhotoResponseListMeasurer.getAgreement(item.photoResponses);
+	                currentMeasure = 1000*pat.PhotoResponseListMeasurer.getAgreement(responsesWithoutPhotoProblems);
 	                break;
 
                 case 'entropy':
-                    currentMeasure = pat.PhotoResponseListMeasurer.getWeightedEntropy(item.photoResponses);
+                    currentMeasure = 1000*pat.PhotoResponseListMeasurer.getWeightedEntropy(responsesWithoutPhotoProblems);
                     break;
 
                 case 'duration-avg':
-	                currentMeasure = pat.PhotoResponseListMeasurer.getAvgDuration(item.photoResponses);
+	                currentMeasure = 1000*pat.PhotoResponseListMeasurer.getAvgDuration(responsesWithoutPhotoProblems);
 	                break;
 	                
 	            case 'duration-med':
-	                currentMeasure = pat.PhotoResponseListMeasurer.getMedDuration(item.photoResponses);
+	                currentMeasure = 1000*pat.PhotoResponseListMeasurer.getMedDuration(responsesWithoutPhotoProblems);
 	                break;
 	            
 	            case 'source':
@@ -306,7 +309,7 @@ $.widget('pat.binfolist', {
 	                break;
 
 	            case 'luminance':
-                    currentMeasure = item.luminance;
+                    currentMeasure = item.luminance * 100;
                     break;
 
 	            case 'time-of-day':
@@ -321,17 +324,24 @@ $.widget('pat.binfolist', {
 	                throw new Error('Unknown sort mode ' + currentSortMode + ' in sort order ');
 	            }
 	            
-	            if (currentIsDescending) {
-	                currentMeasure *= -1;
-	            } else {
-	                currentMeasure *= 1; // avoid having nulls
-	            }
+	            currentMeasure = currentMeasure *= 1; // avoid having nulls
 	            if (isNaN(currentMeasure)) {
 	                currentMeasure = 0; // avoid having NaNs
 	            }
+	            // Normalising
+	            if (currentMeasure > 0x10000) {
+	                currentMeasure = 0x10000;
+	            } else if (currentMeasure < 1 && currentMeasure != 0) {
+	                currentMeasure = 1;
+	            }
 	            
+	            // Reversing if needed
+                if (currentIsDescending) {
+                    currentMeasure *= -1;
+                }
+
 	            measure = measure * 0x10000 + currentMeasure;
-	            
+
 	            // Once items are sorted by id, all further measuring is skipped as it's pointless
 	            if (currentSortMode == 'id')
 	                break;

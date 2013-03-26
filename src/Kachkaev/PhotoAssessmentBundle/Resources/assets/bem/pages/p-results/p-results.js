@@ -38,13 +38,19 @@ var COLORSCHEME_PHOTO_COMPLETED = {
 };
 var COLORSCHEME_PHOTO_LUMINANCE = {
         0: d3.scale.linear()
-            .domain([0, SMALL_NUMBER, 0.5, 10])
+            .domain([0, SMALL_NUMBER, 0.1, 5])
             .range(['#eee', 'hsl(265, 31%, 35%)', 'hsl(0, 0, 65%)', 'rgb(255,255,204)'])
             .clamp(true)
             ,
         1: d3.scale.linear()
-            .domain([0, SMALL_NUMBER, 1, 10])
-            .range(['#eee', 'hsl(265, 31%, 35%)', 'hsl(0, 0, 65%)', 'hsl(64, 39%, 78%)'])
+            .domain([0, 1])
+            .range(['#F7D9D9', '#F7D9D9'])
+            .clamp(true)
+};
+var COLORSCHEME_PHOTO_SOURCE = {
+        'flickr': '#000000',
+        'panoramio': '#ff0000',
+        'geograph': '#00ff00'
 };
 
 $(function(){
@@ -275,7 +281,6 @@ $(function(){
 
                         'suitability-med',
                         'suitability-q0-med',
-                        'suitability-q0-med',
                         'suitability-q1-med',
                         'suitability-q2-med',
                         'suitability-q3-med',
@@ -293,14 +298,15 @@ $(function(){
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
             customizeItem: function($item, id, data, options) {
-                if (options.viewModeBackgroundVariable == 2) {
-                    $item.css('backgroundColor', COLORSCHEME_PHOTO_LUMINANCE[data.status](data.luminance));
-                } else if (options.viewModeBackgroundVariable == 1) {
+                if (options.viewModeBackgroundVariable == 1) {
                     $item.css('backgroundColor', COLORSCHEME_PHOTO_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                } else if (options.viewModeBackgroundVariable == 2) {
+                    $item.css('backgroundColor', COLORSCHEME_PHOTO_LUMINANCE[data.status](data.luminance));
+                } else if (options.viewModeBackgroundVariable == 3) {
+                    $item.css('backgroundColor', COLORSCHEME_PHOTO_SOURCE[data.source]);
                 }
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
-                $item.addClass('source_' + data.source);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
     
@@ -520,6 +526,7 @@ $(function(){
 
         case 49:
         case 50:
+        case 51:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                 updateState({infolistViewModeBackgroundVariable: key - 48});
                 return false;

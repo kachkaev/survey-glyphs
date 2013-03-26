@@ -99,3 +99,17 @@ pat.getAnswerSeq = function(question) {
 };
 //pat.config.flatLinesInTimeScaling = true;
 //pat.config.applyPaddingToTimeBaseline = false;
+
+pat.config.lang = {};
+
+pat.config.lang.hintQuestions = {
+        'qIsRealPhoto': 'real photo',
+        'qIsOutdoors': 'outdoors',
+        'qTimeOfDay': 'daytime',
+        'qSubjectTemporal': 'subject temporal',
+        'qSubjectPeople': 'people',
+        'qIsByPedestrian': 'by pedestrian',
+        'qIsSpaceAttractive': 'attractive'
+   };
+
+

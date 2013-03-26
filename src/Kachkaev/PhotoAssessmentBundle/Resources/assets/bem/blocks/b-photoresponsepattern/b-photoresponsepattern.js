@@ -13,16 +13,6 @@ var LANG_HINT_ANSWERS = {
        'qTimeOfDay': [[0, 'day'], [1, 'twilight'], [2, 'night'], [-1, 'hard to say'], [null, 'N/A']]
 };
 
-var LANG_HINT_QUESTIONS = {
-         'qIsRealPhoto': 'real photo',
-         'qIsOutdoors': 'outdoors',
-         'qTimeOfDay': 'daytime',
-         'qSubjectTemporal': 'subject temporal',
-         'qSubjectPeople': 'people',
-         'qIsByPedestrian': 'by pedestrian',
-         'qIsSpaceAttractive': 'attractive'
-    };
-
 var LANG_HINT_RESPONSE = ' selected';
 var LANG_HINT_RESPONSES = ' selected';
 var LANG_HINT_WITH = ' with ';
@@ -102,7 +92,7 @@ $.widget('ui.bphotoresponsepattern', {
 		        if (eventData.questionId !== undefined && eventData.answerId !== undefined) {
 		            var question = w.options.questions[eventData.questionId];
                     hintTextChunks.push(LANG_HINT_WITH);
-		            hintTextChunks.push(LANG_HINT_QUESTIONS[question]);
+		            hintTextChunks.push(pat.config.lang.hintQuestions[question]);
 		            hintTextChunks.push(LANG_HINT_QAJOINT);
 		            var langHintAnswers = LANG_HINT_ANSWERS[question] || LANG_HINT_ANSWERS['_default'];
 		            var answer = pat.getAnswerSeq(question)[eventData.answerId];
