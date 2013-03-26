@@ -4,61 +4,64 @@ pat.config.apiBaseURL = (document.URL.indexOf('p_app_dev.php') != -1) ? '/p_app_
 
 pat.config.answerSequencesLength = 7;
 pat.config.answerSequences = {};
+// pat.config.gridMode = 'standard';
+pat.config.gridMode = 'purpose-oriented';
 
-/* 
-pat.config.answerSequences['_default'] = [
-          0,    // no
-          -42,
-          -1,   // hard to say
-          -43,
-          1,    // yes
-          -44,
-          null  // n/a
-      ];
-
- // Special case: time of day
- pat.config.answerSequences['qTimeOfDay'] = [
-         2,    // night
-         1,    // twilight
-         -1,   // hard to say
-         -42,
-         0,    // day
-         -43,
-         null  // n/a
-     ];
-*/
-pat.config.answerSequences['_default'] = [
-         1,    // yes
-         -42,
-         -1,   // hard to say
-         -43,
-         0,    // no
-         -44,
-         null  // n/a
-     ];
-
-// Reversed questions
-pat.config.answerSequences['qSubjectTemporal'] = [
-        0,    // no
-        -42,
-        -1,   // hard to say
-        -43,
-        1,    // yes
-        -44,
-        null  // n/a
-    ];
-pat.config.answerSequences['qSubjectPeople'] = pat.config.answerSequences['qSubjectTemporal'];
-
-// Special case: time of day
-pat.config.answerSequences['qTimeOfDay'] = [
-        0,    // day
-        1,    // twilight
-        -1,   // hard to say
-        -42,
-        2,    // night
-        -43,
-        null  // n/a
-    ];
+if (pat.config.gridMode == 'standard') {
+    pat.config.answerSequences['_default'] = [
+              0,    // no
+              -42,
+              -1,   // hard to say
+              -43,
+              1,    // yes
+              -44,
+              null  // n/a
+          ];
+    
+     // Special case: time of day
+     pat.config.answerSequences['qTimeOfDay'] = [
+             2,    // night
+             1,    // twilight
+             -1,   // hard to say
+             -42,
+             0,    // day
+             -43,
+             null  // n/a
+         ];
+} else {
+    pat.config.answerSequences['_default'] = [
+             1,    // yes
+             -42,
+             -1,   // hard to say
+             -43,
+             0,    // no
+             -44,
+             null  // n/a
+         ];
+    
+    // Reversed questions
+    pat.config.answerSequences['qSubjectTemporal'] = [
+            0,    // no
+            -42,
+            -1,   // hard to say
+            -43,
+            1,    // yes
+            -44,
+            null  // n/a
+        ];
+    pat.config.answerSequences['qSubjectPeople'] = pat.config.answerSequences['qSubjectTemporal'];
+    
+    // Special case: time of day
+    pat.config.answerSequences['qTimeOfDay'] = [
+            0,    // day
+            1,    // twilight
+            -1,   // hard to say
+            -42,
+            2,    // night
+            -43,
+            null  // n/a
+        ];
+}
 
 pat.config.answerNA = null;
 
@@ -94,5 +97,5 @@ pat.config.dependentQuestionDisabling = {
 pat.getAnswerSeq = function(question) {
     return pat.config.answerSequences[question] || pat.config.answerSequences['_default'];
 };
-pat.config.flatLinesInTimeScaling = true;
-pat.config.applyPaddingToTimeBaseline = false;
+//pat.config.flatLinesInTimeScaling = true;
+//pat.config.applyPaddingToTimeBaseline = false;

@@ -13,7 +13,7 @@ class PhotoStat extends AbstractStandardEntity
     protected $standardProperties = ["responsesCount_UNANSWERED",
             "responsesCount_INCOMPLETE", "responsesCount_COMPLETE",
             "responsesCount_PHOTO_PROBLEM", "medianDuration"];
-    protected $standardGetters = ["user", "timestamp"];
+    protected $standardGetters = ["photo", "timestamp"];
     
     /**
      * @ORM\ManyToOne(targetEntity="Photo", inversedBy="stats")

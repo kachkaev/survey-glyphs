@@ -14,8 +14,9 @@ $.widget('pat.binfolist', {
 
         viewModeShowThumbnails: false,
         viewModeShowProblems: false,
-        viewModeShowUnread: false,
+        viewModeShowUnchecked: false,
         viewModeTimeScaling: false,
+        viewModeBackgroundVariable: 1,
         height: 200,
         
         customizeItem: null,  // function
@@ -38,6 +39,7 @@ $.widget('pat.binfolist', {
 			};
 		this.w = w;
 
+		w.$indexOutOf = $('<div/>').addClass('b-infolist__index-out-of');
         w.$percentage = $('<div/>').addClass('b-infolist__percentage');
 		w.$soPickersContainer = $('<ul/>').addClass("b-infolist__sopickers-container").disableSelection();
 		w.$soPickersControls = $('<ul/>').addClass("b-infolist__sopickers-controls").disableSelection();
@@ -95,15 +97,20 @@ $.widget('pat.binfolist', {
             setTimeout(function() {
                 if (w.mouseId === id)
                     return;
+                var itemsTotal = _.size(w.$itemsMap);
                 if (id === null) {
                     w.$percentage.text('');
+                    w.$indexOutOf.text(itemsTotal);
                 } else {
-                    var itemsTotal = _.size(w.$itemsMap);
+                    
                     var currentIndex = w.$itemsMap[id].index();
-                    w.$percentage.text(Math.floor((currentIndex + 1)/itemsTotal*100) + '%');
+                    w.$indexOutOf.text((currentIndex + 1) + ' / ' + itemsTotal);
+                    w.$percentage.html(Math.floor((currentIndex + 1)/itemsTotal*100) + '&thinsp;%');
                 }
             }, 20);
 		};
+		w.mouseId = -42;
+		triggerMouseoveritemWithDelay(null);
 		
 		//// Hover over
 		var onItemHoverOver = function() {
@@ -180,7 +187,7 @@ $.widget('pat.binfolist', {
 		    }
 		});
 		
-		w.$element.append(w.$percentage, w.$soPickersContainer, w.$soPickersControls, w.$items, w.$hint);
+		w.$element.append(w.$indexOutOf, w.$percentage, w.$soPickersContainer, w.$soPickersControls, w.$items, w.$hint);
 		
 		// Thumbnail rendering queue gets updated when scrolling has stopped
 		// (we want to first render the thumbnails that are within the view)  
@@ -199,7 +206,7 @@ $.widget('pat.binfolist', {
         w._self._applySortOrderOrModes(true);
         w._self._applyViewModeShowThumbnails();
         w._self._applyViewModeShowProblems();
-        w._self._applyViewModeShowUnread();
+        w._self._applyViewModeShowUnchecked();
         w._self._updateHintPos();
 	},
 	
@@ -246,8 +253,8 @@ $.widget('pat.binfolist', {
                     currentMeasure = -item.status;
                     break;
                     
-	            case 'unread':
-	                currentMeasure = item.isUnread ? -1 : 0;
+	            case 'unchecked':
+	                currentMeasure = item.isUnchecked ? -1 : 0;
 	                break;
 
 	            case 'suitability-avg':
@@ -417,7 +424,7 @@ $.widget('pat.binfolist', {
 
 		var idsToUpdate = ids;
 		if (!_.isArray(idsToUpdate)) {
-		    idsToUpdate = _.keys(w.options.items);
+		    idsToUpdate = _.map(w.options.items, function(item){return item.id;});
 		}
 		
         var oldScrollTop = w.$items.scrollTop();
@@ -425,7 +432,9 @@ $.widget('pat.binfolist', {
         if (_.isFunction(w.options.customizeItem)) {
             _.each(idsToUpdate, function(id) {
                 var $item = w.$itemsMap[id];
-                w.options.customizeItem($item, id, w.itemsMap[id], w.options);
+                if (!_.isUndefined($item)) {
+                    w.options.customizeItem($item, id, w.itemsMap[id], w.options);
+                }
             });
         }
         w.$items.appendTo(w.$element);
@@ -510,10 +519,10 @@ $.widget('pat.binfolist', {
         w.$element.toggleClass('b-infolist_problems_disabled', !w.options.viewModeShowProblems);
     },
 
-    _applyViewModeShowUnread: function() {
+    _applyViewModeShowUnchecked: function() {
         var w = this.w;
-        w.$element.toggleClass('b-infolist_unread_enabled',   w.options.viewModeShowUnread);
-        w.$element.toggleClass('b-infolist_unread_disabled', !w.options.viewModeShowUnread);
+        w.$element.toggleClass('b-infolist_unchecked_enabled',   w.options.viewModeShowUnchecked);
+        w.$element.toggleClass('b-infolist_unchecked_disabled', !w.options.viewModeShowUnchecked);
     },
 
     _applyViewModeTimeScaling: function() {
@@ -526,6 +535,10 @@ $.widget('pat.binfolist', {
 
         });
         this._resortRenderingQueue();
+    },
+
+    _applyViewModeBackgroundVariable: function() {
+        this.updateItems();
     },
 
     _updateHintUsingMouseData: function() {
@@ -630,11 +643,14 @@ $.widget('pat.binfolist', {
         case 'viewModeShowProblems':
             this._applyViewModeShowProblems();
             break;
-        case 'viewModeShowUnread':
-            this._applyViewModeShowUnread();
+        case 'viewModeShowUnchecked':
+            this._applyViewModeShowUnchecked();
             break;
         case 'viewModeTimeScaling':
             this._applyViewModeTimeScaling();
+            break;
+        case 'viewModeBackgroundVariable':
+            this._applyViewModeBackgroundVariable();
             break;
         }
         

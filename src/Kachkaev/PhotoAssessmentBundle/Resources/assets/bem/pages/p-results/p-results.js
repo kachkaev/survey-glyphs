@@ -22,11 +22,11 @@ var SMALL_NUMBER = 0.00000001;
 
 var COLORSCHEME_USER_COMPLETED = {
         0: d3.scale.linear()
-            .domain([0, SMALL_NUMBER, USER_SPECTRUM_MAX/2, USER_SPECTRUM_MAX])
-            .range(['#ebf7fa', '#c0e0e8', '#7ab1bf', '#428696']),
+            .domain([0, SMALL_NUMBER, USER_SPECTRUM_MAX])
+            .range(['#ebf7fa', '#c0e0e8', '#428696']),
         1: d3.scale.linear()
             .domain([0, SMALL_NUMBER, USER_SPECTRUM_MAX])
-            .range(['#faeeee', '#F7D9D9', '#d88282'])
+            .range(['#fbe3e2', '#F7D9D9', '#cf827c'])
 };
 var COLORSCHEME_PHOTO_COMPLETED = {
         0: d3.scale.linear()
@@ -34,7 +34,7 @@ var COLORSCHEME_PHOTO_COMPLETED = {
             .range(['#ebfaef', '#c0e8c2', '#7abf8a', '#429756']),
         1: d3.scale.linear()
             .domain([0, SMALL_NUMBER, PHOTO_SPECTRUM_MAX])
-            .range(['#faeeee', '#F7D9D9', '#d88282'])
+            .range(['#fbe3e2', '#F7D9D9', '#d88282'])
 };
 var COLORSCHEME_PHOTO_LUMINANCE = {
         0: d3.scale.linear()
@@ -76,7 +76,8 @@ $(function(){
         photoId: null,
         infolistViewModeShowThumbnails: false,
         infolistViewModeShowProblems: true,
-        infolistViewModeShowUnread: true
+        infolistViewModeShowUnchecked: true,
+        infolistViewModeBackgroundVariable: 0
     };
     
     if (localStorage[LOCALSTORAGE_STATE]) {
@@ -183,17 +184,17 @@ $(function(){
        });
     });
     
-    // Update users' "unread" property
+    // Update users' "unchecked" property
     _.each(data.users, function(user) {
         var statusCheckedAt = user.statusCheckedAt; 
         if (!user.statusCheckedAt) {
-            user.isUnread = true;
+            user.isUnchecked = true;
             return;
         }
-        user.isUnread = false;
+        user.isUnchecked = false;
         _.each(user.photoResponses, function(photoResponse) {
             if (photoResponse.submittedAt > statusCheckedAt) {
-                user.isUnread = true;
+                user.isUnchecked = true;
                 return false;
             }
         });
@@ -213,7 +214,7 @@ $(function(){
             success: function(ajaxData) {
                 data.status = ajaxData.response.new_value;
                 if (data.type == 'user')
-                    data.isUnread = false;
+                    data.isUnchecked = false;
                 $infoList.binfolist('updateItems', [data.id]);
             },
             error: function() {
@@ -290,10 +291,13 @@ $(function(){
             sortOrder: stateContainer.state.photoSortOrder,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
-            viewModeShowUnread: stateContainer.state.infolistViewModeShowUnread,
-            customizeItem: function($item, id, data) {
-                $item.css('backgroundColor', COLORSCHEME_PHOTO_LUMINANCE[data.status](data.luminance));
-                //$item.css('backgroundColor', COLORSCHEME_PHOTO_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+            viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
+            customizeItem: function($item, id, data, options) {
+                if (options.viewModeBackgroundVariable == 2) {
+                    $item.css('backgroundColor', COLORSCHEME_PHOTO_LUMINANCE[data.status](data.luminance));
+                } else if (options.viewModeBackgroundVariable == 1) {
+                    $item.css('backgroundColor', COLORSCHEME_PHOTO_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                }
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
                 $item.addClass('source_' + data.source);
@@ -322,7 +326,7 @@ $(function(){
                         'completed',
                         'problems',
                         'exclusion',
-                        'unread',
+                        'unchecked',
                         'duration-avg',
                         'duration-med',
                         'agreement',
@@ -332,7 +336,7 @@ $(function(){
             sortOrder: stateContainer.state.userSortOrder,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
-            viewModeShowUnread: stateContainer.state.infolistViewModeShowUnread,
+            viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
             customizeItem: function($item, id, data, options) {
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                     return false;
@@ -341,7 +345,7 @@ $(function(){
                 $item.addClass('status_' + data.status);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
-                $item.toggleClass('unread', data.isUnread);
+                $item.toggleClass('unchecked', data.isUnchecked);
                 
                 var hint = 'User ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
                 if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
@@ -405,7 +409,7 @@ $(function(){
         
         // Mark user as "read" after some time if selected item does not get change quickly
         var userStatus = user.status;
-        if (user.isUnread) {
+        if (user.isUnchecked) {
             setTimeout(function() {
                 if ($bUserInfoList.binfolist('option','selectedItemId') == userId && userStatus == user.status) {
                     setStatusFunction($bUserInfoList, user, user.status);
@@ -510,9 +514,20 @@ $(function(){
 
     $(document.body).bind("keydown", function(event) {
         var key = event.keyCode || event.which;
-        // console.log('key pressed', key);
+        //console.log('key pressed', key);
         
         switch (key) {
+
+        case 49:
+        case 50:
+            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                updateState({infolistViewModeBackgroundVariable: key - 48});
+                return false;
+            } else {
+                return;
+            }
+
+        // ESC to unselect 
         case 27:
             updateState({userId: null, photoId: null});
             return false;
@@ -526,10 +541,10 @@ $(function(){
                 return;
             }
 
-        // u for toggling unread state in lists
+        // u for toggling unchecked state in lists
         case 85:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                updateState({infolistViewModeShowUnread: !stateContainer.state.infolistViewModeShowUnread});
+                updateState({infolistViewModeShowUnchecked: !stateContainer.state.infolistViewModeShowUnchecked});
                 return false;
             } else {
                 return;
@@ -612,8 +627,9 @@ $(function(){
             height: stateContainer.state.infolistHeight,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
-            viewModeShowUnread: stateContainer.state.infolistViewModeShowUnread,
-            viewModeTimeScaling: stateContainer.state.timeScaling
+            viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
+            viewModeTimeScaling: stateContainer.state.timeScaling,
+            viewModeBackgroundVariable: stateContainer.state.infolistViewModeBackgroundVariable
         });
 
         $bUserInfoList .binfolist('option', {
@@ -623,8 +639,9 @@ $(function(){
             height: stateContainer.state.infolistHeight,
             viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
-            viewModeShowUnread: stateContainer.state.infolistViewModeShowUnread,
-            viewModeTimeScaling: stateContainer.state.timeScaling
+            viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
+            viewModeTimeScaling: stateContainer.state.timeScaling,
+            viewModeBackgroundVariable: stateContainer.state.infolistViewModeBackgroundVariable
         });
         
         $bothPhotoresponsePatterns.bphotoresponsepattern('option', {

@@ -113,6 +113,9 @@ class DefaultController extends Controller
             throw new NotFoundHttpException();
         }
         
+        $minPhotoId = $this->container->getParameter('pat.results.show_test_photo') ? -1 : 0;
+        $maxSubmittedAt = $this->container->getParameter('pat.results.max_submitted_at') ?: 0xFFFFFFFF;  
+        
     	$em = $this->get("doctrine.orm.entity_manager");
     	
     	// Get all photos
@@ -127,7 +130,7 @@ class DefaultController extends Controller
             "dateTaken"          => "int",
             "luminance"          => "double",
     	];
-        $photosStmt = $em->getConnection()->query(sprintf("SELECT %s FROM Photo where id > 0 ORDER BY id", implode(',', array_keys($photosColumnTypes))));
+        $photosStmt = $em->getConnection()->query(sprintf("SELECT %s FROM Photo where id >= %d ORDER BY id", implode(',', array_keys($photosColumnTypes)), $minPhotoId));
         $photosStmt->execute();
         $photosArray = $photosStmt->fetchAll(\PDO::FETCH_ASSOC);
         // Put the test photo (id = -1) to the end of the list
@@ -171,7 +174,7 @@ class DefaultController extends Controller
             "submissionCount"    => "int",
             "submittedAt"        => "int",
     	];
-        $photoResponsesStmt = $em->getConnection()->query(sprintf("SELECT %s FROM PhotoResponse WHERE status != 0 && photoId >= 0 ORDER BY id", implode(',', array_keys($photoResponsesColumnTypes))));
+        $photoResponsesStmt = $em->getConnection()->query(sprintf('SELECT %s FROM PhotoResponse WHERE status != 0 && photoId >= %d && submittedAt < %d ORDER BY id', implode(',', array_keys($photoResponsesColumnTypes)), $minPhotoId, $maxSubmittedAt));
         $photoResponsesStmt->execute();
         $photoResponsesArray = $photoResponsesStmt->fetchAll(\PDO::FETCH_ASSOC);
         $photoResponsesCollection = [];
