@@ -328,9 +328,12 @@ $.widget('pat.binfolist', {
 	            if (isNaN(currentMeasure)) {
 	                currentMeasure = 0; // avoid having NaNs
 	            }
-	            // Normalising
-	            if (currentMeasure > 0x10000) {
-	                currentMeasure = 0x10000;
+	            // Normalising (0, 1-65536)
+	            if (currentMeasure > 0x8000) {
+//	                if (item.id == 142 || item.id == 396 || item.id == 524) {
+//	                    console.log('!!!', item.id, currentMeasure);
+//	                }
+	                currentMeasure = 0x8000;
 	            } else if (currentMeasure < 1 && currentMeasure != 0) {
 	                currentMeasure = 1;
 	            }
@@ -341,12 +344,13 @@ $.widget('pat.binfolist', {
                 }
 
 	            measure = measure * 0x10000 + currentMeasure;
+//	            if (item.id == 142 || item.id == 396 || item.id == 524)
+//	                console.log(item.id, currentMeasure, measure);
 
 	            // Once items are sorted by id, all further measuring is skipped as it's pointless
 	            if (currentSortMode == 'id')
 	                break;
 	        };
-	        
 	        return measure;
 	    });
 	    
