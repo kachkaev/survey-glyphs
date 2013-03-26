@@ -20,7 +20,7 @@ class StatsManager
         $timestamp = $this->validateTimestamp($timestamp, false);
 
         // Getting data
-        $queryPhotoResponses = "SELECT pr, user FROM KachkaevPhotoAssessmentBundle:PhotoResponse pr LEFT JOIN pr.user user WHERE pr.submittedAt <= $timestamp AND user.status = 0";
+        $queryPhotoResponses = "SELECT pr, user, photo FROM KachkaevPhotoAssessmentBundle:PhotoResponse pr LEFT JOIN pr.photo photo LEFT JOIN pr.user user WHERE pr.submittedAt <= $timestamp AND user.status = 0";
         $photoResponses = $this->em->createQuery($queryPhotoResponses)
                 ->getResult();
 
@@ -40,33 +40,43 @@ class StatsManager
         // Extracting stats
         foreach ($photoResponses as $photoResponse) {
             $photoId = $photoResponse->getPhoto()->getId();
-            $userId = $photoResponse->getUser()->getId();
+            $userId  = $photoResponse->getUser()->getId();
 
             // Creating a stat entity for photo if it is new
             if (!array_key_exists($photoId, $photoStats)) {
                 $photoStats[$photoId] = array();
+                //$photoStats[$photoId]['photoId'] = $photoId;
                 $photoStats[$photoId]['entity'] = new PhotoStat(
                         $photoResponse->getPhoto(), $timestamp);
                 $photoStats[$photoId]['durations'] = array();
                 $photoStats[$photoId]['answers'] = array();
-
+                
                 foreach ($questions as $question) {
                     $photoStats[$photoId]['answers'][$question] = array();
                 }
             }
-
+            
             // Creating a stat entity for user if it is new
             if (!array_key_exists($userId, $userStats)) {
                 $userStats[$userId] = array();
+                //$userStats[$userId]['userId'] = $userId;
                 $userStats[$userId]['entity'] = new UserStat(
                         $photoResponse->getUser(), $timestamp);
                 $userStats[$userId]['durations'] = array();
             }
 
-            $photoStat = &$photoStats[$photoId];
-            $userStat = &$userStats[$userId];
+            //$photoStat =& $photoStats[$photoId];
+            //$userStat  =& $userStats[$userId];
+            $photoStat = $photoStats[$photoId];
+            $userStat  = $userStats[$userId];
             $photoStatEntity = $photoStat['entity'];
-            $userStatEntity = $userStat['entity'];
+            $userStatEntity  = $userStat['entity'];
+            
+//             echo $photoId.' '. $userId
+//                 . ($photoStat === null) . '.'
+//                 . ($userStat === null) . '.'
+//                 . ($photoStatEntity === null) . '.'
+//                 . ($userStatEntity === null) . "\n";
 
             $status = $photoResponse->getStatus();
             $statusAsString = PhotoResponseStatus::valueToString($status);
@@ -98,14 +108,17 @@ class StatsManager
                 array_push($photoStat['durations'], $duration);
                 array_push($userStat['durations'], $duration);
             }
+            
+            $photoStats[$photoId] = $photoStat;
+            $userStats[$userId] = $userStat;
         }
-
+        
         // Calculating aggregations
         //// PhotoStat
         foreach ($photoStats as $photoStat) {
-            $photoStat['entity']
-                    ->setMedianDuration(
-                            calculate_median($photoStat['durations']));
+             $photoStat['entity']
+                     ->setMedianDuration(
+                             calculate_median($photoStat['durations']));
         }
         //// UserStat
         foreach ($userStats as $userStat) {
@@ -114,14 +127,19 @@ class StatsManager
                             calculate_median($userStat['durations']));
         }
 
+        
         // Wiping off old stats
         $this->delete($timestamp);
 
         // Saving new stats
-        foreach ($photoStats as $photoStat) {
+        foreach ($photoStats as $photoId => $photoStat) {
+            //$photoId = $photoStat['photoId'];
+            //echo $photoId. "\t".$photoStat['entity']->getPhoto()->getId(). ($photoId != $photoStat['entity']->getPhoto()->getId() ? "\t!" : '') . "\n";
             $this->em->persist($photoStat['entity']);
         }
-        foreach ($userStats as $userStat) {
+        foreach ($userStats as $userId => $userStat) {
+            //$userId = $userStat['userId'];
+            //echo $userId. "\t".$userStat['entity']->getUser()->getId(). ($userId != $userStat['entity']->getUser()->getId() ? "\t!" : '') . "\n";
             $this->em->persist($userStat['entity']);
         }
         $this->em->flush();

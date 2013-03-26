@@ -37,7 +37,8 @@ class PhotoPrioritiesManager
         // Set priorities of photos that have complete responses to that value * -1 (photos with fewer responses get higher priority)
         $updatePriorityStmt = $this->em->getConnection()->prepare("UPDATE Photo SET priority = ? WHERE id = ?");
         foreach($photoStats as $photoStat) {
-            $priority = - ($photoStat->get('responsesCount_COMPLETE') + $photoStat->get('responsesCount_PHOTO_PROBLEM')); 
+            $photoProblemCount = $photoStat->get('responsesCount_PHOTO_PROBLEM');
+            $priority = - ($photoStat->get('responsesCount_COMPLETE') + ($photoProblemCount > 1 ? $photoProblemCount : 0)); 
             $updatePriorityStmt->bindValue(1, $priority);
             $updatePriorityStmt->bindValue(2, $photoStat->get('photo')->getId());
             $updatePriorityStmt->execute();
