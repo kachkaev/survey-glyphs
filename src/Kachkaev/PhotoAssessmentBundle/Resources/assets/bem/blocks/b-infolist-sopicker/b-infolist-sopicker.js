@@ -9,7 +9,7 @@ var LANG_SORT_MODES = {
         'id': 'id',
         'completed': 'completed',
         'problems': 'problems',
-        'exclusion': 'exclusion',
+        'status': 'status',
         'duration-avg': 'avg duration',
         'duration-med': 'med duration',
         'agreement': 'agreement (Fleiss Kappa)',

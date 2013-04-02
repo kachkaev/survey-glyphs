@@ -23,7 +23,7 @@ pat.PatternThumbnailGenerator = function(options) {
             },
         
         defaultBaselineStyle: {
-            strokeStyle: "#6273c0",
+            strokeStyle: "#c0d4f3",
             strokeWidth: 2,
             rounded: true
         }

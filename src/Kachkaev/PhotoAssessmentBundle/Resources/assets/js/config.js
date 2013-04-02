@@ -28,6 +28,16 @@ if (pat.config.gridMode == 'standard') {
              -43,
              null  // n/a
          ];
+     pat.config.questions = [
+                             'qIsRealPhoto',
+                             'qIsOutdoors',
+                             'qTimeOfDay',
+                             'qSubjectTemporal',
+                             'qSubjectPeople',
+                             'qIsByPedestrian',
+                             'qIsSpaceAttractive'
+                         ];
+
 } else {
     pat.config.answerSequences['_default'] = [
              1,    // yes
@@ -61,19 +71,19 @@ if (pat.config.gridMode == 'standard') {
             -43,
             null  // n/a
         ];
+    pat.config.questions = [
+                            'qIsRealPhoto',
+                            'qSubjectPeople',
+                            'qIsOutdoors',
+                            'qTimeOfDay',
+                            'qSubjectTemporal',
+                            'qIsByPedestrian',
+                            'qIsSpaceAttractive'
+                        ];
+
 }
 
 pat.config.answerNA = null;
-
-pat.config.questions = [
-         'qIsRealPhoto',
-         'qSubjectPeople',
-         'qIsOutdoors',
-         'qTimeOfDay',
-         'qSubjectTemporal',
-         'qIsByPedestrian',
-         'qIsSpaceAttractive'
-     ];
 
 pat.config.answers = {
         'qIsRealPhoto':       [-1, 0, 1],

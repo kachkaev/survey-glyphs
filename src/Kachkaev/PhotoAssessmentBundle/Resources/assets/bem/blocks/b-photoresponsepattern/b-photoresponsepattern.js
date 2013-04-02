@@ -6,6 +6,7 @@ var CANVAS_PADDING = [10, 20, 5, 4]; // top right bottom left
 var NODE_SIZE = 14;
 
 var ANIMATION_LENGTH = 750;
+var ANIMATION_EASING = 'in-out';
 
 // Mapping answers with strings to be displayed in the interface
 var LANG_HINT_ANSWERS = {
@@ -182,7 +183,7 @@ $.widget('ui.bphotoresponsepattern', {
             .append('svg:line')
          .each(function(d) {
              var s = d3.select(this);
-             s.transition().duration(0);
+             s.transition().duration(0).ease(ANIMATION_EASING);
              s.style('opacity', null);
              if (d[0] == 'h') {
                  s.attr({
@@ -204,12 +205,14 @@ $.widget('ui.bphotoresponsepattern', {
              var o = s.style('opacity');
              s.style('opacity', 0)
                  .transition().duration(ANIMATION_LENGTH)
+                 .ease(ANIMATION_EASING)
                  .style('opacity', o);
          });
          
          // Exit
          d3gridElem.exit()
             .transition().duration(ANIMATION_LENGTH)
+            .ease(ANIMATION_EASING)
             .style('opacity',0)
             .remove();
         
@@ -267,7 +270,7 @@ $.widget('ui.bphotoresponsepattern', {
             return selection.attr('d', function(d) {
                 var pts = [];
                 if (w.options.timeScaling && pat.config.flatLinesInTimeScaling) {
-                    var y = (w.options.questions.length - 1) * Math.max(0, d.duration);
+                    var y = (w.options.questions.length - 1) * Math.min(w.options.maxTime, Math.max(0, d.duration));
                     for (var i = 0; i < 7; ++i) {
                         pts.push([i, y]);
                     }
@@ -300,6 +303,7 @@ $.widget('ui.bphotoresponsepattern', {
                 var neededO = s.style('opacity');
                 s.style('opacity', currentO);
                 s.transition().duration(ANIMATION_LENGTH)
+                    .ease(ANIMATION_EASING)
                     .style('opacity', neededO)
                     .call(updateResponseLine);
 
@@ -317,6 +321,7 @@ $.widget('ui.bphotoresponsepattern', {
             var o = s.style('opacity');
             s.style('opacity', 0)
                 .transition().duration(ANIMATION_LENGTH)
+                .ease(ANIMATION_EASING)
                 .style('opacity', o)
                 .call(updateResponseLine);
         });
@@ -324,6 +329,7 @@ $.widget('ui.bphotoresponsepattern', {
 	    // Exit
         d3responseLine.exit()
            .transition().duration(ANIMATION_LENGTH)
+           .ease(ANIMATION_EASING)
            .style('opacity',0)
            .remove();
        

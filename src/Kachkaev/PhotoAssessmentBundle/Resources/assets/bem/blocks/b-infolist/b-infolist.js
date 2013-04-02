@@ -252,7 +252,7 @@ $.widget('pat.binfolist', {
 	                currentMeasure = item.photoResponseCounts[pat.PhotoResponseStatus.PHOTO_PROBLEM];
 	                break;
 
-                case 'exclusion':
+                case 'status':
                     currentMeasure = -item.status;
                     break;
                     

@@ -94,7 +94,12 @@ pat.PhotoResponseListMeasurer.getMedSuitability = function(photoResponses, optio
  */
 pat.PhotoResponseListMeasurer.getAgreement = function(photoResponses, options) {
     var matrix = this._getAnswerIndexMatrix(photoResponses, true, options);
-    var fleissKappaValue = pat.math.fleissKappa(matrix);
+    var fleissKappaValue = 1;
+    try {
+        fleissKappaValue = pat.math.fleissKappa(matrix); 
+    } catch (e) {
+        console.log(e);
+    }
     return -fleissKappaValue;
 };
 

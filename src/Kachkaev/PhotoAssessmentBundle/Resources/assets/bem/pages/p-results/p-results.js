@@ -48,9 +48,24 @@ var COLORSCHEME_PHOTO_LUMINANCE = {
             .clamp(true)
 };
 var COLORSCHEME_PHOTO_SOURCE = {
-        'flickr': '#000000',
-        'panoramio': '#ff0000',
-        'geograph': '#00ff00'
+        'flickr': '#FBB4AE',
+        'panoramio': '#B3CDE3',
+        'geograph': '#CCEBC5'
+};
+
+var c1 = '#ffffff';
+var c2 = '#01665E';
+
+var COLORSCHEME_PHOTO_TIME = {
+        0: d3.scale.linear()
+            .domain([-100500, 0, 60*3, 60*9, 60*12, 60*15, 60*21, 60*24]) // Minutes
+            .range(['#eee', c2, c2, c1, c1, c1, c2, c2])
+            .clamp(true)
+            ,
+        1: d3.scale.linear()
+            .domain([0, 60*3, 60*9, 60*12, 60*15, 60*21, 60*24]) // Minutes
+            .range(['#300', '#300', '#f99', '#f99', '#f99', '#300', '#300'])
+            .clamp(true)
 };
 
 $(function(){
@@ -118,6 +133,10 @@ $(function(){
     // If there is a question answer restricting another question,
     // make sure that dependent questions are all answered as N/A
     _.each(data.photoResponses, function(photoResponse) {
+        // DEBUG
+//        if (photoResponse.duration < 1) {
+//            photoResponse.duration = Math.floor(10 + Math.random()*10);
+//        }
         _.each(pat.config.questions, function(question) {
            if (pat.config.dependentQuestionDisabling[question]) {
                var answerAsString = '' + photoResponse[question];
@@ -264,7 +283,7 @@ $(function(){
                         'id',
                         'completed',
                         'problems',
-                        'exclusion',
+                        'status',
                         'duration-avg',
                         'duration-med',
                         'agreement',
@@ -304,6 +323,11 @@ $(function(){
                     $item.css('backgroundColor', COLORSCHEME_PHOTO_LUMINANCE[data.status](data.luminance));
                 } else if (options.viewModeBackgroundVariable == 3) {
                     $item.css('backgroundColor', COLORSCHEME_PHOTO_SOURCE[data.source]);
+                } else if (options.viewModeBackgroundVariable == 4) {
+                    var timeTaken = data.dateTaken % 86400 / 60;
+                    if (data.source == 'geograph')
+                        timeTaken = -100500;
+                    $item.css('backgroundColor', COLORSCHEME_PHOTO_TIME[data.status](timeTaken));
                 }
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
@@ -331,7 +355,7 @@ $(function(){
                         'id',
                         'completed',
                         'problems',
-                        'exclusion',
+                        'status',
                         'unchecked',
                         'duration-avg',
                         'duration-med',
@@ -527,6 +551,7 @@ $(function(){
         case 49:
         case 50:
         case 51:
+        case 52:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                 updateState({infolistViewModeBackgroundVariable: key - 48});
                 return false;
