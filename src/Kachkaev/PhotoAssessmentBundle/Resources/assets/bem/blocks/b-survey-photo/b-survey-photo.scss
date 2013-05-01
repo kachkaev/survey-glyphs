@@ -119,3 +119,17 @@
 .b-survey-photo_small .b-survey-photo__timestampanduser {
 	float: right;
 }
+
+.b-survey-photo__faces {
+	position: absolute;
+    top: 15px;
+    left: 15px;
+    overflow: hidden;
+}
+.b-survey-photo__face {
+    position: absolute;
+    border: 1px solid;
+}
+.b-survey-photo__face:hover {
+	background: rgba(255,255,255, .2);
+}

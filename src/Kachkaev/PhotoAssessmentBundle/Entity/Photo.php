@@ -66,6 +66,14 @@ class Photo extends AbstractStandardEntity {
 	 */
 	protected $dateTaken;
 	
+	/** @ORM\Column(type="string", nullable=true)
+	 */
+	protected $faces500;
+	
+	/** @ORM\Column(type="string", nullable=true)
+	 */
+	protected $faces640;
+	
 	public function getId() {    
         return $this->id;        
     }

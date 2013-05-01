@@ -68,6 +68,18 @@ var COLORSCHEME_PHOTO_TIME = {
             .clamp(true)
 };
 
+var COLORSCHEME_PHOTO_FACES = {
+        0: d3.scale.linear()
+            .domain([0, 1])
+            .range(['#fff', '#9EBCDA'])
+            .clamp(true)
+            ,
+        1: d3.scale.linear()
+            .domain([0, 1])
+            .range(['#f00', '#000'])
+            .clamp(true)
+};
+
 $(function(){
     if (!$(document.body).hasClass("p-results"))
         return;
@@ -328,6 +340,8 @@ $(function(){
                     if (data.source == 'geograph')
                         timeTaken = -100500;
                     $item.css('backgroundColor', COLORSCHEME_PHOTO_TIME[data.status](timeTaken));
+                } else if (options.viewModeBackgroundVariable == 5) {
+                    $item.css('backgroundColor', COLORSCHEME_PHOTO_FACES[data.status](Math.max(0,data.faces500.length - 9)));
                 }
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
@@ -552,6 +566,7 @@ $(function(){
         case 50:
         case 51:
         case 52:
+        case 53:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                 updateState({infolistViewModeBackgroundVariable: key - 48});
                 return false;

@@ -122,4 +122,6 @@ pat.config.lang.hintQuestions = {
         'qIsSpaceAttractive': 'attractive'
    };
 
-
+/* color brewer set 2 7 */
+pat.config.faceAlgorithmNames = ['opencvfront', 'opencvfrontalt', 'opencvfrontalt2', 'opencvfrontalttree', 'opencvprofile'];
+pat.config.faceAlgorithmColors = ['#66C2A5', '#FC8D62','#8DA0CB', '#E78AC3', '#A6D854', '#FFD92F', '#E5C494'];

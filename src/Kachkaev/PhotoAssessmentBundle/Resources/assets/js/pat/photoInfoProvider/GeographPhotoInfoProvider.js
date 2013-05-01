@@ -15,6 +15,7 @@ pat.photoInfoProvider.GeographPhotoInfoProvider.prototype._doLoad = function(par
 			status: 0,
 			imgSrc: this._baseURL + params.photoId + ".jpg",
 			lon: params.lon,
+	        faces500: params.faces500,
 			lat: params.lat
 	};
 	

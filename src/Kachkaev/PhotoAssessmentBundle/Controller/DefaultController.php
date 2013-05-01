@@ -129,6 +129,7 @@ class DefaultController extends Controller
             "priority"           => "int",
             "dateTaken"          => "int",
             "luminance"          => "double",
+            "faces500"           => "string",
     	];
         $photosStmt = $em->getConnection()->query(sprintf("SELECT %s FROM Photo where id >= %d ORDER BY id", implode(',', array_keys($photosColumnTypes)), $minPhotoId));
         $photosStmt->execute();
