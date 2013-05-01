@@ -107,7 +107,7 @@ $(function(){
         maxTime: DEFAULT_MAX_TIME,
         userId: null,
         photoId: null,
-        infolistViewModeShowThumbnails: false,
+        infolistViewModeThumbnailType: pat.InfolistThumbnailGenerator.TYPE_RESPONSES,
         infolistViewModeShowProblems: true,
         infolistViewModeShowUnchecked: true,
         infolistViewModeBackgroundVariable: 0
@@ -325,9 +325,10 @@ $(function(){
 
                     ],
             sortOrder: stateContainer.state.photoSortOrder,
-            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeThumbnailType: stateContainer.state.infolistViewModeThumbnailType,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
+            viewModeBackgroundVariable: stateContainer.state.infolistViewModeBackgroundVariable,
             customizeItem: function($item, id, data, options) {
                 if (options.viewModeBackgroundVariable == 1) {
                     $item.css('backgroundColor', COLORSCHEME_PHOTO_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
@@ -378,13 +379,16 @@ $(function(){
                     ],
 
             sortOrder: stateContainer.state.userSortOrder,
-            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeThumbnailType: stateContainer.state.infolistViewModeThumbnailType,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
+            viewModeBackgroundVariable: stateContainer.state.infolistViewModeBackgroundVariable,
             customizeItem: function($item, id, data, options) {
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                     return false;
-                $item.css('backgroundColor', COLORSCHEME_USER_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                if (options.viewModeBackgroundVariable == 1) {
+                    $item.css('backgroundColor', COLORSCHEME_USER_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                }
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
@@ -562,13 +566,23 @@ $(function(){
         
         switch (key) {
 
+        // t for toggling thumbnails (previews)
         case 49:
         case 50:
+            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                updateState({infolistViewModeBackgroundVariable: 0, infolistViewModeThumbnailType: (key == 49) ? pat.InfolistThumbnailGenerator.TYPE_RESPONSES : pat.InfolistThumbnailGenerator.TYPE_FACES});
+                return false;
+            } else {
+                return;
+            }
+
         case 51:
         case 52:
         case 53:
+        case 54:
+        case 55:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                updateState({infolistViewModeBackgroundVariable: key - 48});
+                updateState({infolistViewModeBackgroundVariable: key - 50, infolistViewModeThumbnailType: pat.InfolistThumbnailGenerator.TYPE_NONE});
                 return false;
             } else {
                 return;
@@ -596,16 +610,6 @@ $(function(){
             } else {
                 return;
             }
-
-        // t for toggling thumbnails (previews)
-        case 84:
-            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                updateState({infolistViewModeShowThumbnails: !stateContainer.state.infolistViewModeShowThumbnails});
-                return false;
-            } else {
-                return;
-            }
-
 
         // r to reset interface
         case 82:
@@ -665,14 +669,14 @@ $(function(){
     });
     
     var onStateUpdated = function() {
-        //console.log('onStateUpdated', stateContainer.state);
+        console.log('onStateUpdated', stateContainer.state);
         
         $bPhotoInfoList .binfolist('option', {
             selectedItemId: stateContainer.state.photoId,
             sortOrder: stateContainer.state.photoSortOrder,
             
             height: stateContainer.state.infolistHeight,
-            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeThumbnailType: stateContainer.state.infolistViewModeThumbnailType,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
             viewModeTimeScaling: stateContainer.state.timeScaling,
@@ -684,7 +688,7 @@ $(function(){
             sortOrder: stateContainer.state.userSortOrder,
             
             height: stateContainer.state.infolistHeight,
-            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeThumbnailType: stateContainer.state.infolistViewModeThumbnailType,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
             viewModeTimeScaling: stateContainer.state.timeScaling,
