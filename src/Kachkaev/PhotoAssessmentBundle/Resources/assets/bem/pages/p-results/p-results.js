@@ -695,7 +695,7 @@ $(function(){
     });
     
     var onStateUpdated = function() {
-        console.log('onStateUpdated', stateContainer.state);
+        //console.log('onStateUpdated', stateContainer.state);
         
         $bPhotoInfoList .binfolist('option', {
             selectedItemId: stateContainer.state.photoId,
