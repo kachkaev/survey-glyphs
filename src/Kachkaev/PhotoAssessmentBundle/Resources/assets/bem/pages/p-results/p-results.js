@@ -178,6 +178,7 @@ $(function(){
         user.photoResponses = [];
     });
     
+    var faceBundleNames = ['faces500'];
     _.each(data.photos, function(photo) {
         photo.type = 'photo';
         photo.photoResponseCounts = {};
@@ -187,6 +188,31 @@ $(function(){
         photo.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] = 0;
         photo.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] = 0;
         photo.photoResponses = [];
+        
+        // Parse face rects in photos
+        for (var i = faceBundleNames.length - 1; (faceBundleName = faceBundleNames[i]) && i >= 0; --i) {
+            var unparsedFacesAsArray = photo[faceBundleName].split('|');
+            var parsedFaces = {count: 0};
+            
+            for(var j = unparsedFacesAsArray.length - 1; j >= 0; --j) {
+                var currentAlgorithmEncodedFacesAsStr = unparsedFacesAsArray[j];
+                parsedFaces[j] = [];
+                if (!currentAlgorithmEncodedFacesAsStr || currentAlgorithmEncodedFacesAsStr == 'x') {
+                    continue;
+                }
+                var currentAlgorithmEncodedFaces = currentAlgorithmEncodedFacesAsStr.match(/.{2}/g);
+                for (var faceCount = currentAlgorithmEncodedFaces.length/4 - 1; faceCount >= 0; --faceCount) {
+                    var faceCenterX = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 0], 16) / 255;
+                    var faceCenterY = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 1], 16) / 255;
+                    var faceWidth   = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 2], 16) / 255;
+                    var faceHeight  = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 3], 16) / 255;
+                    parsedFaces[j].push([faceCenterX, faceCenterY, faceWidth, faceHeight]);
+                    parsedFaces.count++;
+                }
+            }
+            
+            photo[faceBundleName] = parsedFaces;
+        }
     });
     
     _.each(data.photoResponses, function(photoResponse) {

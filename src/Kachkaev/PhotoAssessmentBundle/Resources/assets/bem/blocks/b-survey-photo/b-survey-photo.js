@@ -19,6 +19,9 @@ $.widget('ui.bsurveyphoto', {
 		
 		w.lastInfoHeight = defaultHeight;
 		
+		w.faceAlgorithmNames = _.keys(pat.config.faceAlgorithms);
+		w.faceAlgorithmOptions = _.values(pat.config.faceAlgorithms);
+		
 		w.$info = $('<a class="b-survey-photo__info" target="_blank"/>');
 		w.$infoPhoto = $('<img class="b-survey-photo__photo" />').appendTo(w.$info);
 		w.$infoTitle = $('<span class="b-survey-photo__title" />');//.appendTo(w.$info);
@@ -72,26 +75,23 @@ $.widget('ui.bsurveyphoto', {
 			if (info.faces500) {
 			    w.$infoFaces.hide();
 			    w.$infoFaces.empty();
-                var faces500 = info.faces500.split('|');
-                for(var i = faces500.length - 1; i >=0; --i) {
-                    var currentAlgorithmEncodedFacesAsStr = faces500[i];
-                    if (!currentAlgorithmEncodedFacesAsStr || currentAlgorithmEncodedFacesAsStr == 'x') {
-                        continue;
-                    }
-                    var currentAlgorithmEncodedFaces = currentAlgorithmEncodedFacesAsStr.match(/.{2}/g);
-                    for (var faceCount = currentAlgorithmEncodedFaces.length/4 - 1; faceCount >= 0; --faceCount) {
-                        var faceCenterX = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 0], 16) / 255;
-                        var faceCenterY = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 1], 16) / 255;
-                        var faceWidth   = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 2], 16) / 255;
-                        var faceHeight  = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 3], 16) / 255;
+                var faces500 = info.faces500;
+                for(var i = 0; faces500[i] != undefined; ++i) {
+                    var currentAlgorithmFaces = faces500[i];
+                    for (var j = currentAlgorithmFaces.length - 1; j >= 0; --j) {
+                        var currentFaceCoordinate = currentAlgorithmFaces[j];
+                        var faceAlgorithmName = w.faceAlgorithmNames[i];
+                        if (!w.faceAlgorithmOptions[i].visible) {
+                            continue;
+                        }
                         w.$infoFaces.append($('<div class="b-survey-photo__face"/>')
-                                .attr('title', pat.config.faceAlgorithmNames[i])
+                                .attr('title', faceAlgorithmName)
                                 .css({
-                            'border-color': pat.config.faceAlgorithmColors[i],
-                            'left': (faceCenterX - faceWidth /2) * 100 + '%',
-                            'top':  (faceCenterY - faceHeight/2) * 100 + '%',
-                            'width': faceWidth * 100 + '%',
-                            'height': faceHeight * 100 + '%'
+                            'border-color': w.faceAlgorithmOptions[i].colorPreview,
+                            'left': (currentFaceCoordinate[0] - currentFaceCoordinate[2] / 2) * 100 + '%',
+                            'top':  (currentFaceCoordinate[1] - currentFaceCoordinate[3] / 2) * 100 + '%',
+                            'width':  currentFaceCoordinate[2] * 100 + '%',
+                            'height': currentFaceCoordinate[3] * 100 + '%'
                         }));
                     }
                 };

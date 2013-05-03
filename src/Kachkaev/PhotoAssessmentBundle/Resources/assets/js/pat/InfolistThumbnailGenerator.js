@@ -13,6 +13,8 @@ pat.InfolistThumbnailGenerator = function(options) {
         width: 17,
         height: 17,
         canvasPadding: [2, 2, 2, 2],
+        canvasPaddingForFaces: [1, 1, 1, 1],
+        canvasPaddingForFaces: [0, 0, 0, 0],
         threads: 30,
         backgroundColor: null,
 
@@ -35,6 +37,10 @@ pat.InfolistThumbnailGenerator = function(options) {
         threads.push([false, $('<canvas/>').attr('width', this.options.width, 'height', this.options.height)]);
     }
     
+    this.faceAlgorithmNames = _.keys(pat.config.faceAlgorithms);
+    this.faceAlgorithmOptions = _.values(pat.config.faceAlgorithms);
+    
+
     this.queue = [];
 
     var drawingIntervalId = null;
@@ -159,45 +165,35 @@ pat.InfolistThumbnailGenerator.prototype._render = function(thread, queueElement
         
     // Drawing face rectangles
     } else if (optionType == pat.InfolistThumbnailGenerator.TYPE_FACES) {
+        var currentPadding = this.options.canvasPaddingForFaces;
+        
         thread[1].drawRect({
-            fillStyle: "rgba(0, 0, 0, 0.2)",
-            x: this._normalToX(0), y: this._normalToY(0),
-            width: this._normalToX(1, true),
-            height: this._normalToY(1, true),
+            fillStyle: "rgba(0, 0, 0, 0.05)",
+            x: this._normalToX(0, false, currentPadding), y: this._normalToY(0, false, currentPadding),
+            width: this._normalToX(1, true, currentPadding),
+            height: this._normalToY(1, true, currentPadding),
             fromCenter: false
           });
 
-        var faces500 = queueElement[0].faces500 ? queueElement[0].faces500.split('|') : null;
+        var faces500 = queueElement[0].faces500;
         if (faces500) {
-            for(var i = faces500.length - 1; i >=0; --i) {
-                var currentAlgorithmEncodedFacesAsStr = faces500[i];
-                if (!currentAlgorithmEncodedFacesAsStr || currentAlgorithmEncodedFacesAsStr == 'x') {
+            for(var i = 0; faces500[i] != undefined; ++i) {
+                var currentAlgorithmFaces = faces500[i];
+                if (!obj.faceAlgorithmOptions[i].visible) {
                     continue;
                 }
-                var currentAlgorithmEncodedFaces = currentAlgorithmEncodedFacesAsStr.match(/.{2}/g);
-                for (var faceCount = currentAlgorithmEncodedFaces.length/4 - 1; faceCount >= 0; --faceCount) {
-                    var faceCenterX = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 0], 16) / 255;
-                    var faceCenterY = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 1], 16) / 255;
-                    var faceWidth   = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 2], 16) / 255;
-                    var faceHeight  = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 3], 16) / 255;
+                for (var j = currentAlgorithmFaces.length - 1; j >= 0; --j) {
+                    var currentFaceCoordinate = currentAlgorithmFaces[j];
                     
                     thread[1].drawRect({
-                        fillStyle: "rgba(0, 0, 0, 0.2)",
-                        x: this._normalToX(faceCenterX), y: this._normalToY(faceCenterY),
-                        width: this._normalToX(faceWidth, true),
-                        height: this._normalToY(faceHeight, true),
+                        strokeStyle: obj.faceAlgorithmOptions[i].colorThumbnail,
+                        strokeWidth: 1,
+                        fillStyle: obj.faceAlgorithmOptions[i].colorThumbnail,
+                        x: obj._normalToX(currentFaceCoordinate[0], false, currentPadding), y: obj._normalToY(currentFaceCoordinate[1], false, currentPadding),
+                        width: obj._normalToX(currentFaceCoordinate[2], true, currentPadding),
+                        height: obj._normalToY(currentFaceCoordinate[3], true, currentPadding),
                         fromCenter: true
-                      });
-                    
-    //                w.$infoFaces.append($('<div class="b-survey-photo__face"/>')
-    //                        .attr('title', pat.config.faceAlgorithmNames[i])
-    //                        .css({
-    //                    'border-color': pat.config.faceAlgorithmColors[i],
-    //                    'left': (faceCenterX - faceWidth /2) * 100 + '%',
-    //                    'top':  (faceCenterY - faceHeight/2) * 100 + '%',
-    //                    'width': faceWidth * 100 + '%',
-    //                    'height': faceHeight * 100 + '%'
-    //                }));
+                    });
                 }
             }
         }
@@ -237,10 +233,11 @@ pat.InfolistThumbnailGenerator.prototype._qaToCoords = function(photoResponse, q
 };
 })();
 
-pat.InfolistThumbnailGenerator.prototype._normalToX = function(value, lengthOnly) {
-    return (lengthOnly ? 0 : this.options.canvasPadding[1]) + (this.options.width - this.options.canvasPadding[1] - this.options.canvasPadding[3]) * value;
+
+pat.InfolistThumbnailGenerator.prototype._normalToX = function(value, lengthOnly, padding) {
+    return (lengthOnly ? 0 : padding[1]) + (this.options.width - padding[1] - padding[3]) * value;
 };
     
-pat.InfolistThumbnailGenerator.prototype._normalToY = function(value, lengthOnly) {
-    return (lengthOnly ? 0 : this.options.canvasPadding[0]) + (this.options.height - this.options.canvasPadding[0] - this.options.canvasPadding[2]) * value;
+pat.InfolistThumbnailGenerator.prototype._normalToY = function(value, lengthOnly, padding) {
+    return (lengthOnly ? 0 : padding[0]) + (this.options.height - padding[0] - padding[2]) * value;
 };
