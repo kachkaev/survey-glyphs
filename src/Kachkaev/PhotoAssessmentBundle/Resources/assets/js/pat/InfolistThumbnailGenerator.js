@@ -167,18 +167,23 @@ pat.InfolistThumbnailGenerator.prototype._render = function(thread, queueElement
     } else if (optionType == pat.InfolistThumbnailGenerator.TYPE_FACES) {
         var currentPadding = this.options.canvasPaddingForFaces;
         
+        var optionSize = queueElement[1] ? queueElement[1].size : 0;
+        if (!optionSize) {
+            optionSize = 500;
+        }
+
         thread[1].drawRect({
             fillStyle: "rgba(0, 0, 0, 0.05)",
-            x: this._normalToX(0, false, currentPadding), y: this._normalToY(0, false, currentPadding),
-            width: this._normalToX(1, true, currentPadding),
-            height: this._normalToY(1, true, currentPadding),
+            x: obj._normalToX(0, false, currentPadding), y: obj._normalToY(0, false, currentPadding),
+            width: obj._normalToX(1, true, currentPadding),
+            height: obj._normalToY(1, true, currentPadding),
             fromCenter: false
           });
 
-        var faces500 = queueElement[0].faces500;
-        if (faces500) {
-            for(var i = 0; faces500[i] != undefined; ++i) {
-                var currentAlgorithmFaces = faces500[i];
+        var faces = queueElement[0]['faces'+optionSize];
+        if (faces) {
+            for(var i = 0; faces[i] != undefined; ++i) {
+                var currentAlgorithmFaces = faces[i];
                 if (!obj.faceAlgorithmOptions[i].visible) {
                     continue;
                 }

@@ -178,7 +178,7 @@ $(function(){
         user.photoResponses = [];
     });
     
-    var faceBundleNames = ['faces500'];
+    var faceBundleNames = ['faces240','faces500','faces1024'];
     _.each(data.photos, function(photo) {
         photo.type = 'photo';
         photo.photoResponseCounts = {};

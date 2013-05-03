@@ -68,11 +68,19 @@ class Photo extends AbstractStandardEntity {
 	
 	/** @ORM\Column(type="string", nullable=true)
 	 */
+	protected $faces240;
+	
+	/** @ORM\Column(type="string", nullable=true)
+	 */
 	protected $faces500;
 	
 	/** @ORM\Column(type="string", nullable=true)
 	 */
 	protected $faces640;
+	
+	/** @ORM\Column(type="string", nullable=true)
+	 */
+	protected $faces1024;
 	
 	public function getId() {    
         return $this->id;        
