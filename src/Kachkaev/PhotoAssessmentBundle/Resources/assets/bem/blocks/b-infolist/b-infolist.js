@@ -687,6 +687,38 @@ $.widget('pat.binfolist', {
         
 //        console.log("event: change" + key.toLowerCase(), {newValue: value, prevValue: prev});
         w._self._trigger("change" + key.toLowerCase(), null, {newValue: value, prevValue: prev});
-    }
+        
+    },
+
+    getNextItemId: function() {
+        var w = this.w;
+        if (w.options.selectedItemId === null) {
+            return null;
+        }
+        var itemIndex = null;
+        _.each(w.options.items, function(item, index) {
+            if (item.id == w.options.selectedItemId) {
+                itemIndex = index;
+                return false;
+            }
+        });
+        if (itemIndex === null) {
+            return null;
+        }
+        var newItemIndex;
+        if (itemIndex == w.options.items.length - 1) {
+            newItemIndex = 0;
+        } else {
+            newItemIndex = itemIndex + 1;
+        }
+        return  w.options.items[newItemIndex].id;
+    },
+
+    selectNextItem: function() {
+        var nextItem = this.getNextItemId();
+        if (nextItem !== null) {
+            this._setOption('selectedItemId', this.getNextItemId());
+        }
+	}
 });
 }());

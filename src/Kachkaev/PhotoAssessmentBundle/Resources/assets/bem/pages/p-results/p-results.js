@@ -516,6 +516,13 @@ $(function(){
             $bPhoto.bsurveyphoto('showPhotoInfo', info);
         });
         
+        // preload the next id
+        var nextPhotoId = $bPhotoInfoList.binfolist('getNextItemId');
+        var nextPhoto = data.photos[nextPhotoId];
+        photoInfoProviders[nextPhoto.source].load(nextPhoto, function(info) {
+            if (info.imgSrc)
+                $.preload(info.imgSrc);
+        });
         updateState({photoId: photoId});
     });
 
@@ -666,7 +673,15 @@ $(function(){
         case 32:
             updateState({maxTime: DEFAULT_MAX_TIME});
             return false;
-            
+        
+        // Enter / shift + enter to go to the next photo / user
+        case KEY_ENTER:
+            if (event.metaKey || event.ctrlKey || event.altKey) {
+                return;
+            }
+            var $infoListToIterate = event.shiftKey ? $bUserInfoList : $bPhotoInfoList; 
+            $infoListToIterate.binfolist('selectNextItem');
+        
         case KEY_PLUS:
         case KEY_EQUALS:
         case KEY_EQUALS2:
