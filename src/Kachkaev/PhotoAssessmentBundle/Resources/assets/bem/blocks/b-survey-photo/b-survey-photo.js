@@ -7,13 +7,19 @@
  */
 $.widget('ui.bsurveyphoto', {
 
+    options: {
+        facesAttributeName: null,
+        editableFacesGroupIndex: null
+    },
+    
 	_init: function() {
 		var preloaderImg = '/static/i/b-survey-photo__loader.gif';
 		var defaultHeight = 400;
 		
 		var w = {
 				_self: this,
-				$element: this.element
+				$element: this.element,
+				options: this.options
 			};
 		this.w = w;
 		
@@ -22,13 +28,29 @@ $.widget('ui.bsurveyphoto', {
 		w.faceAlgorithmNames = _.keys(pat.config.faceAlgorithms);
 		w.faceAlgorithmOptions = _.values(pat.config.faceAlgorithms);
 		
-		w.$info = $('<a class="b-survey-photo__info" target="_blank"/>');
+		if (_.isNumber(w.options.editableFacesGroupIndex)) {
+		    w.$info = $('<div class="b-survey-photo__info" />');
+		} else {
+		    w.$info = $('<a class="b-survey-photo__info" target="_blank"/>');
+		}
 		w.$infoPhoto = $('<img class="b-survey-photo__photo" />').appendTo(w.$info);
-		w.$infoTitle = $('<span class="b-survey-photo__title" />');//.appendTo(w.$info);
-		w.$infoTimestampanduser = $('<span class="b-survey-photo__timestampanduser" />').appendTo(w.$info);
 		w.$infoLogo = $('<span class="b-survey-photo__logo" />');//.appendTo(w.$info);
-		w.$infoFaces = $('<span class="b-survey-photo__faces" />').appendTo(w.$info);
-		
+		w.$infoFacesWrap = $('<span class="b-survey-photo__faces-wrap" />').appendTo(w.$info);
+		w.$infoFaces     = $('<span class="b-survey-photo__faces" />').appendTo(w.$infoFacesWrap);
+		w.$infoTitle = $('<span class="b-survey-photo__title" />');//.appendTo(w.$info);
+
+		if (_.isNumber(w.options.editableFacesGroupIndex)) {
+		    w.$infoTimestampanduser = $('<span class="b-survey-photo__timestampanduser" />').appendTo(w.$info);
+		    w.$infoFaces.addClass('b-survey-photo__faces_editable');
+		    w.$infoFaces.boxer({
+		        stop: function(event, ui) {
+		            w.addFace(ui.box);
+		           }
+		    });
+		} else {
+		    w.$infoTimestampanduser = $('<span class="b-survey-photo__timestampanduser" />').appendTo(w.$info);
+		}
+		 
 		w.$loading = $('<div class="b-survey-photo__loading"/>').append($('<img/>', {src: preloaderImg}));
 		$.preload([preloaderImg]);
 		
@@ -36,27 +58,104 @@ $.widget('ui.bsurveyphoto', {
 		
 		setInterval(function(){
 		        w._self._resizeFacesIfNeeded();
-		    }, 500);
+		    }, 100);
+		
+		
+		 w.deleteFace = function(event) {
+		        var normalisedFaceCoordinates = $(event.currentTarget).data('coordinates');
+		        var allFaces = w.$infoFaces.data('faces');
+		        var currentFaces = allFaces[w.options.editableFacesGroupIndex];
+		        var photoId = w.$infoFaces.data('photoId');
+		        
+		        currentFaces = _.without(currentFaces, normalisedFaceCoordinates);
+		        
+		        w._self._trigger('faceschanged', null, {
+		            photoInternalId: w.$infoFaces.data('photoInternalId'),
+		            facesAttributeName: w.options.facesAttributeName,
+		            group: w.options.editableFacesGroupIndex,
+		            faces: currentFaces }
+		        );
+		    };
+		    
+		 w.addFace = function(box) {
+		     var allFaces = w.$infoFaces.data('faces');
+             var currentFaces = allFaces[w.options.editableFacesGroupIndex];
+             var photoId = w.$infoFaces.data('photoId');
+
+             var imageWidth = w.$infoFacesWrap.width();
+             var imageHeight = w.$infoFacesWrap.height();
+             var imageSize = Math.max(imageWidth, imageHeight);
+             
+             if (box.left < 0) {
+                 box.left = 0;
+             }
+             if (box.top < 0) {
+                 box.top = 0;
+             }
+             if (box.left + box.width > imageWidth) {
+                 box.width = imageWidth - box.left;
+             }
+             if (box.top + box.height > imageHeight) {
+                 box.height = imageHeight - box.top;
+             }
+             
+             var centeredBox = [
+                    box.left + box.width / 2,
+                    box.top + box.height / 2,
+                    box.width,
+                    box.height
+                 ];
+             
+             var normalisedFaceCoordinates256 = [
+                     Math.round(centeredBox[0]/imageSize * 255),
+                     Math.round(centeredBox[1]/imageSize * 255),
+                     Math.floor(centeredBox[2]/imageSize * 255),
+                     Math.floor(centeredBox[3]/imageSize * 255)
+                 ];
+             var normalisedFaceCoordinates = [
+                      normalisedFaceCoordinates256[0]/255,
+                      normalisedFaceCoordinates256[1]/255,
+                      normalisedFaceCoordinates256[2]/255,
+                      normalisedFaceCoordinates256[3]/255
+                  ];
+             currentFaces.push(normalisedFaceCoordinates);
+             w._self._trigger('faceschanged', null, {
+                 photoInternalId: w.$infoFaces.data('photoInternalId'),
+                 facesAttributeName: w.options.facesAttributeName,
+                 group: w.options.editableFacesGroupIndex,
+                 faces: currentFaces }
+             );
+		 };
 	},
 
     _resizeFacesIfNeeded: function() {
         var w = this.w;
         
-        var maxDimension = Math.max(w.$infoPhoto.innerWidth(), w.$infoPhoto.innerHeight());
-        if (maxDimension != w.$infoFaces.width()) {
-            w.$infoFaces.width(maxDimension);
-            w.$infoFaces.height(maxDimension); 
+        var ifwWidth = w.$infoFacesWrap.width();
+        var ifwHeight = w.$infoFacesWrap.height();
+        var ipWidth = w.$infoPhoto.innerWidth();
+        var ipHeight = w.$infoPhoto.innerHeight();
+        
+        if (ifwWidth == ipHeight && ifwHeight == ipHeight) {
+            return;
         }
+        
+        w.$infoFacesWrap.width(ipWidth);
+        w.$infoFacesWrap.height(ipHeight);
+        
+        var maxDimension = Math.max(ipWidth, ipHeight);
+        w.$infoFaces.width(maxDimension);
+        w.$infoFaces.height(maxDimension); 
     },
 
     showNothing: function() {
-		this.w.$element.empty();
+		this.w.$element.children().detach();
 	},
 
 	showLoading: function() {
 		var w = this.w;
 		
-		w.$element.empty();
+		w.$element.children().detach();
 		w.$element.append(w.$loading);
 	},
 	
@@ -67,17 +166,21 @@ $.widget('ui.bsurveyphoto', {
 			w.$infoPhoto.attr('src', info.imgSrc);
 			w.$infoTitle.text('').text(info.title);
 			w.$infoTimestampanduser.text('').text(/*(info.timestamp ? info.timestamp + " " : "") + */"© " + info.user + ' (' + _.capitalize(info.source) + ')');
-			w.$info.attr('href', info.permalink);
+			if (_.isNumber(w.options.editableFacesGroupIndex)) {
+			    w.$infoTimestampanduser.attr('href', info.permalink);
+			} else {
+			    w.$info.attr('href', info.permalink);
+			}
 			w.$infoLogo.removeClass("flickr panoramio geograph picasa").addClass(info.source);
-			w.$element.empty();
+			w.$element.children().detach();
 			w.$element.append(w.$info);
 			w.lastInfoHeight = w.$info.height();
-			if (info.faces500) {
-			    w.$infoFaces.hide();
-			    w.$infoFaces.empty();
-                var faces500 = info.faces500;
-                for(var i = 0; faces500[i] != undefined; ++i) {
-                    var currentAlgorithmFaces = faces500[i];
+			if (w.options.facesAttributeName && info[w.options.facesAttributeName] != undefined) {
+			    w.$infoFacesWrap.hide();
+			    w.$infoFaces.children().detach();
+                var faces = info[w.options.facesAttributeName];
+                for(var i = 0; faces[i] != undefined; ++i) {
+                    var currentAlgorithmFaces = faces[i];
                     for (var j = currentAlgorithmFaces.length - 1; j >= 0; --j) {
                         var currentFaceCoordinate = currentAlgorithmFaces[j];
                         var faceAlgorithmName = w.faceAlgorithmNames[i];
@@ -85,6 +188,8 @@ $.widget('ui.bsurveyphoto', {
                             continue;
                         }
                         w.$infoFaces.append($('<div class="b-survey-photo__face"/>')
+                                .on('dblclick', w.deleteFace)
+                                .data('coordinates', currentFaceCoordinate)
                                 .attr('title', faceAlgorithmName)
                                 .css({
                             'border-color': w.faceAlgorithmOptions[i].colorPreview,
@@ -94,14 +199,16 @@ $.widget('ui.bsurveyphoto', {
                             'height': currentFaceCoordinate[3] * 100 + '%'
                         }));
                     }
-                };
-                w.$infoFaces.show();
+                }
+                w.$infoFaces.data('faces', info[w.options.facesAttributeName]);
+                w.$infoFaces.data('photoInternalId', info.internalId);
+                w.$infoFacesWrap.show();
 			} else {
-			    w.$infoFaces.hide();
+			    w.$infoFacesWrap.hide();
 			}
 			
 		} else {
-			w.$element.empty();
+			w.$element.children().detach();
 			w.$element.append(w.$error);
 		};
 	},

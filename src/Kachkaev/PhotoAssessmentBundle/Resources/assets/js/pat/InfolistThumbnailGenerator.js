@@ -169,7 +169,7 @@ pat.InfolistThumbnailGenerator.prototype._render = function(thread, queueElement
         
         var optionSize = queueElement[1] ? queueElement[1].size : 0;
         if (!optionSize) {
-            optionSize = 500;
+            optionSize = 'Manual';
         }
 
         thread[1].drawRect({

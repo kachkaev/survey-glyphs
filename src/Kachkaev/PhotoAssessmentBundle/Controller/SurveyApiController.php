@@ -187,27 +187,46 @@ class SurveyApiController extends Controller
         return $this->changeEntityStatus('Photo', $this->get('request'));
     }
     
-    function serializePhotoResponses($photoResponses) {
-    	// Serializing
-    	$serializedPhotoResponses = [];
-    	foreach ($photoResponses as $photoResponse) {
-    		$serializedPhotoResponse = [];
-    	
-    		$serializedPhotoResponse["id"] = $photoResponse->getId();
-    		foreach ($photoResponse->getSerializableProperties() as $property) {
-    			$serializedPhotoResponse [$property] = $photoResponse->get($property);
-    		}
-    		$photo = $photoResponse->getPhoto();
-    		$serializedPhoto = [];
-    		foreach ($photo->getSerializableProperties() as $property) {
-    			$p = $photo->get($property);
-    			if ($p !== null)
-    				$serializedPhoto[$property] = $photo->get($property);
-    		}
-    		$serializedPhotoResponse["photo"] = $serializedPhoto;
-    		$serializedPhotoResponses []= $serializedPhotoResponse;
-    	}
-    	return $serializedPhotoResponses;
+    /**
+     * @Route("/api/set_photo_facesmanual", name="pat_api_setphotofacesmanual", defaults={"_format"="json"})
+     * @Method({"GET", "POST"})
+     * #@Method({"POST"})
+	 * @Template()
+     */
+    function setPhotoFacesManualAction(Request $request)
+    {
+        $requestParameters = $request;
+        $backdoorSecret = $requestParameters->get('s');
+        $value = $requestParameters->get('value');
+        
+         
+        // Checking backdoor security
+        if ($backdoorSecret !== $this->container->getParameter('backdoor_secret')) {
+            throw new \InvalidArgumentException("Wrong value for backdoor_secret");
+        }
+         
+        // Checking status
+        $id     = $requestParameters->get('id');
+    
+        // Checking id and getting the entity
+        $em = $this->get("doctrine.orm.entity_manager");
+        $entity = $em->getRepository('KachkaevPhotoAssessmentBundle:Photo')->findOneById($id);
+        if (!$entity) {
+            throw new \InvalidArgumentException("Wrong value for id");
+        }
+    
+        // Saaving new value to the DB
+        $entity->setFacesManual($value);
+        $em->persist($entity);
+        $em->flush();
+         
+        $apiResponse = [
+            "response" => [
+            "status" => "ok",
+            ],
+        ];
+    
+        return new Response(json_encode($apiResponse));
     }
     
     protected function changeEntityStatus($entityName, Request $request)
@@ -263,5 +282,28 @@ class SurveyApiController extends Controller
         ];
         
         return new Response(json_encode($apiResponse));
+    }
+    
+    function serializePhotoResponses($photoResponses) {
+        // Serializing
+        $serializedPhotoResponses = [];
+        foreach ($photoResponses as $photoResponse) {
+            $serializedPhotoResponse = [];
+             
+            $serializedPhotoResponse["id"] = $photoResponse->getId();
+            foreach ($photoResponse->getSerializableProperties() as $property) {
+                $serializedPhotoResponse [$property] = $photoResponse->get($property);
+            }
+            $photo = $photoResponse->getPhoto();
+            $serializedPhoto = [];
+            foreach ($photo->getSerializableProperties() as $property) {
+                $p = $photo->get($property);
+                if ($p !== null)
+                    $serializedPhoto[$property] = $photo->get($property);
+            }
+            $serializedPhotoResponse["photo"] = $serializedPhoto;
+            $serializedPhotoResponses []= $serializedPhotoResponse;
+        }
+        return $serializedPhotoResponses;
     }
 }

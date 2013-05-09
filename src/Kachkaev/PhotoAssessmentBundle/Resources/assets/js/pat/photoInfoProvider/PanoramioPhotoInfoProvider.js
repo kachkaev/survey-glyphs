@@ -38,8 +38,11 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(pa
 			info.permalink = photo.getPhotoUrl();
 			info.title = photo.getPhotoTitle();
 			info.user = photo.getOwnerName();
-	        info.faces500 = params.faces500;
-			info.status = 0;
+            info.faces240 = params.faces240;
+            info.faces500 = params.faces500;
+            info.faces1024 = params.faces1024;
+	        info.internalId = params.internalId;
+            info.status = 0;
 			var pos = photo.getPosition();
 			if (pos) {
 				info.lon = pos.lng;

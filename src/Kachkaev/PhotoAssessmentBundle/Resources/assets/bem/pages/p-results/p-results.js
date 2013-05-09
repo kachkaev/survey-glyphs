@@ -178,8 +178,9 @@ $(function(){
         user.photoResponses = [];
     });
     
-    var faceBundleNames = ['faces240','faces500','faces1024'];
-    _.each(data.photos, function(photo) {
+    var faceBundleNames = ['faces240','faces500','faces1024', 'facesManual'];
+    _.each(data.photos, function(photo, id) {
+        photo.internalId = id;
         photo.type = 'photo';
         photo.photoResponseCounts = {};
         photo.photoResponseCounts[PHOTO_RESPONSE_ALL] = 0;
@@ -286,6 +287,20 @@ $(function(){
         });
     };
     
+    // Sends a new value of status for a photo / user / photoresponse to the server
+    var setManualFacesFunction = function(id, manualFaces) {
+        $.ajax({
+            url: pat.config.apiBaseURL + 'set_photo_facesmanual',
+            data: {s: backdoorSecret, id: id, value: manualFaces},
+            type: "POST",
+            success: function(ajaxData) {
+            },
+            error: function(data) {
+                alert('Problem updating faces: ' + data);
+            }
+        });
+    };
+
     // Toggles status function
     var toggleStatusFunction = function(event) {
         var $this = $(this);
@@ -368,7 +383,7 @@ $(function(){
                         timeTaken = -100500;
                     $item.css('backgroundColor', COLORSCHEME_PHOTO_TIME[data.status](timeTaken));
                 } else if (options.viewModeBackgroundVariable == 5) {
-                    $item.css('backgroundColor', COLORSCHEME_PHOTO_FACES[data.status](Math.max(0,data.faces500.length - 9)));
+                    $item.css('backgroundColor', COLORSCHEME_PHOTO_FACES[data.status](Math.max(0,data.faces.length - 9)));
                 }
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
@@ -456,13 +471,39 @@ $(function(){
     });
 
     //// Box with photo
-    var $bPhoto = $('.b-survey-photo').bsurveyphoto();
+    var $bPhoto = $('.b-survey-photo').bsurveyphoto({
+        facesAttributeName: 'facesManual',
+        editableFacesGroupIndex: 0
+    });
     
     
     // =====================================
     // Object Events
     // =====================================
 
+    $bPhoto.on('bsurveyphotofaceschanged', function (event, ui) {
+        data.photos[ui.photoInternalId][ui.facesAttributeName][ui.group] = ui.faces;
+
+        var photo = data.photos[ui.photoInternalId];
+        photoInfoProviders[photo.source].load(photo, function(info) {
+            $bPhoto.bsurveyphoto('showPhotoInfo', info);
+        });
+        
+        var encodedFaces = '';
+        _.each(ui.faces, function(face) {
+            encodedFaces +=
+                  (0x100 + Math.round(face[0] * 255)).toString(16).substr(-2)
+                + (0x100 + Math.round(face[1] * 255)).toString(16).substr(-2)
+                + (0x100 + Math.round(face[2] * 255)).toString(16).substr(-2)
+                + (0x100 + Math.round(face[3] * 255)).toString(16).substr(-2);
+        });
+        
+        $bPhotoInfoList.binfolist('updateItems', [ui.photoInternalId]);
+        
+        setManualFacesFunction(ui.photoInternalId, encodedFaces);
+
+    });
+    
     // When selected item is changed in the user info list
     $bUserInfoList.on('binfolistchangeselecteditemid', function(event, ui) {
         var userId = ui.newValue;

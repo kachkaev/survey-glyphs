@@ -98,38 +98,53 @@
 /* small version of the photo - on the results page */
 .b-survey-photo_small {
     float: right;
-    height: 300px;
-    padding: 10px 15px 15px;
+/*    height: 300px;
+*/    padding: 10px 15px 15px;
 }
 .b-survey-photo_small .b-survey-photo__photo {
     min-height: 100px;
     min-width: 100px;
-    max-width: 500px;
+/*    max-width: 500px;
     max-height: 215px;
-}
+*/}
 .b-survey-photo_small .b-survey-photo__loading {
     padding-top: 0px;
 }
 .b-survey-photo_small .b-survey-photo__error {
     padding-top: 0px;
     text-align: center;
-    width: 200px;
-}
+/*    width: 200px;
+*/}
 
 .b-survey-photo_small .b-survey-photo__timestampanduser {
 	float: right;
 }
-
-.b-survey-photo__faces {
-	position: absolute;
+.b-survey-photo__faces-wrap {
+    position: absolute;
     top: 15px;
     left: 15px;
     overflow: hidden;
 }
+
+.b-survey-photo__faces {
+    position: absolute;
+	top: 0px;
+    left: 0px;
+}
+
 .b-survey-photo__face {
     position: absolute;
     border: 1px solid;
+    cursor: pointer;
 }
 .b-survey-photo__face:hover {
 	background: rgba(255,255,255, .2);
+}
+
+.b-survey-photo__faces_editable  {
+	cursor:crosshair;
+}
+
+.b-survey-photo__faces_editable .b-survey-photo__face {
+	cursor: default;
 }

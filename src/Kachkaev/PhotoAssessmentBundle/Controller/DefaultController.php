@@ -132,6 +132,7 @@ class DefaultController extends Controller
             "faces240"           => "string",
             "faces500"           => "string",
             "faces1024"          => "string",
+            "facesManual"        => "string",
     	];
         $photosStmt = $em->getConnection()->query(sprintf("SELECT %s FROM Photo where id >= %d ORDER BY id", implode(',', array_keys($photosColumnTypes)), $minPhotoId));
         $photosStmt->execute();
