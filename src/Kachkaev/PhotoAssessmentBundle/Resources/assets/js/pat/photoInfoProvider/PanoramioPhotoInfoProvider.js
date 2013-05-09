@@ -41,6 +41,7 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(pa
             info.faces240 = params.faces240;
             info.faces500 = params.faces500;
             info.faces1024 = params.faces1024;
+            info.facesManual = params.facesManual;
 	        info.internalId = params.internalId;
             info.status = 0;
 			var pos = photo.getPosition();
