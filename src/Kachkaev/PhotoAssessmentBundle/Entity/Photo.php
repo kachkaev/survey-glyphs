@@ -66,23 +66,19 @@ class Photo extends AbstractStandardEntity {
 	 */
 	protected $dateTaken;
 	
-	/** @ORM\Column(type="string", nullable=true)
+	/** @ORM\Column(type="text", nullable=true)
 	 */
 	protected $faces240;
 	
-	/** @ORM\Column(type="string", nullable=true)
+	/** @ORM\Column(type="text", nullable=true)
 	 */
 	protected $faces500;
 	
-	/** @ORM\Column(type="string", nullable=true)
-	 */
-	protected $faces640;
-	
-	/** @ORM\Column(type="string", nullable=true)
+	/** @ORM\Column(type="text", nullable=true)
 	 */
 	protected $faces1024;
 	
-	/** @ORM\Column(type="string", nullable=true)
+	/** @ORM\Column(type="text", nullable=true)
 	 */
 	protected $facesManual;
 	
