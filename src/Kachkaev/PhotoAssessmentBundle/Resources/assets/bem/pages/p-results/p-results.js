@@ -472,8 +472,8 @@ $(function(){
 
     //// Box with photo
     var $bPhoto = $('.b-survey-photo').bsurveyphoto({
-        facesAttributeName: 'facesManual',
-        editableFacesGroupIndex: 0
+        facesAttributeName: pat.config.visibleFaceBundle,
+        editableFacesGroupIndex: pat.config.visibleFaceBundle == 'facesManual' ? 0 : null
     });
     
     

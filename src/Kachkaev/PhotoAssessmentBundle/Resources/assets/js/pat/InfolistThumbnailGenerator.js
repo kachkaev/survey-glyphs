@@ -168,8 +168,9 @@ pat.InfolistThumbnailGenerator.prototype._render = function(thread, queueElement
         var currentPadding = this.options.canvasPaddingForFaces;
         
         var optionSize = queueElement[1] ? queueElement[1].size : 0;
-        if (!optionSize) {
-            optionSize = 'Manual';
+        var facesBundle = pat.config.visibleFaceBundle;
+        if (optionSize) {
+            facesBundle = 'faces' + optionSize;
         }
 
         thread[1].drawRect({
@@ -180,7 +181,7 @@ pat.InfolistThumbnailGenerator.prototype._render = function(thread, queueElement
             fromCenter: false
           });
 
-        var faces = queueElement[0]['faces'+optionSize];
+        var faces = queueElement[0][facesBundle];
         if (faces) {
             for(var i = 0; faces[i] != undefined; ++i) {
                 var currentAlgorithmFaces = faces[i];
