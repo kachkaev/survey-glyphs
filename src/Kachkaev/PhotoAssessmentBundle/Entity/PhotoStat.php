@@ -57,90 +57,90 @@ class PhotoStat extends AbstractStandardEntity
     protected $responsesCount_PHOTO_PROBLEM = 0;
     
 
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsRealPhotoNormalizedAvg = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsRealPhotoNormalizedMed = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsRealPhotoNormalizedAgr = null;
 
 
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsOutdoorsNormalizedAvg = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsOutdoorsNormalizedMed = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsOutdoorsNormalizedAgr = null;
 
 
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qTimeOfDayNormalizedAvg = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qTimeOfDayNormalizedMed = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qTimeOfDayNormalizedAgr = null;
 
 
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qSubjectTemporalNormalizedAvg = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qSubjectTemporalNormalizedMed = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qSubjectTemporalNormalizedAgr = null;
 
 
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qSubjectPeopleNormalizedAvg = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qSubjectPeopleNormalizedMed = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qSubjectPeopleNormalizedAgr = null;
 
 
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsLocationCorrectNormalizedAvg = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsLocationCorrectNormalizedMed = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsLocationCorrectNormalizedAgr = null;
 
 
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsByPedestrianNormalizedAvg = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsByPedestrianNormalizedMed = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsByPedestrianNormalizedAgr = null;
 
 
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsSpaceAttractiveNormalizedAvg = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsSpaceAttractiveNormalizedMed = null;
-    /** @ORM\Column(type="integer", nullable=true)
+    /** @ORM\Column(type="float", nullable=true)
      */
     protected $qIsSpaceAttractiveNormalizedAgr = null;
     

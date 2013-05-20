@@ -1,5 +1,9 @@
 <?php
 namespace Kachkaev\PhotoAssessmentBundle;
+use Kachkaev\PhotoAssessmentBundle\Type\Status\UserStatus;
+
+use Kachkaev\PhotoAssessmentBundle\Type\Status\PhotoStatus;
+
 use Kachkaev\PhotoAssessmentBundle\Type\Status\PhotoResponseStatus;
 
 use Kachkaev\PhotoAssessmentBundle\Entity\UserStat;
@@ -10,6 +14,23 @@ class StatsManager
 {
     protected $em;
 
+    // Main principle of normalization: the bigger the number the less appropriate the photograph
+    protected $answerNormalizationMap = [
+            '_default'   => ['1' => 0, '0' => 1 , '-1' => 0.5, '' => 2],
+            'qTimeOfDay' => ['2' => 1, '1' => 0.75],
+            'qSubjectTemporary' => ['1' => 1, '0' => 0],
+            'qSubjectPeople' => ['1' => 1, '0' => 0]
+        ];
+    
+    protected $dependentQuestionDisabling = [
+        'qIsRealPhoto' => [
+                '0' => ['qIsOutdoors', 'qTimeOfDay', 'qTimeOfYear', 'qSubjectTemporal', 'qSubjectPeople', 'qIsLocationCorrect', 'qIsByPedestrian', 'qIsSpaceAttractive']
+            ],
+        'qIsOutdoors' => [
+                '0' => ['qDuringEvent', 'qTimeOfDay', 'qTimeOfYear', 'qSubjectTemporal', 'qIsLocationCorrect', 'qIsByPedestrian', 'qIsSpaceAttractive']
+            ]
+        ];
+    
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
@@ -53,6 +74,7 @@ class StatsManager
                 
                 foreach ($questions as $question) {
                     $photoStats[$photoId]['answers'][$question] = array();
+                    $photoStats[$photoId]['normalized_answers'][$question] = array();
                 }
             }
             
@@ -98,27 +120,88 @@ class StatsManager
                                     ->get('responsesCount_' . $statusAsString)
                                     + 1);
 
-            foreach ($questions as $question) {
-                $photoStat['answers'][$question][] = $photoResponse
-                        ->get($question);
+            // Adding the answer to the array of answers if the response status is ok as well
+            // as the user is not banned and photo is not rejected
+            if ($status == PhotoResponseStatus::COMPLETE
+                    && $photoStatEntity->getPhoto()->getStatus() == PhotoStatus::OK
+                    && $userStatEntity->getUser()->getStatus() == UserStatus::OK) {
+                
+                foreach ($questions as $question) {
+                    $answer = $photoResponse->get($question);
+                    
+                    // Check if the answer must be void because an answer to another question disables it
+                    // (a rare case when users check "attractive = yes", then choose "outdoors = no")
+                    foreach ($this->dependentQuestionDisabling as $disablerQuestionName => $disablerQuestionAnswers) {
+                        foreach ($disablerQuestionAnswers as $disablerQuestionAnswer => $disablingQuestions) {
+                            if ($photoResponse->get($disablerQuestionName) == $disablerQuestionAnswer) {
+                                if (in_array($question, $disablingQuestions)) {
+                                    $answer = null;
+                                    break 2;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // when questions are disabled they do not affect on the stats
+                    // e.g. someone answered ‘outdoors = yes’ and we are looking at ‘attractive = yes/no’
+                    //if ($answer === null) { 
+                    //    continue;
+                    // }
+                    $photoStat['answers'][$question][] = $answer;
+                    
+                    $answerAsStr = $answer === null ? '' : $answer.'';
+                    
+                    $normalizedAnswer = null;
+                    if (array_key_exists($question, $this->answerNormalizationMap)
+                            && array_key_exists($answerAsStr, $this->answerNormalizationMap[$question])) {
+                        $normalizedAnswer = $this->answerNormalizationMap[$question][$answerAsStr];
+                    } else {
+                        $normalizedAnswer = $this->answerNormalizationMap['_default'][$answerAsStr];
+                    }
+                    $photoStat['normalized_answers'][$question][] = $normalizedAnswer;
+                }
+    
+                $duration = $photoResponse->getDuration();
+                if ($duration) {
+                    array_push($photoStat['durations'], $duration);
+                    array_push($userStat['durations'], $duration);
+                }
+                
+                $photoStats[$photoId] = $photoStat;
+                $userStats[$userId] = $userStat;
             }
-
-            $duration = $photoResponse->getDuration();
-            if ($duration) {
-                array_push($photoStat['durations'], $duration);
-                array_push($userStat['durations'], $duration);
-            }
-            
-            $photoStats[$photoId] = $photoStat;
-            $userStats[$userId] = $userStat;
         }
         
         // Calculating aggregations
         //// PhotoStat
         foreach ($photoStats as $photoStat) {
-             $photoStat['entity']
-                     ->setMedianDuration(
+            $photoStatEntity = $photoStat['entity'];
+            $photo = $photoStatEntity->getPhoto();
+             
+            $photoStatEntity->setMedianDuration(
                              calculate_median($photoStat['durations']));
+            
+            if ($photo->getStatus() == PhotoStatus::OK) {
+                foreach ($questions as $question) {
+                    $questionAnswers = &$photoStat['normalized_answers'][$question];
+                    $avg = calculate_average($questionAnswers);
+                    $med = calculate_median($questionAnswers);
+                    $agr = null;
+                    if ($med !== null) {
+                        $agr = $med <= 0.5 ? 0 : ($med <= 1.5 ? 1 : 2);
+                    }
+                    $photoStat['entity']->set($question.'NormalizedAvg', $avg);
+                    $photoStat['entity']->set($question.'NormalizedMed', $med);
+                    $photoStat['entity']->set($question.'NormalizedAgr', $agr);
+                }
+                
+            } else {
+                foreach ($questions as $question) {
+                     $photoStatEntity->set($question.'NormalizedAvg', null);
+                     $photoStatEntity->set($question.'NormalizedMed', null);
+                     $photoStatEntity->set($question.'NormalizedAgr', null);
+                }
+            }
         }
         //// UserStat
         foreach ($userStats as $userStat) {
@@ -215,4 +298,13 @@ function calculate_median($arr)
         $median = (($low + $high) / 2);
     }
     return $median;
+}
+
+function calculate_average($arr)
+{
+    if (!count($arr)) {
+        return null;
+    }
+    
+    return array_sum($arr) / count($arr);
 }
