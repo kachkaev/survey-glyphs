@@ -161,6 +161,8 @@ pat.config.faceAlgorithms = {
             visible: true
         }
 };
-pat.config.visibleFaceBundle = 'faces1024';
+
+//pat.config.visibleFaceBundle = 'facesManual';
+pat.config.visibleFaceBundle = 'faces500';
 //pat.config.faceAlgorithmColors = ['#66C2A5', '#FC8D62','#8DA0CB', '#E78AC3', '#A6D854',/* '#FFD92F', '#E5C494', */'#400', '#004'];
 //pat.config.faceAlgorithmColors = ['#66C2A5', '#FC8D62','#8DA0CB', '#E78AC3', '#A6D854',/* '#FFD92F', '#E5C494', */'#400', '#004'];
