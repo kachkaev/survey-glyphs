@@ -643,18 +643,31 @@ $(function(){
         // t for toggling thumbnails (previews)
         case 49:
         case 50:
+        case 51:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                updateState({infolistViewModeBackgroundVariable: 0, infolistViewModeThumbnailType: (key == 49) ? pat.InfolistThumbnailGenerator.TYPE_RESPONSES : pat.InfolistThumbnailGenerator.TYPE_FACES});
+                var infolistViewModeThumbnailType = null;
+                switch(key) {
+                    case 49:
+                        infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_PHOTO;
+                        break;
+                    case 50:
+                        infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_RESPONSES;
+                        break;
+                    case 51:
+                        infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_FACES;
+                        break;
+                }
+                updateState({infolistViewModeBackgroundVariable: 0, infolistViewModeThumbnailType: infolistViewModeThumbnailType});
                 return false;
             } else {
                 return;
             }
 
-        case 51:
         case 52:
         case 53:
         case 54:
         case 55:
+        case 56:
             if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                 updateState({infolistViewModeBackgroundVariable: key - 50, infolistViewModeThumbnailType: pat.InfolistThumbnailGenerator.TYPE_NONE});
                 return false;

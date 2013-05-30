@@ -51,8 +51,8 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(pa
 			}
 			// Panoramio widget internals change, so we don't know for sure which parameter contains url
 			try {
-			    // Suppose that it's Ha (2012-01-28)
-			    info.imgSrc = photo.Ja[0].url;
+			    // Suppose that it's Ka (2013-05-30)
+			    info.imgSrc = photo.Ka[0].url;
 			} catch (e) {
 			    // If not, looping through all array keys to find one
 			    _.some(photo, function(v, k) {

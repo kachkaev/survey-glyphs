@@ -1,8 +1,8 @@
 (function(){
 namespace('pat');
 
-var INTERVAL_WAITING = 200;
-var INTERVAL_DRAWING = 10;
+var INTERVAL_WAITING = 100;
+var INTERVAL_DRAWING = 5;
 
 var MAX_TIME = 30;
 
@@ -12,6 +12,7 @@ pat.InfolistThumbnailGenerator = function(options) {
     this.options = _.extend({
         width: 17,
         height: 17,
+        photoSpriteURL: '/content/thumbnails.jpg',
         canvasPadding: [2, 2, 2, 2],
         canvasPaddingForFaces: [1, 1, 1, 1],
         canvasPaddingForFaces: [0, 0, 0, 0],
@@ -39,15 +40,29 @@ pat.InfolistThumbnailGenerator = function(options) {
     
     this.faceAlgorithmNames = _.keys(pat.config.faceAlgorithms);
     this.faceAlgorithmOptions = _.values(pat.config.faceAlgorithms);
+
+    // Preload resources
     
+    this.$photoSprite = $('<img />');
+    var loadedResourcesCount = 0;
+    this.$photoSprite.load( function(){
+        ++loadedResourcesCount;
+      }).attr('src', this.options.photoSpriteURL);
 
     this.queue = [];
 
     var drawingIntervalId = null;
     setInterval(function() {
+        // Doing nothing if have nothing to do
         if (!obj.queue.length || drawingIntervalId) {
             return;
         }
+        
+        // Draw nothing if resources are not loaded yet
+        if (loadedResourcesCount < 1) {
+            return;
+        }
+        
         drawingIntervalId = setInterval(function() {
             for (var i = threads.length - 1; i >= 0; --i) {
                 if (!obj.queue.length) // nothing left to render
@@ -73,8 +88,9 @@ pat.InfolistThumbnailGenerator = function(options) {
 };
 
 pat.InfolistThumbnailGenerator.TYPE_NONE = 0;
-pat.InfolistThumbnailGenerator.TYPE_RESPONSES = 1;
-pat.InfolistThumbnailGenerator.TYPE_FACES = 2;
+pat.InfolistThumbnailGenerator.TYPE_PHOTO = 1;
+pat.InfolistThumbnailGenerator.TYPE_RESPONSES = 2;
+pat.InfolistThumbnailGenerator.TYPE_FACES = 3;
 
 /**
  * Add job to the rendering queue
@@ -112,8 +128,22 @@ pat.InfolistThumbnailGenerator.prototype._render = function(thread, queueElement
 
     var optionType = queueElement[1] ? queueElement[1].type : pat.InfolistThumbnailGenerator.TYPE_NONE;
 
+    // Drawing photo
+    if (optionType == pat.InfolistThumbnailGenerator.TYPE_PHOTO) {
+        thread[1].drawImage({
+            source: obj.options.photoSpriteURL,
+            x: 0, y: 0,
+            sWidth: 18,
+            sHeight: 18,
+            sx: (queueElement[0].id - 1)*18, sy: 0,
+            width: 18,
+            height: 18,
+            cropFromCenter: false,
+            fromCenter: false
+          });
+        
     // Drawing photo responses
-    if (optionType == pat.InfolistThumbnailGenerator.TYPE_RESPONSES) {
+    } else if (optionType == pat.InfolistThumbnailGenerator.TYPE_RESPONSES) {
         
         var optionTimeScaling = queueElement[1] ? queueElement[1].timeScaling : false;
         
