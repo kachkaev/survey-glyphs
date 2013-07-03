@@ -26,7 +26,8 @@ class DefaultController extends Controller
     	$parameters = [
     		'userIsReturning' => ($this->get('security.context')->getToken()->getUser() instanceof UserInterface),
     		'user' => null,
-    	];
+    		'surveyClosed' => $this->container->getParameter('pat.survey_closed')
+		];
 	    return $this->render("KachkaevPhotoAssessmentBundle:Default:index.html.twig", $parameters);
     }
     
@@ -98,7 +99,8 @@ class DefaultController extends Controller
     	$parameters = [
     		'jsTranslationStrings' => json_encode($jsTranslations),
     		'initialQueueSize' => $this->container->getParameter('pat.queue_initial_size'),
-    		'askLocation' => $this->container->getParameter('pat.ask_location')
+    		'askLocation' => $this->container->getParameter('pat.ask_location'),
+    		'surveyClosed' => $this->container->getParameter('pat.survey_closed')
     	];
     	
 	    return $this->render("KachkaevPhotoAssessmentBundle:Default:survey.html.twig", $parameters, $response);

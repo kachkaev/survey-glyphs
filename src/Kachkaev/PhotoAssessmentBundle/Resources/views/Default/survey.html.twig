@@ -5,6 +5,7 @@
 {% block body_modif %} class="p-survey"{% endblock %}
 
 {% block body %}
+{% if surveyClosed %}<div class="b-survey-closed"><div class="b-survey-closed__plate">{{ 'survey_closed' | trans }}</div></div>{% endif %}
 	<div class="p-survey-header">
 		<div class="b-userbox"><span class="b-userbox__name" title="{{ "participant.title" | trans }}">{{ "participant" | trans({'%n%': app.user.id}) }}</span></div>
 		<h1><a href="{{ path("pat_default_index") }}">{{ 'pat_default_index.h1' | trans }}</a></h1>
