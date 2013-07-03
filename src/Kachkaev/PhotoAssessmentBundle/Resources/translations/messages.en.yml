@@ -102,4 +102,4 @@ hint.dashboard.queue_extended_6: You’re a guinness of photo content assessment
 
 message.error_api: Oops! Something went terribly wrong while exchanging data with the server, sorry for that. We recommend you to refresh the page, please press OK to do that.
 
-survey_closed: Survey data collection is now over. You can still submit your answers, but it is unlikely that they are used in the research.
+survey_closed: Survey data collection is now over. You can still submit your answers, but it is unlikely for them to be used in the research.
