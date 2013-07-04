@@ -32,12 +32,15 @@ index.details_1_3: ', PhD student at School of Informatics, '
 index.details_1_4: City University London
 index.details_1_5: ' and is supervised by Professor '
 index.details_1_6: Jo Wood
-index.details_1_7: . The knowledge and experience gained from the questionnaire will be useful when implementing a new pedestrian routing algorithm, which will be made freely available at the end of the project. Collected answers will be released under a free license (
-index.details_1_8: CC BY 2.0
-index.details_1_8_title: Creative Commons Attribution 2.0 Generic
-index.details_1_9: '). No personal data is being collected and stored; the source code of the app is available '
-index.details_1_10: on Github
-index.details_1_11: .
+index.details_1_7: '. The knowledge and experience gained from the questionnaire will be useful when implementing a new pedestrian routing algorithm, which will be made freely available at the end of the project. The answers '
+index.details_1_8: are released
+index.details_1_8_title: ''
+index.details_1_9: ' under a free license ('
+index.details_1_10: CC BY 2.0
+index.details_1_10_title: Creative Commons Attribution 2.0 Generic
+index.details_1_11: '). No personal data is being collected and stored; the source code of the app is available '
+index.details_1_12: on Github
+index.details_1_13: .
 
 index.details_2_1: 'The sample of photographs consists of 900 randomly picked images (300 for each mentioned photo-sharing website) geotagged in Central London. Photographs from Flickr and Panoramio are being retrieved by means of service APIs and are copyrighted by their owners. All photographs from Geograph are distributed under '
 index.details_2_2: CC BY-SA 2.0
