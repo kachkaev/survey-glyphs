@@ -6,7 +6,9 @@
 
 {% block body %}
 	<div class="p-results__header">
-		<h1><a href="{{ path("pat_default_index") }}">{{ 'pat_default_index.h1' | trans }}</a>{{ 'pat_default_results.h1' | trans }}</h1>
+		<h1><a href="{{ path("pat_default_index") }}">{{ 'pat_default_index.h1' | trans }}</a>{{ 'pat_default_results.h1' | trans }}
+		{%-  if (not backdoorSecret) %} <span class="p-results__header-readonly" title="{{ 'pat_default_results.read_only.title' | trans }}">{{ 'pat_default_results.read_only' | trans }}</span>{% endif -%}
+		</h1>
 	</div>
 	<table class="p-results__layout">
 	    <tr>
@@ -40,7 +42,8 @@
 {% block assets_js %}
 	{{ parent() }}
     <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl={{ app.request.locale }}"></script>
-    <script type="text/javascript">data = {{ data | raw }}; lang = { str: {{ jsTranslationStrings | raw }} }; backdoorSecret = '{{ backdoorSecret }}'</script>
-{% endblock assets_js %}
+    <script type="text/javascript">data = {{ data | raw }}; lang = { str: {{ jsTranslationStrings | raw }} }; backdoorSecret = '{{ backdoorSecret }}';</script>
+    <script type="text/template" id="b-help">{% include 'KachkaevPhotoAssessmentBundle:Components/includes:b-help.html.twig'%}</script>
+    {% endblock assets_js %}
 
 {% block footer %}{% endblock %}

@@ -1,6 +1,8 @@
 title: Photo Content Assessment
 pat_default_index.h1: Photo Content Assessment
-pat_default_results.h1: ' − Results'
+pat_default_results.h1: ' Results'
+pat_default_results.read_only: (read only)
+pat_default_results.read_only.title: In this mode you do not have permissions to change statuses of users and photographs and perform other changes to the data. This functionality gets unlocked by adding a secret token to the URL.
 
 og.title: Photo Content Assessment
 og.description: ""

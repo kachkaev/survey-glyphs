@@ -107,11 +107,12 @@ class DefaultController extends Controller
     }
     
     /**
+     * @Route("/results/", defaults={"backdoorSecret" = ""}, name="pat_default_results_readonly")
      * @Route("/results/{backdoorSecret}/", name="pat_default_results")
      * @Template
      */
     public function resultsAction($backdoorSecret) { 
-        if ($backdoorSecret !== $this->container->getParameter('backdoor_secret')) {
+        if ($backdoorSecret && $backdoorSecret !== $this->container->getParameter('backdoor_secret')) {
             throw new NotFoundHttpException();
         }
         

@@ -232,6 +232,10 @@ $(function(){
 
     // Sends a new value of status for a photo / user / photoresponse to the server
     var setStatusFunction = function($infoList, data, status) {
+        // Do nothing in the read-only mode
+        if (!backdoorSecret)
+            return;
+        
         $.ajax({
             url: pat.config.apiBaseURL + 'set_' + data.type + '_status',
             data: {s: backdoorSecret, id: data.id, status: status},
@@ -270,6 +274,12 @@ $(function(){
     // Objects with UI
     // =====================================
 
+    // Body
+    $body = $('body');
+    
+    // Help box
+    var $bHelp = $($('#b-help').html()).hide().appendTo($body).bHelp();
+    
     // Info lists
     
     //// Photos
@@ -543,109 +553,145 @@ $(function(){
     // =====================================
 
     $(document.body).bind("keydown", function(event) {
-        var key = event.keyCode || event.which;
-        //console.log('key pressed', key);
         
-        switch (key) {
+        var key = + (event.keyCode || event.which);
+        //console.log('key pressed', key);
 
-        case 49:
-        case 50:
-        case 51:
-        case 52:
-            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                updateState({infolistViewModeBackgroundVariable: key - 48});
-                return false;
-            } else {
-                return;
-            }
 
-        // ESC to unselect 
-        case 27:
-            updateState({userId: null, photoId: null});
-            return false;
+        if (document.activeElement && document.activeElement !== document.body) {
+            return;
+        }
+        
+        // --------------------
+        // when help screen is open
+        if ($bHelp.bHelp('option', 'state') == 1) {
+            switch (key) {
             
-        // p for toggling photo problems in lists
-        case 80:
-            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                updateState({infolistViewModeShowProblems: !stateContainer.state.infolistViewModeShowProblems});
+            // ESC and h to close help
+            case 72:
+            case 27:
+                $bHelp.bHelp('close');
+                break;
+
+            // Ignore backspace (avoid accidently going back to the prev. page)
+            case 8:
+                event.stopPropagation();
                 return false;
-            } else {
-                return;
             }
-
-        // u for toggling unchecked state in lists
-        case 85:
-            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                updateState({infolistViewModeShowUnchecked: !stateContainer.state.infolistViewModeShowUnchecked});
-                return false;
-            } else {
-                return;
-            }
-
-        // t for toggling thumbnails (previews)
-        case 84:
-            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                updateState({infolistViewModeShowThumbnails: !stateContainer.state.infolistViewModeShowThumbnails});
-                return false;
-            } else {
-                return;
-            }
-
-
-        // r to reset interface
-        case 82:
-            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                var newState = _.clone(defaultState);
-                if (!event.shiftKey) {
-                    newState.infolistHeight = stateContainer.state.infolistHeight;
+            
+        // --------------------
+        // when help screen is closed
+        } else if ($bHelp.bHelp('option', 'state') == 0) {
+            
+            switch (key) {
+    
+            case 49:
+            case 50:
+            case 51:
+            case 52:
+                if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                    updateState({infolistViewModeBackgroundVariable: key - 48});
+                    return false;
+                } else {
+                    return;
                 }
-                updateState(newState);
+    
+            // ESC to unselect 
+            case 27:
+                updateState({userId: null, photoId: null});
                 return false;
-            } else {
-                return;
-            }
             
-        // d for toggling duration scaling
-        case 68:
-            if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                updateState({timeScaling: !stateContainer.state.timeScaling});
+            // h for showing help
+            case 72:
+                if (event.ctrlKey || event.metaKey) {
+                    return true;
+                }
+                $bHelp.bHelp('open');
+                break;
+            
+            // p for toggling photo problems in lists
+            case 80:
+                if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                    updateState({infolistViewModeShowProblems: !stateContainer.state.infolistViewModeShowProblems});
+                    return false;
+                } else {
+                    return;
+                }
+    
+            // u for toggling unchecked state in lists
+            case 85:
+                if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                    updateState({infolistViewModeShowUnchecked: !stateContainer.state.infolistViewModeShowUnchecked});
+                    return false;
+                } else {
+                    return;
+                }
+    
+            // t for toggling thumbnails (previews)
+            case 84:
+                if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                    updateState({infolistViewModeShowThumbnails: !stateContainer.state.infolistViewModeShowThumbnails});
+                    return false;
+                } else {
+                    return;
+                }
+    
+    
+            // r to reset interface
+            case 82:
+                if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                    var newState = _.clone(defaultState);
+                    if (!event.shiftKey) {
+                        newState.infolistHeight = stateContainer.state.infolistHeight;
+                    }
+                    updateState(newState);
+                    return false;
+                } else {
+                    return;
+                }
+                
+            // d for toggling duration scaling
+            case 68:
+                if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                    updateState({timeScaling: !stateContainer.state.timeScaling});
+                    return false;
+                } else {
+                    return;
+                }
+                
+            case KEY_BACKSPACE:
                 return false;
-            } else {
-                return;
+                
+            // space to reset time
+            case 32:
+                updateState({maxTime: DEFAULT_MAX_TIME});
+                return false;
+                
+            case KEY_PLUS:
+            case KEY_EQUALS:
+            case KEY_EQUALS2:
+                if (event.metaKey || event.ctrlKey || event.shiftKey) {
+                    return;
+                }
+                updateState({maxTime: stateContainer.state.maxTime * 1.25});
+                return false;
+            case KEY_MINUS:
+            case KEY_DASH:
+            case KEY_DASH2:
+            case KEY_UNDERSCORE:
+                if (event.metaKey || event.ctrlKey || event.shiftKey) {
+                    return;
+                }
+                updateState({maxTime: stateContainer.state.maxTime * 0.8});
+                return false;
+                
+            case 219:
+                stateContainer.stateManager.undo();
+                return false;
+            case 221:
+                stateContainer.stateManager.redo();
+                return false;
             }
-            
-        case KEY_BACKSPACE:
-            return false;
-            
-        // space to reset time
-        case 32:
-            updateState({maxTime: DEFAULT_MAX_TIME});
-            return false;
-            
-        case KEY_PLUS:
-        case KEY_EQUALS:
-        case KEY_EQUALS2:
-            if (event.metaKey || event.ctrlKey || event.shiftKey) {
-                return;
-            }
-            updateState({maxTime: stateContainer.state.maxTime * 1.25});
-            return false;
-        case KEY_MINUS:
-        case KEY_DASH:
-        case KEY_DASH2:
-        case KEY_UNDERSCORE:
-            if (event.metaKey || event.ctrlKey || event.shiftKey) {
-                return;
-            }
-            updateState({maxTime: stateContainer.state.maxTime * 0.8});
-            return false;
-            
-        case 219:
-            stateContainer.stateManager.undo();
-            return false;
-        case 221:
-            stateContainer.stateManager.redo();
-            return false;
         }
     });
     

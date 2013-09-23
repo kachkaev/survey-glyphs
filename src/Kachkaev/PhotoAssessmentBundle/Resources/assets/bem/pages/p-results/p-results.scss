@@ -13,7 +13,7 @@
 	height: 54px;
 }
 
-.p-results h1{
+.p-results__header{
 	font-size: 25px;
 	font-weight: normal;
 	margin: 0px;
@@ -21,13 +21,22 @@
 	padding-top: 10px;
 }
 
-.p-results h1 a{
+.p-results__header a{
 	color: #000;
 	text-decoration: none;
 }
 
-.p-results h1 a:hover{
+.p-results__header a:hover{
 	text-decoration: underline;
+}
+
+.p-results__header-readonly {
+    color: #aaa;
+}
+
+.p-results__header-readonly:hover {
+    border-bottom: 1px dotted;
+    cursor: help;
 }
 
 .p-results__layout {

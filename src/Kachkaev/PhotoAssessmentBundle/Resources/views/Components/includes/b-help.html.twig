@@ -1,0 +1,232 @@
+{{-' '-}}<div class="b-help">
+<h2 class="b-help__header">Photo Content Assessment Results − Help</h2>
+<ul class="b-help__tabs">
+{#    <li class="b-help__tab" data-id="manual">Manual</li> #}
+    <li class="b-help__tab b-help__tab_current" data-id="controls">Controls</li>
+</ul>
+
+<ul class="b-help__tab-bodies">
+{% set imagesInDD = true %}
+{# ========================== #}
+{#<li class="b-help__tab-body b-help__tab-body_current" data-id="manual">
+<div class="b-help__text-container">
+    <h3>What is Energy Consumption Signature Viewer?</h3>
+    
+    <p>ECSV is a convienient way of seeing energy consumption patterns in a very dense and compact format.
+       The visual representation of data is designed to help understand how people are using household appliances and to discover patterns within the data. For instance, it is easy to identify how one appliance’s signature differs from another, how season affects patterns of behaviour and how optimisation methods can change consumption patterns.
+       The application is designed and developed at the giCentre, City University, London and works in combination with modelled data built and provided by IMDEA Energià, Madrid.
+       The application forms part of a joint project, titled “Visualising the Smart Home: Creative Engagement with Customer Data”, between IMDEA and City University for E.ON AG’s International Research Initiative (IRI) 2012.
+    </p>
+    
+    <p>The core concept of the visualisation is the ‘energy consumption signature’, which is a rectangle showing the distribution of power consumed by an appliance over time of day and days of week:
+    </p>
+    <div class="image-block image-block_centered"><img src="/static/i/b-help__01-signature.png" /></div>
+        
+    <p>The signature is a grid of numbers with 96 columns and 7 rows.
+       The columns represent 15-minute-long intervals (starting at 00:00—23:45),
+       and the rows correspond to days of week (Monday to Sunday).
+       The cells are coloured according to their values and the colour scheme located in the top-right corner of the screen:
+    </p>
+    <div class="image-block image-block_centered" style="padding-left: 10px"><img src="/static/i/b-help__02-range500.png" /></div>
+    
+    <p>The more solid the colour is, the bigger the value that it represents.
+       Positive numbers are red, negatives are blue.
+       If a value exceeds the range, it is shown <i class="nobr">as dark <img clas="inline-image" src="/static/i/b-help__03-overflow.png" /> .</i>
+       If no values are available then the signature or part of the signature is shown <i class="nobr">in grey <img clas="inline-image" src="/static/i/b-help__04-null.png" /> .</i>
+    </p>
+    
+    <p>Power is not the only characteristic that can be represented by means of a signature; it can also show numbers of devices or users (households).
+       It is possible to toggle between minimum, maximum, average, median and standard deviation and also filter by device state: on, standby and not off (on<i class="action-plus">+</i>standby).
+    </p>
+    
+    <p>Signatures are precalculated for a number of datasets, which are available to add and remove depending on what data is of current interest.
+       The same is possible for the rows with a choice of 85 individual appliances and 57 groupings of these appliances.
+    </p>
+    
+    <p>The page URL incorporates the structure of the page with the loaded columns, rows and data settings, so a shared URL link will always result in allowing the reloading of the exact same view as before.
+    </p>
+    
+    <h3>Scaling the data</h3>
+    <p>The colour legend representing the numbers in the signatures can be customised.
+       There are two data scaling modes: global and local.
+       <b>Global scaling</b> sets a single colour legend across all signatures on the page, meaning that the same value is always represented by the same colour.
+       This mode is useful for comparing appliances and datasets against each other and also for detecting global peaks and trends:
+    </p>
+    <div class="image-block image-block_shrinkable">
+        <img src="/static/i/b-help__10-scale-global.png" />
+        <span class="image-title">average power consumption on heating among 100 users</span>
+    </div>
+    
+    <p>The maximum value is controlled by pressing <i class="key key_lifted">+</i> and <i class="key key_lifted">–</i> on the keyboard or by dragging the gradient in the range picker.
+       Alternatively to rescale quickly:
+    </p>
+    
+    <dl>{% block controlsScale %}
+        <dt><i class="action">click on a signature</i></dt>
+        <dd>changes the range to fit the selected signature</dd>
+        
+        <dt><i class="action">click on a title of a column or the name of the appliance/group in a row</i></dt>
+        <dd>changes the range to fit all signatures in that column or row</dd>
+    {% endblock %}</dl>
+
+    <p>In <b>local scaling</b> mode each signatures gets an individual colour range, chosen automatically to fit the span of the data it consists of:
+    </p>
+    <div class="image-block image-block_shrinkable">
+        <img src="/static/i/b-help__11-scale-local.png" />
+        <span class="image-title">average power consumption on heating among 100 users</span>
+    </div>
+    
+    <p>This can be useful when comparing time-based peaks and troughs and investigating local patterns.
+       However, because the same colour represents different values in different signatures, this mode should be used with precaution.
+       When local scaling is on, each signature is supplemented with a vertical bar on its side giving a hint on how the local maximum is different from the global one. Manual scaling in this mode is unavailable.
+    </p>
+    
+    <p>Toggling between scaling modes is done by pressing <i class="key">L</i> or by clicking on the current maximum value in the legend.
+    </p>
+    
+    <h3>Comparing signatures to each other</h3>
+    
+    <p>Being placed next to each other, the signatures become a powerful instrument for data comparison and the image below is a vivid example:
+    </p>
+    <div class="image-block image-block_shrinkable">
+        <img src="/static/i/b-help__20-comparison-off.png" />
+        <span class="image-title">average power consumption per user; maximum colour value is 1,000</span>
+    </div>
+    
+    <p>It’s clear that the optimised dataset has reduced consumption in peak times compared to the two other signatures, and that this is (partially) achieved by changes to the times of use of washing and cleaning appliances.
+       The third column showing modelled energy consumption in January has the highest values with a clear increase in the use of heating throughout the whole signature.
+    </p>
+    
+    <p>To investigate the difference with ease, it is possible to switch on the signature comparison mode and, for instance, compare all signatures in the second column to the corresponding columns:
+    </p>
+    <div class="image-block image-block_shrinkable">
+        <img src="/static/i/b-help__21-comparison-on.png" />
+        <span class="image-title">average power consumption per user; maximum colour value is 1,000</span>
+    </div>
+    
+    <p>Such mode makes it easier to see when and at what rate the signatures differ.
+       These actions enable the comparison:
+    </p>
+    
+    <dl>{% block controlsCompare %}
+        <dt><i class="key">Alt</i><i class="action-plus">+</i><i class="action">click on a column title</i></dt>
+        <dd>compares the selected dataset to all other datasets</dd>
+        
+        <dt><i class="key">Alt</i><i class="action-plus">+</i><i class="action">click on a row title</i></dt>
+        <dd>compares the selected appliance to all other appliances</dd>
+        
+        <dt><i class="key">Alt</i><i class="action-plus">+</i><i class="action">click on a signature</i></dt>
+        <dd>compares the selected signature to all other ones</dd>
+        
+        <dt><i class="key">Alt</i><i class="action-plus">+</i><i class="key">Shift</i><i class="action-plus">+</i><i class="action">click on a signature</i></dt>
+        <dd class="dd-with-small-indent">compares all signatures to the value of the current selected cell within the current signature{% if imagesInDD %}:
+            <img class="image-in-dd" src="/static/i/b-help__22-comparison-number.png" />
+        {% endif %}</dd>
+        
+        <dt class="sameline"><i class="key">Esc</i></dt>
+        <dd>switches comparison off</dd>
+    {% endblock %}</dl>
+    
+    <p>Comparison mode only works in the global scale mode.
+       Little pointers that appear above all signatures to match the position of the cursor can be disabled <i class="nobr">by pressing <i class="key">P</i> .</i>
+    </p>
+    
+    <h3>Sorting the signatures</h3>
+    
+    <p>It is possible to sort the appliances alphabetically or by the values of a certain cell (when hovered over). This is done <i class="nobr">by pressing <i class="key">S</i> .</i>  <i class="key">Shift</i><i class="action-plus">+</i><i class="key">S</i> performs the reverse ordering.</p>
+    
+    <h3>Other features</h3>
+    <p>A number of other commands are accessible via the menu next to the legend. Here are their shortcuts:</p>
+    
+    <dl>{% block controlsOther %}
+        <dt class="sameline"><i class="key key_bracket">[</i></dt>
+        <dd>returns to the previous view (undoes the last change)</dd>
+        
+        <dt class="sameline"><i class="key key_bracket">]</i></dt>
+        <dd>reopens the next view</dd>
+
+        <dt class="sameline"><i class="key">D</i></dt>
+        <dd>returns to the default view</dd>
+        
+        <dt class="sameline"><i class="key">R</i></dt>
+        <dd>reloads all data from the server</dd>
+        
+        <dt class="sameline"><i class="key">G</i></dt>
+        <dd>toggles a grid mask on or off, which has guide marks dividing time into hours of 6 at: <i class="nobr">6 a.m.</i>, <i class="nobr">12 p.m.</i> and <i class="nobr">6 p.m.</i> and also showing the boundary between the weekdays and the weekend{% if imagesInDD %}:
+            <img class="image-in-dd" src="/static/i/b-help__30-grid.png" />
+        {% endif %}</dd>
+
+        <dt class="sameline"><i class="key">H</i></dt>
+        <dd>shows or hides this help dialog</dd>
+
+    {% endblock controlsOther %}</dl>
+    
+    <p class="note"><i class="note-header">Note:</i> When switching to a new view the signature may take some time to load. Once the borders have turned grey all the signatures have loaded correctly.</p>
+    
+</div>
+</li>
+ #}
+ 
+{% set imagesInDD = false %}
+{# ========================== #}
+<li class="b-help__tab-body" data-id="controls">
+    <dl class="controls-dl-1">
+        <dt><i class="action">click on a user or a photo</i></dt>
+        <dd>selects the item and shows related responses below the list</dd>
+
+        <dt><i class="action">double click on an item</i></dt>
+        <dd>toggles the state of the item (unavailable in the read-only mode)</dd>
+
+        <dt><i class="action">hover over a user or a photo</i></dt>
+        <dd>highlights related items in another other list</dd>
+        
+        <dt class="sameline"><i class="key">Esc</i></dt>
+        <dd>deselects items</dd>
+                
+        <dt class="sameline"><i class="key">R</i></dt>
+        <dd>resets interface settings to default</dd>
+        
+        <dt class="sameline"><i class="key key_bracket">[</i></dt>
+        <dd>returns to the previous view (undoes the last change)</dd>
+        
+        <dt class="sameline"><i class="key key_bracket">]</i></dt>
+        <dd>reopens the next view</dd>
+        
+    </dl>
+    <dl class="controls-dl-2">
+        <dt class="sameline"><i class="key">T</i></dt>
+        <dd>shows or hides response thumbnails</dd>
+        
+        <dt class="sameline"><i class="key">D</i></dt>
+        <dd>toggles thumbnail design in items (normal / involving response duration)</dd>
+        
+        <dt class="sameline"><i class="key">P</i></dt>
+        <dd>toggles showing of API problems in items</dd>
+        
+        <dt class="sameline"><i class="key">U</i></dt>
+        <dd>toggles highlighting of unchecked users</dd>
+        
+        <dt class="sameline"><i class="key">1</i></dt>
+        <dd>numbers of responses</dd>
+        
+        <dt class="sameline"><i class="key">2</i></dt>
+        <dd>luminance</dd>
+
+        <dt class="sameline"><i class="key">3</i></dt>
+        <dd>source</dd>
+
+        <dt class="sameline"><i class="key">4</i></dt>
+        <dd>time taken</dd>
+        
+        <dt class="sameline"><i class="key">space</i></dt>
+        <dd>resets response duration scale</dd>
+        
+        <dt class="sameline"><i class="key">+</i></dt>
+        <dd>increases response duration scale</dd>
+        
+        <dt class="sameline"><i class="key">–</i></dt>
+        <dd>decreases response duration scale</dd>
+    </dl>
+</li>
+</ul>
+</div>
