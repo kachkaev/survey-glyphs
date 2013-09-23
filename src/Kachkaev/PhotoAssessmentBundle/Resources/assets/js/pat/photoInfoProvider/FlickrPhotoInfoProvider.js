@@ -23,6 +23,11 @@ pat.photoInfoProvider.FlickrPhotoInfoProvider.prototype._doLoad = function(param
 			info.title = response.photo.title._content;
 			info.user = response.photo.owner.username;
 			info.status = 0;
+			info.faces240 = params.faces240;
+			info.faces500 = params.faces500;
+			info.faces1024 = params.faces1024;
+			info.facesManual = params.facesManual;
+			info.internalId = params.internalId;
 			info.timestamp = response.photo.dates.taken;
 			if (response.photo.location) {
 				info.lon = response.photo.location.longitude;

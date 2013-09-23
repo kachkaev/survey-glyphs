@@ -23,7 +23,6 @@ class GeographDownloadCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-    	
     	$dir = $this->getContainer()->getParameter('pat.geograph_dir');
     	if (!file_exists($dir))
     		mkdir($dir, 0777, true);

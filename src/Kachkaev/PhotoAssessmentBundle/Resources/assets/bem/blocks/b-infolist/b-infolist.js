@@ -1,6 +1,6 @@
 (function() {
 
-var patternThumbnailGenerator = new pat.PatternThumbnailGenerator();
+var infolistThumbnailGenerator = new pat.InfolistThumbnailGenerator();
     
 $.widget('pat.binfolist', {
 
@@ -12,9 +12,9 @@ $.widget('pat.binfolist', {
         highlightedItemsIds: [],
         maxSortLevels: 3,
 
-        viewModeShowThumbnails: false,
         viewModeShowProblems: false,
         viewModeShowUnchecked: false,
+        viewModeThumbnailType: pat.InfolistThumbnailGenerator.TYPE_NONE,
         viewModeTimeScaling: false,
         viewModeBackgroundVariable: 1,
         height: 200,
@@ -151,20 +151,37 @@ $.widget('pat.binfolist', {
 		    if (addItem) {
 		        $item.addClass('thumbnail_rendering');
                 // Render thumbnails
-                patternThumbnailGenerator.prependToQueue(itemData, null, function(img) {
-                    $item.data('thumbnail-pattern', img);
-                    if (!w.options.viewModeTimeScaling) {
+                infolistThumbnailGenerator.prependToQueue(itemData, {type: pat.InfolistThumbnailGenerator.TYPE_RESPONSES, timeScaling: false}, function(img) {
+                    $item.data('thumbnail-responses_normalscaling', img);
+                    if (w.options.viewModeThumbnailType == pat.InfolistThumbnailGenerator.TYPE_RESPONSES && !w.options.viewModeTimeScaling) {
                         $item.css('background-image', 'url(' + img + ')');
                         $item.removeClass('thumbnail_rendering');
                     }
                 });
-                patternThumbnailGenerator.prependToQueue(itemData, {timeScaling: true}, function(img) {
-                    $item.data('thumbnail-pattern-timescaling', img);
-                    if (w.options.viewModeTimeScaling) {
+                infolistThumbnailGenerator.prependToQueue(itemData, {type: pat.InfolistThumbnailGenerator.TYPE_RESPONSES, timeScaling: true}, function(img) {
+                    $item.data('thumbnail-responses_timescaling', img);
+                    if (w.options.viewModeThumbnailType == pat.InfolistThumbnailGenerator.TYPE_RESPONSES && w.options.viewModeTimeScaling) {
                         $item.css('background-image', 'url(' + img + ')');
                         $item.removeClass('thumbnail_rendering');
                     }
                 });
+                
+                if (itemData.type == 'photo') {
+                    infolistThumbnailGenerator.prependToQueue(itemData, {type: pat.InfolistThumbnailGenerator.TYPE_PHOTO}, function(img) {
+                        $item.data('thumbnail-photo', img);
+                        if (w.options.viewModeThumbnailType == pat.InfolistThumbnailGenerator.TYPE_PHOTO) {
+                            $item.css('background-image', 'url(' + img + ')');
+                            $item.removeClass('thumbnail_rendering');
+                        }
+                    });
+                    infolistThumbnailGenerator.prependToQueue(itemData, {type: pat.InfolistThumbnailGenerator.TYPE_FACES}, function(img) {
+                        $item.data('thumbnail-faces', img);
+                        if (w.options.viewModeThumbnailType == pat.InfolistThumbnailGenerator.TYPE_FACES) {
+                            $item.css('background-image', 'url(' + img + ')');
+                            $item.removeClass('thumbnail_rendering');
+                        }
+                    });
+                }
 
 		        $item.appendTo(w.$items);
 		        w.itemsMap[id] = itemData;
@@ -201,10 +218,10 @@ $.widget('pat.binfolist', {
 		});
 
 		w._self._applySelectedItemId();
+		w._self._applyViewModeThumbnailTypeOrTimeScaling();
         w._self._applyHighlightedItemsIds();
         w._self._applyHeight();
         w._self._applySortOrderOrModes(true);
-        w._self._applyViewModeShowThumbnails();
         w._self._applyViewModeShowProblems();
         w._self._applyViewModeShowUnchecked();
         w._self._updateHintPos();
@@ -358,8 +375,14 @@ $.widget('pat.binfolist', {
             return item.id;
         });
 	    
-	    if (_.isEqual(oldIds, newIds))
+	    if (_.isEqual(oldIds, newIds)) {
+	        if (initialUse) {
+	            setTimeout(function() {
+	                w._self._resortRenderingQueue();
+	            }, 100);
+	        }
 	        return;
+	    }
 	    
 	    // Actual sorting of UI elements
         var oldScrollTop = w.$items.scrollTop();
@@ -390,7 +413,7 @@ $.widget('pat.binfolist', {
 	_resortRenderingQueue: function() {
         var w = this.w;
 
-        if (!patternThumbnailGenerator.queue.length) {
+        if (!infolistThumbnailGenerator.queue.length) {
             return;
         }
         
@@ -413,12 +436,13 @@ $.widget('pat.binfolist', {
 
         
         // update patternThumbnailGenerator queue order
-        patternThumbnailGenerator.resortQueue(function(queueElement /*[data, options, fallback]*/, i) {
-            // Elements with timeScaling not equal to the current one are put into the end of the queue
-            if (w.options.viewModeTimeScaling == !queueElement[1].timeScaling) {
-                return 100600;
-            }
+        infolistThumbnailGenerator.resortQueue(function(queueElement /*[data, options, fallback]*/, i) {
             var itemIndex = _.indexOf(w.options.items, queueElement[0]);
+
+            // Elements with timeScaling not equal to the current one are put into the end of the queue
+            if (w.options.viewModeThumbnailType != queueElement[1].type || (queueElement[1].type == pat.InfolistThumbnailGenerator.TYPE_RESPONSES && w.options.viewModeTimeScaling != queueElement[1].timeScaling)) {
+                return itemIndex + 200600;
+            }
 
             // Elements with items from another infolists are put in the end of the queue
             if (itemIndex == -1)
@@ -521,10 +545,34 @@ $.widget('pat.binfolist', {
         }
     },
     
-    _applyViewModeShowThumbnails: function() {
+    _applyViewModeThumbnailTypeOrTimeScaling: function() {
         var w = this.w;
-        w.$element.toggleClass('b-infolist_thumbnails_enabled',   w.options.viewModeShowThumbnails);
-        w.$element.toggleClass('b-infolist_thumbnails_disabled', !w.options.viewModeShowThumbnails);
+        w.$element.toggleClass('b-infolist_thumbnails_enabled', w.options.viewModeThumbnailType != pat.InfolistThumbnailGenerator.TYPE_NONE);
+        w.$element.toggleClass('b-infolist_thumbnails_disabled', w.options.viewModeThumbnailType == pat.InfolistThumbnailGenerator.TYPE_NONE);
+        
+        var w = this.w;
+        if (w.options.viewModeThumbnailType != pat.InfolistThumbnailGenerator.TYPE_NONE) {
+            w.$items.children().each(function() {
+               $this = $(this);
+               var dataKey = '';
+               switch (w.options.viewModeThumbnailType) {
+                   case pat.InfolistThumbnailGenerator.TYPE_RESPONSES:
+                       dataKey = w.options.viewModeTimeScaling ? 'thumbnail-responses_timescaling' : 'thumbnail-responses_normalscaling';
+                       break;
+                   case pat.InfolistThumbnailGenerator.TYPE_PHOTO:
+                       dataKey = 'thumbnail-photo';
+                       break;
+                   case pat.InfolistThumbnailGenerator.TYPE_FACES:
+                       dataKey = 'thumbnail-faces';
+                       break;
+               }
+               var imgData = $this.data(dataKey);
+               $this.css('background-image', imgData ? 'url(' + imgData + ')' : '');
+               $this.toggleClass('thumbnail_rendering', !imgData);
+    
+            });
+            this._resortRenderingQueue();
+        }
     },
     
     _applyViewModeShowProblems: function() {
@@ -537,18 +585,6 @@ $.widget('pat.binfolist', {
         var w = this.w;
         w.$element.toggleClass('b-infolist_unchecked_enabled',   w.options.viewModeShowUnchecked);
         w.$element.toggleClass('b-infolist_unchecked_disabled', !w.options.viewModeShowUnchecked);
-    },
-
-    _applyViewModeTimeScaling: function() {
-        var w = this.w;
-        w.$items.children().each(function() {
-           $this = $(this);
-           var imgData = $this.data(w.options.viewModeTimeScaling ? 'thumbnail-pattern-timescaling' : 'thumbnail-pattern');
-           $this.css('background-image', imgData ? 'url(' + imgData + ')' : '');
-           $this.toggleClass('thumbnail_rendering', !imgData);
-
-        });
-        this._resortRenderingQueue();
     },
 
     _applyViewModeBackgroundVariable: function() {
@@ -651,25 +687,58 @@ $.widget('pat.binfolist', {
             this._applySortOrderOrModes();
             break;
             
-        case 'viewModeShowThumbnails':
-            this._applyViewModeShowThumbnails();
-            break;
+        case 'viewModeThumbnailType':
+        case 'viewModeTimeScaling':
+            this._applyViewModeThumbnailTypeOrTimeScaling();
+            
         case 'viewModeShowProblems':
             this._applyViewModeShowProblems();
             break;
+            
         case 'viewModeShowUnchecked':
             this._applyViewModeShowUnchecked();
             break;
-        case 'viewModeTimeScaling':
-            this._applyViewModeTimeScaling();
-            break;
+            
         case 'viewModeBackgroundVariable':
             this._applyViewModeBackgroundVariable();
             break;
+//            break;
         }
         
-        // console.log("event: change" + key.toLowerCase(), {newValue: value, prevValue: prev});
+//        console.log("event: change" + key.toLowerCase(), {newValue: value, prevValue: prev});
         w._self._trigger("change" + key.toLowerCase(), null, {newValue: value, prevValue: prev});
-    }
+        
+    },
+
+    getNextItemId: function() {
+        var w = this.w;
+        if (w.options.selectedItemId === null) {
+            return null;
+        }
+        var itemIndex = null;
+        _.each(w.options.items, function(item, index) {
+            if (item.id == w.options.selectedItemId) {
+                itemIndex = index;
+                return false;
+            }
+        });
+        if (itemIndex === null) {
+            return null;
+        }
+        var newItemIndex;
+        if (itemIndex == w.options.items.length - 1) {
+            newItemIndex = 0;
+        } else {
+            newItemIndex = itemIndex + 1;
+        }
+        return  w.options.items[newItemIndex].id;
+    },
+
+    selectNextItem: function() {
+        var nextItem = this.getNextItemId();
+        if (nextItem !== null) {
+            this._setOption('selectedItemId', this.getNextItemId());
+        }
+	}
 });
 }());

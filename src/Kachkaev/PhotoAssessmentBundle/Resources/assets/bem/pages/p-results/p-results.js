@@ -68,6 +68,18 @@ var COLORSCHEME_PHOTO_TIME = {
             .clamp(true)
 };
 
+var COLORSCHEME_PHOTO_FACES = {
+        0: d3.scale.linear()
+            .domain([0, 1])
+            .range(['#fff', '#9EBCDA'])
+            .clamp(true)
+            ,
+        1: d3.scale.linear()
+            .domain([0, 1])
+            .range(['#f00', '#000'])
+            .clamp(true)
+};
+
 $(function(){
     if (!$(document.body).hasClass("p-results"))
         return;
@@ -95,7 +107,7 @@ $(function(){
         maxTime: DEFAULT_MAX_TIME,
         userId: null,
         photoId: null,
-        infolistViewModeShowThumbnails: false,
+        infolistViewModeThumbnailType: pat.InfolistThumbnailGenerator.TYPE_RESPONSES,
         infolistViewModeShowProblems: true,
         infolistViewModeShowUnchecked: true,
         infolistViewModeBackgroundVariable: 0
@@ -166,7 +178,9 @@ $(function(){
         user.photoResponses = [];
     });
     
-    _.each(data.photos, function(photo) {
+    var faceBundleNames = ['faces240','faces500','faces1024', 'facesManual'];
+    _.each(data.photos, function(photo, id) {
+        photo.internalId = id;
         photo.type = 'photo';
         photo.photoResponseCounts = {};
         photo.photoResponseCounts[PHOTO_RESPONSE_ALL] = 0;
@@ -175,6 +189,31 @@ $(function(){
         photo.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] = 0;
         photo.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] = 0;
         photo.photoResponses = [];
+        
+        // Parse face rects in photos
+        for (var i = faceBundleNames.length - 1; (faceBundleName = faceBundleNames[i]) && i >= 0; --i) {
+            var unparsedFacesAsArray = photo[faceBundleName].split('|');
+            var parsedFaces = {count: 0};
+            
+            for(var j = unparsedFacesAsArray.length - 1; j >= 0; --j) {
+                var currentAlgorithmEncodedFacesAsStr = unparsedFacesAsArray[j];
+                parsedFaces[j] = [];
+                if (!currentAlgorithmEncodedFacesAsStr || currentAlgorithmEncodedFacesAsStr == 'x') {
+                    continue;
+                }
+                var currentAlgorithmEncodedFaces = currentAlgorithmEncodedFacesAsStr.match(/.{2}/g);
+                for (var faceCount = currentAlgorithmEncodedFaces.length/4 - 1; faceCount >= 0; --faceCount) {
+                    var faceCenterX = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 0], 16) / 255;
+                    var faceCenterY = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 1], 16) / 255;
+                    var faceWidth   = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 2], 16) / 255;
+                    var faceHeight  = parseInt(currentAlgorithmEncodedFaces[faceCount * 4 + 3], 16) / 255;
+                    parsedFaces[j].push([faceCenterX, faceCenterY, faceWidth, faceHeight]);
+                    parsedFaces.count++;
+                }
+            }
+            
+            photo[faceBundleName] = parsedFaces;
+        }
     });
     
     _.each(data.photoResponses, function(photoResponse) {
@@ -252,6 +291,20 @@ $(function(){
         });
     };
     
+    // Sends a new value of status for a photo / user / photoresponse to the server
+    var setManualFacesFunction = function(id, manualFaces) {
+        $.ajax({
+            url: pat.config.apiBaseURL + 'set_photo_facesmanual',
+            data: {s: backdoorSecret, id: id, value: manualFaces},
+            type: "POST",
+            success: function(ajaxData) {
+            },
+            error: function(data) {
+                alert('Problem updating faces: ' + data);
+            }
+        });
+    };
+
     // Toggles status function
     var toggleStatusFunction = function(event) {
         var $this = $(this);
@@ -323,9 +376,10 @@ $(function(){
 
                     ],
             sortOrder: stateContainer.state.photoSortOrder,
-            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeThumbnailType: stateContainer.state.infolistViewModeThumbnailType,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
+            viewModeBackgroundVariable: stateContainer.state.infolistViewModeBackgroundVariable,
             customizeItem: function($item, id, data, options) {
                 if (options.viewModeBackgroundVariable == 1) {
                     $item.css('backgroundColor', COLORSCHEME_PHOTO_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
@@ -338,6 +392,8 @@ $(function(){
                     if (data.source == 'geograph')
                         timeTaken = -100500;
                     $item.css('backgroundColor', COLORSCHEME_PHOTO_TIME[data.status](timeTaken));
+                //} else if (options.viewModeBackgroundVariable == 5) {
+                //    $item.css('backgroundColor', COLORSCHEME_PHOTO_FACES[data.status](Math.max(0,data.faces.length - 9)));
                 }
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
@@ -374,13 +430,16 @@ $(function(){
                     ],
 
             sortOrder: stateContainer.state.userSortOrder,
-            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeThumbnailType: stateContainer.state.infolistViewModeThumbnailType,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
+            viewModeBackgroundVariable: stateContainer.state.infolistViewModeBackgroundVariable,
             customizeItem: function($item, id, data, options) {
                 if (data.photoResponseCounts[PHOTO_RESPONSE_ALL] == 0)
                     return false;
-                $item.css('backgroundColor', COLORSCHEME_USER_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                if (options.viewModeBackgroundVariable == 1) {
+                    $item.css('backgroundColor', COLORSCHEME_USER_COMPLETED[data.status](data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE]));
+                }
                 $item.removeClass('status_0 status_1');
                 $item.addClass('status_' + data.status);
                 $item.toggleClass('photo_problem', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 0);
@@ -422,13 +481,39 @@ $(function(){
     });
 
     //// Box with photo
-    var $bPhoto = $('.b-survey-photo').bsurveyphoto();
+    var $bPhoto = $('.b-survey-photo').bsurveyphoto({
+        facesAttributeName: pat.config.visibleFaceBundle,
+        editableFacesGroupIndex: pat.config.visibleFaceBundle == 'facesManual' ? 0 : null
+    });
     
     
     // =====================================
     // Object Events
     // =====================================
 
+    $bPhoto.on('bsurveyphotofaceschanged', function (event, ui) {
+        data.photos[ui.photoInternalId][ui.facesAttributeName][ui.group] = ui.faces;
+
+        var photo = data.photos[ui.photoInternalId];
+        photoInfoProviders[photo.source].load(photo, function(info) {
+            $bPhoto.bsurveyphoto('showPhotoInfo', info);
+        });
+        
+        var encodedFaces = '';
+        _.each(ui.faces, function(face) {
+            encodedFaces +=
+                  (0x100 + Math.round(face[0] * 255)).toString(16).substr(-2)
+                + (0x100 + Math.round(face[1] * 255)).toString(16).substr(-2)
+                + (0x100 + Math.round(face[2] * 255)).toString(16).substr(-2)
+                + (0x100 + Math.round(face[3] * 255)).toString(16).substr(-2);
+        });
+        
+        $bPhotoInfoList.binfolist('updateItems', [ui.photoInternalId]);
+        
+        setManualFacesFunction(ui.photoInternalId, encodedFaces);
+
+    });
+    
     // When selected item is changed in the user info list
     $bUserInfoList.on('binfolistchangeselecteditemid', function(event, ui) {
         var userId = ui.newValue;
@@ -482,6 +567,13 @@ $(function(){
             $bPhoto.bsurveyphoto('showPhotoInfo', info);
         });
         
+        // preload the next id
+        var nextPhotoId = $bPhotoInfoList.binfolist('getNextItemId');
+        var nextPhoto = data.photos[nextPhotoId];
+        photoInfoProviders[nextPhoto.source].load(nextPhoto, function(info) {
+            if (info.imgSrc)
+                $.preload(info.imgSrc);
+        });
         updateState({photoId: photoId});
     });
 
@@ -554,9 +646,8 @@ $(function(){
 
     $(document.body).bind("keydown", function(event) {
         
-        var key = + (event.keyCode || event.which);
+        var key = (event.keyCode || event.which) + 0;
         //console.log('key pressed', key);
-
 
         if (document.activeElement && document.activeElement !== document.body) {
             return;
@@ -578,37 +669,55 @@ $(function(){
                 event.stopPropagation();
                 return false;
             }
-            
+        
         // --------------------
         // when help screen is closed
         } else if ($bHelp.bHelp('option', 'state') == 0) {
             
+            //console.log('key pressed', key);
+            
             switch (key) {
-    
+
+            // t for toggling thumbnails (previews)
             case 49:
             case 50:
             case 51:
-            case 52:
                 if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                    updateState({infolistViewModeBackgroundVariable: key - 48});
+                    var infolistViewModeThumbnailType = null;
+                    switch(key) {
+                        case 49:
+                            infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_PHOTO;
+                            break;
+                        case 50:
+                            infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_RESPONSES;
+                            break;
+                        case 51:
+                            infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_FACES;
+                            break;
+                    }
+                    updateState({infolistViewModeBackgroundVariable: 0, infolistViewModeThumbnailType: infolistViewModeThumbnailType});
                     return false;
                 } else {
                     return;
                 }
-    
+
+            case 52:
+            case 53:
+            case 54:
+            case 55:
+            //case 56:
+                if (!event.altKey && !event.metaKey && !event.ctrlKey) {
+                    updateState({infolistViewModeBackgroundVariable: key - 50, infolistViewModeThumbnailType: pat.InfolistThumbnailGenerator.TYPE_NONE});
+                    return false;
+                } else {
+                    return;
+                }
+
             // ESC to unselect 
             case 27:
                 updateState({userId: null, photoId: null});
                 return false;
-            
-            // h for showing help
-            case 72:
-                if (event.ctrlKey || event.metaKey) {
-                    return true;
-                }
-                $bHelp.bHelp('open');
-                break;
-            
+                
             // p for toggling photo problems in lists
             case 80:
                 if (!event.altKey && !event.metaKey && !event.ctrlKey) {
@@ -617,7 +726,7 @@ $(function(){
                 } else {
                     return;
                 }
-    
+
             // u for toggling unchecked state in lists
             case 85:
                 if (!event.altKey && !event.metaKey && !event.ctrlKey) {
@@ -626,17 +735,7 @@ $(function(){
                 } else {
                     return;
                 }
-    
-            // t for toggling thumbnails (previews)
-            case 84:
-                if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                    updateState({infolistViewModeShowThumbnails: !stateContainer.state.infolistViewModeShowThumbnails});
-                    return false;
-                } else {
-                    return;
-                }
-    
-    
+
             // r to reset interface
             case 82:
                 if (!event.altKey && !event.metaKey && !event.ctrlKey) {
@@ -666,7 +765,15 @@ $(function(){
             case 32:
                 updateState({maxTime: DEFAULT_MAX_TIME});
                 return false;
-                
+            
+            // Enter / shift + enter to go to the next photo / user
+            case KEY_ENTER:
+                if (event.metaKey || event.ctrlKey || event.altKey) {
+                    return;
+                }
+                var $infoListToIterate = event.shiftKey ? $bUserInfoList : $bPhotoInfoList; 
+                $infoListToIterate.binfolist('selectNextItem');
+            
             case KEY_PLUS:
             case KEY_EQUALS:
             case KEY_EQUALS2:
@@ -692,7 +799,7 @@ $(function(){
                 stateContainer.stateManager.redo();
                 return false;
             }
-        }
+        };
     });
     
     var onStateUpdated = function() {
@@ -703,7 +810,7 @@ $(function(){
             sortOrder: stateContainer.state.photoSortOrder,
             
             height: stateContainer.state.infolistHeight,
-            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeThumbnailType: stateContainer.state.infolistViewModeThumbnailType,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
             viewModeTimeScaling: stateContainer.state.timeScaling,
@@ -715,7 +822,7 @@ $(function(){
             sortOrder: stateContainer.state.userSortOrder,
             
             height: stateContainer.state.infolistHeight,
-            viewModeShowThumbnails: stateContainer.state.infolistViewModeShowThumbnails,
+            viewModeThumbnailType: stateContainer.state.infolistViewModeThumbnailType,
             viewModeShowProblems: stateContainer.state.infolistViewModeShowProblems,
             viewModeShowUnchecked: stateContainer.state.infolistViewModeShowUnchecked,
             viewModeTimeScaling: stateContainer.state.timeScaling,

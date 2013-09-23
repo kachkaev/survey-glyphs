@@ -38,7 +38,12 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(pa
 			info.permalink = photo.getPhotoUrl();
 			info.title = photo.getPhotoTitle();
 			info.user = photo.getOwnerName();
-			info.status = 0;
+            info.faces240 = params.faces240;
+            info.faces500 = params.faces500;
+            info.faces1024 = params.faces1024;
+            info.facesManual = params.facesManual;
+	        info.internalId = params.internalId;
+            info.status = 0;
 			var pos = photo.getPosition();
 			if (pos) {
 				info.lon = pos.lng;
@@ -46,8 +51,8 @@ pat.photoInfoProvider.PanoramioPhotoInfoProvider.prototype._doLoad = function(pa
 			}
 			// Panoramio widget internals change, so we don't know for sure which parameter contains url
 			try {
-			    // Suppose that it's Ha (2012-01-28)
-			    info.imgSrc = photo.Ia[0].url;
+			    // Suppose that it's Ka (2013-05-30)
+			    info.imgSrc = photo.Ka[0].url;
 			} catch (e) {
 			    // If not, looping through all array keys to find one
 			    _.some(photo, function(v, k) {

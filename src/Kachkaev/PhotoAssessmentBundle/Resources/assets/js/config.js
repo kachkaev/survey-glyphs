@@ -122,4 +122,47 @@ pat.config.lang.hintQuestions = {
         'qIsSpaceAttractive': 'attractive'
    };
 
+/* color brewer set 2 7 */
+var colorThumbnailOpacity = 0.4;
+pat.config.faceAlgorithms = {
+        'opencvfront': {
+            colorPreview: "rgba(228, 26, 28, 1)",
+            colorThumbnail: "rgba(228, 26, 28, " + colorThumbnailOpacity + ")",
+            visible: true
+        },
+        'opencvfrontalt': {
+            colorPreview: "rgba(55, 126, 184, 1)",
+            colorThumbnail: "rgba(55, 126, 184, " + colorThumbnailOpacity + ")",
+            visible: true
+        },
+        'opencvfrontalt2': {
+            colorPreview: "rgba(77, 175, 74, 1)",
+            colorThumbnail: "rgba(77, 175, 74, " + colorThumbnailOpacity + ")",
+            visible: true
+        },
+        'opencvfrontalttree': {
+            colorPreview: "rgba(152, 78, 163, 1)",
+            colorThumbnail: "rgba(152, 78, 163, " + colorThumbnailOpacity + ")",
+            visible: true
+        },
+        'opencvprofile': {
+            colorPreview: "rgba(247, 129, 191, 1)",
+            colorThumbnail: "rgba(247, 129, 191, " + colorThumbnailOpacity + ")",
+            visible: true
+        },
+        'coreimagelow': {
+            colorPreview: "rgba(255, 127, 0, 1)",
+            colorThumbnail: "rgba(255, 127, 0, " + colorThumbnailOpacity + ")",
+            visible: true
+        },
+        'coreimagehigh': {
+            colorPreview: "rgba(255, 255, 51, 1)",
+            colorThumbnail: "rgba(255, 255, 5, " + colorThumbnailOpacity + ")",
+            visible: true
+        }
+};
 
+//pat.config.visibleFaceBundle = 'facesManual';
+pat.config.visibleFaceBundle = 'faces500';
+//pat.config.faceAlgorithmColors = ['#66C2A5', '#FC8D62','#8DA0CB', '#E78AC3', '#A6D854',/* '#FFD92F', '#E5C494', */'#400', '#004'];
+//pat.config.faceAlgorithmColors = ['#66C2A5', '#FC8D62','#8DA0CB', '#E78AC3', '#A6D854',/* '#FFD92F', '#E5C494', */'#400', '#004'];
