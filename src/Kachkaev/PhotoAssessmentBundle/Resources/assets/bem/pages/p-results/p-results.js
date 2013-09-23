@@ -47,6 +47,20 @@ var COLORSCHEME_PHOTO_LUMINANCE = {
             .range(['#F7D9D9', '#F7D9D9'])
             .clamp(true)
 };
+
+var COLORSCHEME_PHOTO_GREENMANUAL = {
+        0: d3.scale.linear()
+            .domain([-3, -2, -1, 0, 1, 2, 3])
+            // PuBuGn4, YlGn4
+            .range(['#02818A', '#67A9CF' , '#BDC9E1', '#FFF', '#C2E699', '#78C679', '#238443'])
+            .clamp(true)
+            ,
+        1: d3.scale.linear()
+            .domain([0, 1])
+            .range(['#F7D9D9', '#F7D9D9'])
+            .clamp(true)
+};
+
 var COLORSCHEME_PHOTO_SOURCE = {
         'flickr': '#FBB4AE',
         'panoramio': '#B3CDE3',
@@ -291,6 +305,26 @@ $(function(){
         });
     };
     
+ // Sends a new value of greenManual for a photo to the server
+    var setGreenManualFunction = function($infoList, data, greenManual) {
+        // Do nothing in the read-only mode
+        if (!backdoorSecret)
+            return;
+        
+        $.ajax({
+            url: pat.config.apiBaseURL + 'set_photo_greenmanual',
+            data: {s: backdoorSecret, id: data.id, value: greenManual},
+            type: "POST",
+            success: function(ajaxData) {
+                data.status = ajaxData.response.new_value;
+                $infoList.binfolist('updateItems', [data.id]);
+            },
+            error: function() {
+                console.log('Failed updating greenManual', data);
+            }
+        });
+    };
+    
     // Sends a new value of status for a photo / user / photoresponse to the server
     var setManualFacesFunction = function(id, manualFaces) {
         $.ajax({
@@ -392,6 +426,8 @@ $(function(){
                     if (data.source == 'geograph')
                         timeTaken = -100500;
                     $item.css('backgroundColor', COLORSCHEME_PHOTO_TIME[data.status](timeTaken));
+                } else if (options.viewModeBackgroundVariable == 5) {
+                    $item.css('backgroundColor', COLORSCHEME_PHOTO_GREENMANUAL[data.status](data.greenManual));
                 //} else if (options.viewModeBackgroundVariable == 5) {
                 //    $item.css('backgroundColor', COLORSCHEME_PHOTO_FACES[data.status](Math.max(0,data.faces.length - 9)));
                 }
@@ -678,20 +714,19 @@ $(function(){
             
             switch (key) {
 
-            // t for toggling thumbnails (previews)
-            case 49:
-            case 50:
-            case 51:
+            case 49: // 1
+            case 48: // 0
+            case 55: // 7
                 if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                     var infolistViewModeThumbnailType = null;
                     switch(key) {
-                        case 49:
-                            infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_PHOTO;
-                            break;
-                        case 50:
+                        case 49: // 1
                             infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_RESPONSES;
                             break;
-                        case 51:
+                        case 48: // 0
+                            infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_PHOTO;
+                            break;
+                        case 55: // 7
                             infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_FACES;
                             break;
                     }
@@ -701,13 +736,13 @@ $(function(){
                     return;
                 }
 
-            case 52:
-            case 53:
-            case 54:
-            case 55:
-            //case 56:
+            case 50: // 2 - count
+            case 51: // 3 - luminance
+            case 52: // 4 - source
+            case 53: // 5 - time taken
+            case 54: // 6 - greenness
                 if (!event.altKey && !event.metaKey && !event.ctrlKey) {
-                    updateState({infolistViewModeBackgroundVariable: key - 50, infolistViewModeThumbnailType: pat.InfolistThumbnailGenerator.TYPE_NONE});
+                    updateState({infolistViewModeBackgroundVariable: key - 49, infolistViewModeThumbnailType: pat.InfolistThumbnailGenerator.TYPE_NONE});
                     return false;
                 } else {
                     return;
@@ -750,7 +785,9 @@ $(function(){
                 }
                 
             // d for toggling duration scaling
-            case 68:
+            //case 68:
+            // t for toggling duration scaling
+            case 84:
                 if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                     updateState({timeScaling: !stateContainer.state.timeScaling});
                     return false;
@@ -798,6 +835,12 @@ $(function(){
             case 221:
                 stateContainer.stateManager.redo();
                 return false;
+                
+            // h to open help
+            case 72:
+                $bHelp.bHelp('open');
+                break;
+
             }
         };
     });

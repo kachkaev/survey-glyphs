@@ -98,15 +98,15 @@
 /* small version of the photo - on the results page */
 .b-survey-photo_small {
     float: right;
-/*    height: 300px;
-*/    padding: 10px 15px 15px;
+    height: 300px;
+    padding: 10px 15px 15px;
 }
 .b-survey-photo_small .b-survey-photo__photo {
     min-height: 100px;
     min-width: 100px;
-/*    max-width: 500px;
+    max-width: 500px;
     max-height: 215px;
-*/}
+}
 .b-survey-photo_small .b-survey-photo__loading {
     padding-top: 0px;
 }

@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  */
 class Photo extends AbstractStandardEntity {
-	protected $standardProperties = ["status", "facesManual"];
+	protected $standardProperties = ["status", "facesManual", "greenManual"];
 	protected $standardGetters = ["source", "photoId", "userId", "userName", "respnoses"];
 
 	/** @ORM\Column(type="integer")
@@ -81,6 +81,11 @@ class Photo extends AbstractStandardEntity {
 	/** @ORM\Column(type="text", nullable=true)
 	 */
 	protected $facesManual;
+
+	/** @ORM\Column(type="integer", nullable=true)
+	 */
+	protected $greenManual;
+	
 	
 	public function getId() {    
         return $this->id;        

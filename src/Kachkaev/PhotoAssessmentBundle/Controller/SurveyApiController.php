@@ -167,8 +167,8 @@ class SurveyApiController extends Controller
     
     /**
      * @Route("/api/set_user_status", name="pat_api_setuserstatus", defaults={"_format"="json", "count" = 0})
-     * @Method({"GET", "POST"})
-     * #@Method({"POST"})
+     * #@Method({"GET", "POST"})
+     * @Method({"POST"})
 	 * @Template()
      */
     public function setUserStatusAction($count)
@@ -178,8 +178,8 @@ class SurveyApiController extends Controller
     
     /**
      * @Route("/api/set_photo_status", name="pat_api_setphotostatus", defaults={"_format"="json", "count" = 0})
-     * @Method({"GET", "POST"})
-     * #@Method({"POST"})
+     * #@Method({"GET", "POST"})
+     * @Method({"POST"})
 	 * @Template()
      */
     public function setPhotoStatusAction($count)
@@ -189,8 +189,8 @@ class SurveyApiController extends Controller
     
     /**
      * @Route("/api/set_photo_facesmanual", name="pat_api_setphotofacesmanual", defaults={"_format"="json"})
-     * @Method({"GET", "POST"})
-     * #@Method({"POST"})
+     * #@Method({"GET", "POST"})
+     * @Method({"POST"})
 	 * @Template()
      */
     function setPhotoFacesManualAction(Request $request)
@@ -224,6 +224,48 @@ class SurveyApiController extends Controller
             "response" => [
             "status" => "ok",
             ],
+        ];
+    
+        return new Response(json_encode($apiResponse));
+    }
+    
+    /**
+     * @Route("/api/set_photo_greenmanual", name="pat_api_setphotogreenmanual", defaults={"_format"="json"})
+     * @Method({"GET", "POST"})
+     * #@Method({"POST"})
+     * @Template()
+     */
+    function setPhotoGreenManualAction(Request $request)
+    {
+        $requestParameters = $request;
+        $backdoorSecret = $requestParameters->get('s');
+        $value = $requestParameters->get('value');
+    
+         
+        // Checking backdoor security
+        if ($backdoorSecret !== $this->container->getParameter('backdoor_secret')) {
+            throw new \InvalidArgumentException("Wrong value for backdoor_secret");
+        }
+         
+        // Checking status
+        $id     = $requestParameters->get('id');
+    
+        // Checking id and getting the entity
+        $em = $this->get("doctrine.orm.entity_manager");
+        $entity = $em->getRepository('KachkaevPhotoAssessmentBundle:Photo')->findOneById($id);
+        if (!$entity) {
+            throw new \InvalidArgumentException("Wrong value for id");
+        }
+    
+        // Saaving new value to the DB
+        $entity->setGreenManual($value);
+        $em->persist($entity);
+        $em->flush();
+         
+        $apiResponse = [
+        "response" => [
+        "status" => "ok",
+        ],
         ];
     
         return new Response(json_encode($apiResponse));
