@@ -305,22 +305,31 @@ $(function(){
         });
     };
     
- // Sends a new value of greenManual for a photo to the server
-    var setGreenManualFunction = function($infoList, data, greenManual) {
+    // Sends a new value of greenManual for a photo to the server
+    var setGreenManualFunction = function(greenManualValue) {
         // Do nothing in the read-only mode
         if (!backdoorSecret)
             return;
         
+        photoId = $bPhotoInfoList.binfolist('option', 'selectedItemId');
+        if (photoId == null) {
+            console.log('Cannot set greenManual, because no photo is selected');
+            return;
+        }
+        
+        currentData = data.photos[photoId];
+        console.log(currentData);
+        
         $.ajax({
             url: pat.config.apiBaseURL + 'set_photo_greenmanual',
-            data: {s: backdoorSecret, id: data.id, value: greenManual},
+            data: {s: backdoorSecret, id: currentData.id, value: greenManualValue},
             type: "POST",
             success: function(ajaxData) {
-                data.status = ajaxData.response.new_value;
-                $infoList.binfolist('updateItems', [data.id]);
+                currentData.greenManual = greenManualValue;
+                $bPhotoInfoList.binfolist('updateItems', [currentData.id]);
             },
             error: function() {
-                console.log('Failed updating greenManual', data);
+                console.log('Failed updating greenManual', currentData);
             }
         });
     };
@@ -710,7 +719,28 @@ $(function(){
         // when help screen is closed
         } else if ($bHelp.bHelp('option', 'state') == 0) {
             
-            //console.log('key pressed', key);
+            // Assign new value of greenManual by alt(+shift)+0123
+            if (event.altKey) {
+                switch (key) {
+                case 48: // 0
+                case 49: // 1
+                case 50: // 2
+                case 51: // 3
+                    greenValue = key - 48;
+                    
+                    if (!backdoorSecret) {
+                        console.log('Changing greenManual is not available in the read-only mode');
+                        return false;
+                    }
+                    
+                    if (event.shiftKey) {
+                        greenValue = -greenValue;
+                    }
+                    
+                    setGreenManualFunction(greenValue);
+                    return false;
+                }
+            }
             
             switch (key) {
 
