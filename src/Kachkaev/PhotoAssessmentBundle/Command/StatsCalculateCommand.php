@@ -34,6 +34,8 @@ class StatsCalculateCommand extends ContainerAwareCommand
             if (!$input->getOption('precise')) {
                 $timestamp = (int)(floor($timestamp / 60) * 60);
             }
+        } else if (!is_numeric($timestamp)) {
+            $timestamp = strtotime($timestamp);
         }
         
         $timestampHR = date("Y-m-d H:i:s", $timestamp);
