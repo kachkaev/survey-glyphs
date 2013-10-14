@@ -336,6 +336,14 @@ $.widget('pat.binfolist', {
 	            case 'time-from-noon':
                     currentMeasure = Math.abs(item.dateTaken % 86400 - 43200) / 60;
                     break;
+
+	            case 'green-manual':
+	                currentMeasure = Math.abs(item.greenManual);
+	                break;
+
+	            case 'green-manual-split':
+	                currentMeasure = 5 - item.greenManual;
+	                break;
 	                
 	            default:
 	                throw new Error('Unknown sort mode ' + currentSortMode + ' in sort order ');

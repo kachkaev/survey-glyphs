@@ -415,7 +415,9 @@ $(function(){
                         'source',
                         'time-of-day',
                         'time-from-noon',
-                        'luminance'
+                        'luminance',
+                        'green-manual',
+                        'green-manual-split'
 
                     ],
             sortOrder: stateContainer.state.photoSortOrder,

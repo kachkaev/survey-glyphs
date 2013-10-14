@@ -35,7 +35,9 @@ var LANG_SORT_MODES = {
         
         'time-of-day': 'daytime',
         'time-from-noon': 'time from noon',
-        'luminance': 'luminance'
+        'luminance': 'luminance',
+        'green-manual': 'category of greenness',
+        'green-manual-split': 'category of green (man-made sep.)'
 };
 
 /**
