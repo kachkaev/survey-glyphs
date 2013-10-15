@@ -149,18 +149,21 @@ $.widget('ui.bsurveyphoto', {
     },
 
     showNothing: function() {
+        w.currentPhotoInfo = null;
 		this.w.$element.children().detach();
 	},
 
 	showLoading: function() {
 		var w = this.w;
-		
+		w.currentPhotoInfo = null;
 		w.$element.children().detach();
 		w.$element.append(w.$loading);
 	},
 	
 	showPhotoInfo: function(info) {
 		var w = this.w;
+		w.currentPhotoInfo = info;
+		
 		if (info.status === 0) {
 			w.$infoPhoto.attr('src', '');
 			w.$infoPhoto.attr('src', info.imgSrc);
@@ -213,7 +216,40 @@ $.widget('ui.bsurveyphoto', {
 		};
 	},
 	
-	isShowingError: function() {
+    _setOption: function (key, value) {
+        var w = this.w;
+        
+        // Check if such option exists, throw an error if not
+        if (!w.options.hasOwnProperty(key)) {
+            throw "Option " + key + " does not exist";
+        }
+        
+        // Check if value matches what it was, do nothing if yes
+        if (value === w.options[key] || (_.isArray(value) && _.isEqual(value, w.options[key]))) {
+            return;
+        }
+        
+        // Save old option value
+        var prev = w.options[key];
+        
+        // Apply the option
+        this._super(key, value);
+        
+        // Call corresponding update method depending on the option key
+        switch (key) {
+        
+        case 'facesAttributeName':
+            if (w.currentPhotoInfo)
+                this.showPhotoInfo(w.currentPhotoInfo);
+            break;
+        }
+        
+//        console.log("event: change" + key.toLowerCase(), {newValue: value, prevValue: prev});
+        w._self._trigger("change" + key.toLowerCase(), null, {newValue: value, prevValue: prev});
+        
+    },
+    
+    isShowingError: function() {
 		return this.w.$error.parent().length != 0;
 	}
 });

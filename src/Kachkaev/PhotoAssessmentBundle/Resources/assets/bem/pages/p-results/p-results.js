@@ -376,6 +376,10 @@ $(function(){
     // Help box
     var $bHelp = $($('#b-help').html()).hide().appendTo($body).bHelp();
     
+    // Help button
+    var $bHelpButton = $('.p-results__header-help').click(function(){
+        $bHelp.bHelp('open');
+    });
     // Info lists
     
     //// Photos
@@ -529,9 +533,9 @@ $(function(){
 
     //// Box with photo
     var $bPhoto = $('.b-survey-photo').bsurveyphoto({
-        facesAttributeName: pat.config.visibleFaceBundle,
         editableFacesGroupIndex: pat.config.visibleFaceBundle == 'facesManual' ? 0 : null
     });
+    
     
     
     // =====================================
@@ -903,6 +907,11 @@ $(function(){
             viewModeTimeScaling: stateContainer.state.timeScaling,
             viewModeBackgroundVariable: stateContainer.state.infolistViewModeBackgroundVariable
         });
+        
+        $bPhoto.bsurveyphoto('option', 'facesAttributeName',
+                stateContainer.state.infolistViewModeThumbnailType == pat.InfolistThumbnailGenerator.TYPE_FACES
+                     ? pat.config.visibleFaceBundle
+                     : null);
         
         $bothPhotoresponsePatterns.bphotoresponsepattern('option', {
             'timeScaling': stateContainer.state.timeScaling,

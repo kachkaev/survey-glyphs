@@ -21,16 +21,38 @@
 	padding-top: 10px;
 }
 
-.p-results__header a{
+.p-results__header h1 a{
 	color: #000;
 	text-decoration: none;
 }
 
-.p-results__header a:hover{
+.p-results__header h1 a:hover{
 	text-decoration: underline;
 }
 
 .p-results__header-readonly {
+    color: #aaa;
+}
+
+.p-results__header-help {
+	position: absolute;
+	right: 20px;
+	top: 19px;
+	font-size: 16px;
+	font-style: normal;
+    color: #ccc;
+    text-decoration: none;
+    line-height: 21px;
+    border-radius: 3px;
+    display: block;
+    height: 20px;
+    width: 18px;
+    text-align: center;
+    padding-left: 1px;
+}
+
+.p-results__header-help:hover {
+    background: #eee;
     color: #aaa;
 }
 
