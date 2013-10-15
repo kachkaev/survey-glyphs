@@ -753,6 +753,7 @@ $(function(){
             case 49: // 1
             case 48: // 0
             case 55: // 7
+            case 56: // 8
                 if (!event.altKey && !event.metaKey && !event.ctrlKey) {
                     var infolistViewModeThumbnailType = null;
                     switch(key) {
@@ -764,6 +765,9 @@ $(function(){
                             break;
                         case 55: // 7
                             infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_FACES;
+                            break;
+                        case 56: // 8
+                            infolistViewModeThumbnailType = pat.InfolistThumbnailGenerator.TYPE_PHOTO;
                             break;
                     }
                     updateState({infolistViewModeBackgroundVariable: 0, infolistViewModeThumbnailType: infolistViewModeThumbnailType});
