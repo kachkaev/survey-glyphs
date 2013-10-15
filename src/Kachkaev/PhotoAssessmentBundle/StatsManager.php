@@ -17,7 +17,7 @@ class StatsManager
     // Main principle of normalization: the bigger the number the less appropriate the photograph
     protected $answerNormalizationMap = [
             '_default'   => ['1' => 0, '0' => 1 , '-1' => 0.5, '' => 2],
-            'qTimeOfDay' => ['2' => 1, '1' => 0.75],
+            'qTimeOfDay' => ['2' => 1, '1' => 0.75, '0' => 0],
             'qSubjectTemporary' => ['1' => 1, '0' => 0],
             'qSubjectPeople' => ['1' => 1, '0' => 0]
         ];
