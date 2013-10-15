@@ -1,0 +1,6 @@
+<ifModule mod_headers.c>
+    #10 years
+    <filesMatch "\.(ico|jpe?g|jpg|png|gif|swf|css|js)$">
+	Header set Cache-Control "max-age=315360000, public"
+    </filesMatch>
+</IfModule>
