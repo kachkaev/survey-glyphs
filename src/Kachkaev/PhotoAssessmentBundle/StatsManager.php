@@ -187,9 +187,27 @@ class StatsManager
                     $avg = calculate_average($questionAnswers);
                     $med = calculate_median($questionAnswers);
                     $agr = null;
-                    if ($med !== null) {
-                        $agr = $med <= 0.5 ? 0 : ($med <= 1.5 ? 1 : 2);
+                    $agrBins = [];
+                    foreach ($questionAnswers as $answer) {
+                        $key = $answer." ";
+                        if (!array_key_exists($key, $agrBins)) {
+                            $agrBins[$key] = 1;
+                        } else {
+                            ++$agrBins[$key];
+                        }
                     }
+                    ksort($agrBins);
+                    arsort($agrBins);
+                    
+                    foreach ($agrBins as $key => $value) {
+//                         if ($key == "0.5 ") {
+//                             continue;
+//                         } else {
+                            $agr = (float) $key;
+                            break;    
+//                         }
+                    }
+                                       
                     $photoStat['entity']->set($question.'NormalizedAvg', $avg);
                     $photoStat['entity']->set($question.'NormalizedMed', $med);
                     $photoStat['entity']->set($question.'NormalizedAgr', $agr);
