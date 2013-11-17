@@ -417,6 +417,7 @@ $(function(){
                         'suitability-q5-med',
                         'suitability-q6-med',
                         'source',
+                        'location',
                         'time-of-day',
                         'time-from-noon',
                         'luminance',

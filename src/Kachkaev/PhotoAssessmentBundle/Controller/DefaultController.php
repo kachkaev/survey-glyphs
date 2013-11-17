@@ -128,6 +128,8 @@ class DefaultController extends Controller
             "photoId"            => "string",
             "userId"             => "string",
             "userName"           => "string",
+            "lon"                => "float",
+            "lat"                => "float",
             "status"             => "int",
             "priority"           => "int",
             "dateTaken"          => "int",
