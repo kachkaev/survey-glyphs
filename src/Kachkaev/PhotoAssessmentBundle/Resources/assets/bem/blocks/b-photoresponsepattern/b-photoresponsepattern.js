@@ -1,6 +1,6 @@
 (function(){
 
-var CANVAS_PADDING = [10, 20, 5, 4]; // top right bottom left
+var CANVAS_PADDING = [10, 20, -20, 4]; // top right bottom left
 //var CANVAS_PADDING = [10, 20, 5, 12]; // top right bottom left
 
 var NODE_SIZE = 14;
@@ -28,6 +28,7 @@ $.widget('ui.bphotoresponsepattern', {
         answers: [],
         questions: [],
         timeScaling: false,
+        shadeNull: true,
         maxTime: 20,
         photoResponseEqualityParameter: null,
         photoResponses: []
@@ -55,7 +56,18 @@ $.widget('ui.bphotoresponsepattern', {
 		    .append('svg:svg')
     		.attr('width', w.$element.width())
     		.attr('height', w.$element.height());
-		w.d3SvgCanvas.append('g')
+		// rect
+		var x = d3.scale.linear()
+        w.d3SvgCanvas.append('rect')
+            .attr('class', 'nullShading')
+            .attr("x", 134.5)
+            .attr("y", 0)
+            .attr("width", 40)
+            .attr("height", w.$element.height());
+
+        
+        // groups
+        w.d3SvgCanvas.append('g')
 		    .attr('class', 'grid');
         w.d3SvgCanvas.append('g')
             .attr('class', 'photoResponses');
@@ -130,10 +142,16 @@ $.widget('ui.bphotoresponsepattern', {
 	    var w = this.w;
 	    
 	    var d3grid = w.d3SvgCanvas.select('g.grid');
+	    var d3NullShading = w.d3SvgCanvas.select('rect.nullShading');
 	    var d3photoResponses = w.d3SvgCanvas.select('g.photoResponses');
 	    var d3photoResponseEdges = w.d3SvgCanvas.select('g.photoResponseEdges');
 	    var d3photoResponseNodes = w.d3SvgCanvas.select('g.photoResponseNodes');
        
+	    var nullShadingOpacity = w.options.shadeNull * 1 * (w.options.photoResponses !== null && w.options.photoResponses.length > 0);
+	    d3NullShading
+    	    .transition().duration(ANIMATION_LENGTH)
+    	    .style('opacity', nullShadingOpacity);
+	    
 	    d3photoResponses.attr('width', function()  { return w.d3SvgCanvas.attr('width')  - CANVAS_PADDING[1] - CANVAS_PADDING[3];});
 	    d3photoResponses.attr('height', function() { return w.d3SvgCanvas.attr('height') - CANVAS_PADDING[0] - CANVAS_PADDING[2];});
 	    d3photoResponses.attr('transform', function() {return 'translate(' + CANVAS_PADDING[3] + ',' + CANVAS_PADDING[0] + ')';});

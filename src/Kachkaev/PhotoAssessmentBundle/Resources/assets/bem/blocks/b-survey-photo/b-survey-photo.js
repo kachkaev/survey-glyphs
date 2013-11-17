@@ -149,6 +149,7 @@ $.widget('ui.bsurveyphoto', {
     },
 
     showNothing: function() {
+        var w = this.w;
         w.currentPhotoInfo = null;
 		this.w.$element.children().detach();
 	},

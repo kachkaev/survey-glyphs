@@ -1,7 +1,7 @@
 .b-photoresponsepattern {
 	position: relative;
 	width: 200px;
-	height: 200px;
+	height: 175px;
 /*    width: 400px;
     height: 400px; */
 }
@@ -38,6 +38,13 @@
 
 .b-photoresponsepattern .photoResponses {
 	
+}
+
+.b-photoresponsepattern .nullShading {
+    fill: rgba(255,255,0, .3);
+    width: 200px;
+    height: 200px;
+    opacity: 0;
 }
 
 .b-photoresponsepattern .node {
