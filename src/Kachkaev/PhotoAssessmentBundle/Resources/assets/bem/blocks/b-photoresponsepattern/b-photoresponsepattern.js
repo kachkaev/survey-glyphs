@@ -11,7 +11,7 @@ var ANIMATION_EASING = 'in-out';
 // Mapping answers with strings to be displayed in the interface
 var LANG_HINT_ANSWERS = {
        '_default': [[1, 'yes'], [0, 'no'], [-1, 'hard to say'], [null, 'N/A']],
-       'qTimeOfDay': [[0, 'day'], [1, 'twilight'], [2, 'night'], [-1, 'hard to say'], [null, 'N/A']]
+       'qTimeOfDay': [[0, 'day'], [1, 'hts/twilight'], [2, 'night'], [-1, 'hts/twilight'], [null, 'N/A']]
 };
 
 var LANG_HINT_RESPONSE = ' selected';

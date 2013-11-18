@@ -163,6 +163,10 @@ $(function(){
 //        if (photoResponse.duration < 1) {
 //            photoResponse.duration = Math.floor(10 + Math.random()*10);
 //        }
+        // unite twilight + hard to say
+        if (photoResponse['qTimeOfDay'] == 1) {
+            photoResponse['qTimeOfDay'] = -1;
+        }
         _.each(pat.config.questions, function(question) {
            if (pat.config.dependentQuestionDisabling[question]) {
                var answerAsString = '' + photoResponse[question];
