@@ -11,7 +11,7 @@ var ANIMATION_EASING = 'in-out';
 // Mapping answers with strings to be displayed in the interface
 var LANG_HINT_ANSWERS = {
        '_default': [[1, 'yes'], [0, 'no'], [-1, 'hard to say'], [null, 'N/A']],
-       'qTimeOfDay': [[0, 'day'], [1, 'twilight'], [2, 'night'], [-1, 'hard to say'], [null, 'N/A']]
+       'qTimeOfDay': [[0, 'day'], [1, 'hard to say / twilight'], [2, 'night'], [-1, 'hard to say / twilight'], [null, 'N/A']]
 };
 
 var LANG_HINT_RESPONSE = ' selected';
@@ -22,7 +22,7 @@ var LANG_HINT_WITH_DURATION = ' with duration = ';
 var LANG_HINT_SECS = ' s';
 var LANG_HINT_WITH_UNKNOWN_DURATION = ' with unknown duration';
 
-$.widget('ui.bphotoresponsepattern', {
+$.widget('ui.bphotomap', {
 
     options: {
         answers: [],
@@ -34,33 +34,33 @@ $.widget('ui.bphotoresponsepattern', {
         photoResponses: []
     },
     
-	_init: function() {
+    _init: function() {
         
-		var w = {
-				_self: this,
-				$element: this.element,
-				options: this.options
-			};
-		this.w = w;
+        var w = {
+                _self: this,
+                $element: this.element,
+                options: this.options
+            };
+        this.w = w;
 
 
-	    // =====================================
-	    // Objects with UI
-	    // =====================================
+        // =====================================
+        // Objects with UI
+        // =====================================
 
         // Hint
         w.$hint = $('<div/>').addClass('b-photoresponsepattern__hint').appendTo(w.$element);
         
-		// SVG 
-		w.d3SvgCanvas = d3.select(w.$element.get(0))
-		    .append('svg:svg')
-    		.attr('width', w.$element.width())
-    		.attr('height', w.$element.height());
-		// rect
-		var x = d3.scale.linear()
+        // SVG 
+        w.d3SvgCanvas = d3.select(w.$element.get(0))
+            .append('svg:svg')
+            .attr('width', w.$element.width())
+            .attr('height', w.$element.height());
+        // rect
+        var x = d3.scale.linear()
         w.d3SvgCanvas.append('rect')
             .attr('class', 'nullShading')
-            .attr("x", 118)
+            .attr("x", 134.5)
             .attr("y", 0)
             .attr("width", 40)
             .attr("height", w.$element.height());
@@ -68,7 +68,7 @@ $.widget('ui.bphotoresponsepattern', {
         
         // groups
         w.d3SvgCanvas.append('g')
-		    .attr('class', 'grid');
+            .attr('class', 'grid');
         w.d3SvgCanvas.append('g')
             .attr('class', 'photoResponses');
         w.d3SvgCanvas.append('g')
@@ -76,114 +76,114 @@ $.widget('ui.bphotoresponsepattern', {
         w.d3SvgCanvas.append('g')
             .attr('class', 'photoResponseNodes');
 
-		w.$svgCanvas = w.$element.find('svg');
-		
-		// =====================================
+        w.$svgCanvas = w.$element.find('svg');
+        
+        // =====================================
         // Event handling
         // =====================================
 
-		// Highlight responses when mouse is over them + generate hint 
-		w.$element.on('bphotoresponsepatterncontexthover', function(event, eventData) {
-		    var d3PhotoResponse = w.d3SvgCanvas.select('g.photoResponses').selectAll('path');
-		    var photoResponseIds = eventData.photoResponseIds;
-		    
-		    var hintTextChunks = [];
-		    
-		    // If at least something is hovered
-		    if (_.isArray(photoResponseIds) && photoResponseIds.length) {
-		        // Mark lines as selected
-		        d3PhotoResponse.each(function(d) {
-		                var s = d3.select(this);
-		                s.classed('selected', photoResponseIds.indexOf(d.id) !== -1); 
-		            });
-		        
-		        // Generate hint
-		        //// xxx responses
-		        hintTextChunks.push(photoResponseIds.length);
-		        hintTextChunks.push(photoResponseIds.length == 1 ? LANG_HINT_RESPONSE : LANG_HINT_RESPONSES);
-		        //// 'with question: answer'
-		        if (eventData.questionId !== undefined && eventData.answerId !== undefined) {
-		            var question = w.options.questions[eventData.questionId];
+        // Highlight responses when mouse is over them + generate hint 
+        w.$element.on('bphotoresponsepatterncontexthover', function(event, eventData) {
+            var d3PhotoResponse = w.d3SvgCanvas.select('g.photoResponses').selectAll('path');
+            var photoResponseIds = eventData.photoResponseIds;
+            
+            var hintTextChunks = [];
+            
+            // If at least something is hovered
+            if (_.isArray(photoResponseIds) && photoResponseIds.length) {
+                // Mark lines as selected
+                d3PhotoResponse.each(function(d) {
+                        var s = d3.select(this);
+                        s.classed('selected', photoResponseIds.indexOf(d.id) !== -1); 
+                    });
+                
+                // Generate hint
+                //// xxx responses
+                hintTextChunks.push(photoResponseIds.length);
+                hintTextChunks.push(photoResponseIds.length == 1 ? LANG_HINT_RESPONSE : LANG_HINT_RESPONSES);
+                //// 'with question: answer'
+                if (eventData.questionId !== undefined && eventData.answerId !== undefined) {
+                    var question = w.options.questions[eventData.questionId];
                     hintTextChunks.push(LANG_HINT_WITH);
-		            hintTextChunks.push(pat.config.lang.hintQuestions[question]);
-		            hintTextChunks.push(LANG_HINT_QAJOINT);
-		            var langHintAnswers = LANG_HINT_ANSWERS[question] || LANG_HINT_ANSWERS['_default'];
-		            var answer = pat.getAnswerSeq(question)[eventData.answerId];
-		            hintTextChunks.push(_.find(langHintAnswers, function(pair){ return pair[0] == answer;})[1]);
-		        }
-		        
-		        //// with duration = x s || with unknown duration
-		        if (photoResponseIds.length == 1 && w.options.timeScaling) {
-		            var duration = eventData.photoResponses[0].duration;
-		            if (duration >= 0) {
-		                hintTextChunks.push(LANG_HINT_WITH_DURATION);
-		                hintTextChunks.push(eventData.photoResponses[0].duration);
-		                hintTextChunks.push(LANG_HINT_SECS);
-		            } else {
-		                hintTextChunks.push(LANG_HINT_WITH_UNKNOWN_DURATION);
-		            }
-		        }
-		            
-		    } else {
-		        d3PhotoResponse.classed('selected', false);
-		    }
-		    
-		    //console.log('hint', eventData, hintTextChunks.join(''));
-		    w._self._updateHint(hintTextChunks.join(''));
-		});
-		
-		w._self._updatePhotoResponsesMap();
-		w._self._redraw();
-		w._self._updateHint();
-		
-	},
-	
-	_redraw: function() {
-	    var w = this.w;
-	    
-	    var d3grid = w.d3SvgCanvas.select('g.grid');
-	    var d3NullShading = w.d3SvgCanvas.select('rect.nullShading');
-	    var d3photoResponses = w.d3SvgCanvas.select('g.photoResponses');
-	    var d3photoResponseEdges = w.d3SvgCanvas.select('g.photoResponseEdges');
-	    var d3photoResponseNodes = w.d3SvgCanvas.select('g.photoResponseNodes');
+                    hintTextChunks.push(pat.config.lang.hintQuestions[question]);
+                    hintTextChunks.push(LANG_HINT_QAJOINT);
+                    var langHintAnswers = LANG_HINT_ANSWERS[question] || LANG_HINT_ANSWERS['_default'];
+                    var answer = pat.getAnswerSeq(question)[eventData.answerId];
+                    hintTextChunks.push(_.find(langHintAnswers, function(pair){ return pair[0] == answer;})[1]);
+                }
+                
+                //// with duration = x s || with unknown duration
+                if (photoResponseIds.length == 1 && w.options.timeScaling) {
+                    var duration = eventData.photoResponses[0].duration;
+                    if (duration >= 0) {
+                        hintTextChunks.push(LANG_HINT_WITH_DURATION);
+                        hintTextChunks.push(eventData.photoResponses[0].duration);
+                        hintTextChunks.push(LANG_HINT_SECS);
+                    } else {
+                        hintTextChunks.push(LANG_HINT_WITH_UNKNOWN_DURATION);
+                    }
+                }
+                    
+            } else {
+                d3PhotoResponse.classed('selected', false);
+            }
+            
+            //console.log('hint', eventData, hintTextChunks.join(''));
+            w._self._updateHint(hintTextChunks.join(''));
+        });
+        
+        w._self._updatePhotoResponsesMap();
+        w._self._redraw();
+        w._self._updateHint();
+        
+    },
+    
+    _redraw: function() {
+        var w = this.w;
+        
+        var d3grid = w.d3SvgCanvas.select('g.grid');
+        var d3NullShading = w.d3SvgCanvas.select('rect.nullShading');
+        var d3photoResponses = w.d3SvgCanvas.select('g.photoResponses');
+        var d3photoResponseEdges = w.d3SvgCanvas.select('g.photoResponseEdges');
+        var d3photoResponseNodes = w.d3SvgCanvas.select('g.photoResponseNodes');
        
-	    var nullShadingOpacity = w.options.shadeNull * 1 * (w.options.photoResponses !== null && w.options.photoResponses.length > 0);
-	    d3NullShading
-    	    .transition().duration(ANIMATION_LENGTH)
-    	    .style('opacity', nullShadingOpacity);
-	    
-	    d3photoResponses.attr('width', function()  { return w.d3SvgCanvas.attr('width')  - CANVAS_PADDING[1] - CANVAS_PADDING[3];});
-	    d3photoResponses.attr('height', function() { return w.d3SvgCanvas.attr('height') - CANVAS_PADDING[0] - CANVAS_PADDING[2];});
-	    d3photoResponses.attr('transform', function() {return 'translate(' + CANVAS_PADDING[3] + ',' + CANVAS_PADDING[0] + ')';});
-	    d3photoResponseEdges.attr('transform', d3photoResponses.attr('transform'));
-	    d3photoResponseNodes.attr('transform', d3photoResponses.attr('transform'));
-	    d3grid.attr('transform', d3photoResponses.attr('transform'));
+        var nullShadingOpacity = w.options.shadeNull * 1 * (w.options.photoResponses !== null && w.options.photoResponses.length > 0);
+        d3NullShading
+            .transition().duration(ANIMATION_LENGTH)
+            .style('opacity', nullShadingOpacity);
+        
+        d3photoResponses.attr('width', function()  { return w.d3SvgCanvas.attr('width')  - CANVAS_PADDING[1] - CANVAS_PADDING[3];});
+        d3photoResponses.attr('height', function() { return w.d3SvgCanvas.attr('height') - CANVAS_PADDING[0] - CANVAS_PADDING[2];});
+        d3photoResponses.attr('transform', function() {return 'translate(' + CANVAS_PADDING[3] + ',' + CANVAS_PADDING[0] + ')';});
+        d3photoResponseEdges.attr('transform', d3photoResponses.attr('transform'));
+        d3photoResponseNodes.attr('transform', d3photoResponses.attr('transform'));
+        d3grid.attr('transform', d3photoResponses.attr('transform'));
 
-	    // Scaling
-	    // x - always the same
-	    //console.log(photoResponses.size(), photoResponses);
-	    
-	    var x = d3.scale.linear()
-        	    .range([0, d3photoResponses.attr('width')])
-	            .domain([0, pat.config.answerSequencesLength]);
-	    
-	    // y - domain depends on time scaling
-	    var y = d3.scale.linear()
-	            .range([0, d3photoResponses.attr('height')])
-        	    .domain([0, 1]);
+        // Scaling
+        // x - always the same
+        //console.log(photoResponses.size(), photoResponses);
+        
+        var x = d3.scale.linear()
+                .range([0, d3photoResponses.attr('width')])
+                .domain([0, pat.config.answerSequencesLength]);
+        
+        // y - domain depends on time scaling
+        var y = d3.scale.linear()
+                .range([0, d3photoResponses.attr('height')])
+                .domain([0, 1]);
         if (w.options.timeScaling) {
             y.domain([0, w.options.maxTime * w.options.questions.length]);
         } else {
             y.domain([0, w.options.questions.length]);
         }
         
-	    
-	    // SVG Line generator
+        
+        // SVG Line generator
         var line = d3.svg.line()
             .x(function(d){return x(d[0]);})
             .y(function(d){return y(d[1]);})
             .interpolate('linear'); 
-	    
+        
 
         // =====================================
         // Draw grid
@@ -343,8 +343,8 @@ $.widget('ui.bphotoresponsepattern', {
                 .style('opacity', o)
                 .call(updateResponseLine);
         });
-	    
-	    // Exit
+        
+        // Exit
         d3responseLine.exit()
            .transition().duration(ANIMATION_LENGTH)
            .ease(ANIMATION_EASING)
@@ -482,8 +482,8 @@ $.widget('ui.bphotoresponsepattern', {
         d3responseNode.exit()
           .remove();
 
-	},
-	
+    },
+    
     _setOption: function (key, value) {
         var w = this.w;
         
