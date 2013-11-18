@@ -1,19 +1,45 @@
 .b-photomap {
-    position: relative;
+    position: absolute;
     width: 220px;
     height: 200px;
     margin: 10px 0 0 10px;
-    background: #ccc;
 }
 
-.b-photomap__credit {
+.b-photomap__map {
+	background: url("/static/i/b-photomap.png") no-repeat center center;
+	position:absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.b-photomap__points-container {
+	z-index: 1;
+    position:absolute;
+    top: 0;
+    left: 0;
+
+}
+
+.b-photomap .points rect {
+    z-index: 10;
+	fill: #bbb;
+}
+.b-photomap .points rect.highlighted {
+    z-index: 20;
+    fill: #888;
+}
+.b-photomap .points rect.selected {
+	z-index: 100;
+    fill: #000;
+}
+
+.b-photomap__mouse-handler {
+	z-index: 200;
 	position: absolute;
-	bottom: -14px;
-	right:0;
-	color: #888888;
-    font-size: 10px;
-    height: 0;
-    line-height: 14px;
-    overflow: visible;
-    white-space: nowrap;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }

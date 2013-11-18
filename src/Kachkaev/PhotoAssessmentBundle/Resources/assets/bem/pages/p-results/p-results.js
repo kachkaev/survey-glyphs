@@ -541,7 +541,11 @@ $(function(){
         editableFacesGroupIndex: pat.config.visibleFaceBundle == 'facesManual' ? 0 : null
     });
     
-    
+    //// Map
+    var $bMap = $('.b-photomap').bphotomap({
+        photos: data.photos
+    });
+
     
     // =====================================
     // Object Events
@@ -607,11 +611,12 @@ $(function(){
 
         // Update photo caption
         $bListCaptionPhoto.text(photoId ? 'Photo ' + photoId : '');
-
+        
         // Hide photo and patterns if nothing is selected
         if (photoId === null) {
             $bPhotoResponsePatternPhoto.bphotoresponsepattern('option', 'photoResponses', []);
             $bPhoto.bsurveyphoto('showNothing');
+            $bMap.bphotomap('option','selectedItemId', null);
             return;    
         }
 
@@ -622,6 +627,9 @@ $(function(){
         photoInfoProviders[photo.source].load(photo, function(info) {
             $bPhoto.bsurveyphoto('showPhotoInfo', info);
         });
+        
+        // Highlight the photo on the map
+        $bMap.bphotomap('option','selectedItemId', photoId);
         
         // preload the next id
         var nextPhotoId = $bPhotoInfoList.binfolist('getNextItemId');
@@ -657,17 +665,22 @@ $(function(){
 
     // When an item in user list is hovered
     $bUserInfoList.on('binfolisthoveroveritem', function(event, ui) {
-        $bPhotoInfoList.binfolist('option', 'highlightedItemsIds', ui.itemData ? _.map(ui.itemData.photoResponses, function(pr) {return pr.photoId;}) : null);
+        var highlightedItemsIds = ui.itemData ? _.map(ui.itemData.photoResponses, function(pr) {return pr.photoId;}) : null;
+        $bPhotoInfoList.binfolist('option', 'highlightedItemsIds', highlightedItemsIds);
+        $bMap.bphotomap('option', 'highlightedItemsIds', highlightedItemsIds);
     });
     
     // When an item in photo list is hovered
     $bPhotoInfoList.on('binfolisthoveroveritem', function(event, ui) {
         $bUserInfoList.binfolist('option', 'highlightedItemsIds', ui.itemData ? _.map(ui.itemData.photoResponses, function(pr) {return pr.userId;}) : null);
+        $bMap.bphotomap('option', 'highlightedItemsIds', (ui.itemData && ui.itemData.photoResponses) ? [ui.itemData.photoResponses[0].photoId] : null);
     });
 
     // When a line in user pattern is hovered
     $bPhotoResponsePatternUser.on('bphotoresponsepatterncontexthover', function(event, ui) {
-        $bPhotoInfoList.binfolist('option', 'highlightedItemsIds', _.map(ui.photoResponses, function(pr) {return pr.photoId;}));
+        var highlightedItemsIds = _.map(ui.photoResponses, function(pr) {return pr.photoId;});
+        $bPhotoInfoList.binfolist('option', 'highlightedItemsIds', highlightedItemsIds);
+        $bMap.bphotomap('option', 'highlightedItemsIds', highlightedItemsIds);
     });
 
     // When a line in photo pattern is hovered
@@ -693,6 +706,18 @@ $(function(){
         updateState({userId: selectedIdIndex == -1 ? ids[0] : ids[(selectedIdIndex + 1) % ids.length]});
     });
 
+    // When highlighted elements are changed on the map
+    $bMap.on('bphotomapchangehighlighteditemsids', function(event, ui) {
+        $bPhotoInfoList.binfolist('option', 'highlightedItemsIds', ui.newValue);
+    });
+
+    // When selected element is changed on the map
+    $bMap.on('bphotomapchangeselecteditemid', function(event, ui) {
+        $bPhotoInfoList.binfolist('option', 'selectedItemId', ui.newValue);
+    });
+
+    //highlightedItemsIds
+    
     var $bothPhotoresponsePatterns = $bPhotoResponsePatternUser.add($bPhotoResponsePatternPhoto);
     
 

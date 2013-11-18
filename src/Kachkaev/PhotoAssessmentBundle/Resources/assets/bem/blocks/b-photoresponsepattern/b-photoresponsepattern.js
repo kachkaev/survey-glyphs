@@ -25,7 +25,7 @@ var LANG_HINT_WITH_UNKNOWN_DURATION = ' with unknown duration';
 $.widget('ui.bphotoresponsepattern', {
 
     options: {
-        answers: [],
+        photos: [],
         questions: [],
         timeScaling: false,
         shadeNull: true,
