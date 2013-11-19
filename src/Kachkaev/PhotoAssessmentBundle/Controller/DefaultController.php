@@ -2,6 +2,8 @@
 
 namespace Kachkaev\PhotoAssessmentBundle\Controller;
 
+use Symfony\Component\Yaml\Yaml;
+
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Symfony\Component\Translation\IdentityTranslator;
@@ -150,6 +152,13 @@ class DefaultController extends Controller
             $this->castFetchedRowTypes($photo, $photosColumnTypes);
             $photosCollection[$photo['id']] = $photo;
         };
+        
+        // Grid coordinates for photos
+        $photosLocationGrid = Yaml::parse(file_get_contents($this->container->getParameter('pat.photos_location_grid.path')))['photos_location_grid']; 
+        foreach($photosCollection as $photoId => &$photo) {
+            $photo['lgx'] = $photosLocationGrid[$photoId][0];
+            $photo['lgy'] = $photosLocationGrid[$photoId][1];
+        }
         
     	// Get all users
         $usersColumnTypes = [

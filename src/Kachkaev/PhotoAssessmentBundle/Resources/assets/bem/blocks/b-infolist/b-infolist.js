@@ -327,7 +327,7 @@ $.widget('pat.binfolist', {
 
 	            case 'location':
 	                // TODO replace with a real st function
-	                currentMeasure = Math.round(item.lon*100)/100 * 100 + Math.round((item.lat - 50)*100)/100 * 10000;
+	                currentMeasure = item.lgy*100 + item.lgx;
 	                break;
 	                
 	            case 'luminance':

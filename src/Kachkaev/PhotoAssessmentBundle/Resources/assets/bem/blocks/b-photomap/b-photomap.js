@@ -16,7 +16,8 @@ $.widget('ui.bphotomap', {
         photos: [],
         selectedItemId: null,
         highlightedItemsIds: [],
-        bbox: [-0.21, 51.46, 0.02, 51.56]
+        bbox: [-0.21, 51.46, 0.02, 51.56],
+        pixelBbox: [6, 180, 213, 35]
     },
     
     _init: function() {
@@ -51,17 +52,17 @@ $.widget('ui.bphotomap', {
         
         
         w.$mouseHandler = $('<div/>').addClass('b-photomap__mouse-handler').appendTo(w.$element);
-        w.$mouseHandler
+        //w.$mouseHandler
 //            .attr('width', w.$element.width())
 //            .attr('height', w.$element.height());
 
         var x2lon = d3.scale.linear()
-            .domain([0, w.$element.width()])
+            .domain([w.options.pixelBbox[0], w.options.pixelBbox[2]])
             .range([w.options.bbox[0], w.options.bbox[2]]);
 
         // y - domain depends on time scaling
         var y2lat = d3.scale.linear()
-                .domain([0, w.$element.height()])
+                .domain([w.options.pixelBbox[1], w.options.pixelBbox[3]])
                 .range([w.options.bbox[1], w.options.bbox[3]]);
 
         w.$mouseHandler.on('mouseenter mousemove', function(e) {
@@ -69,8 +70,8 @@ $.widget('ui.bphotomap', {
             var y = e.offsetY;
             var minLon = x2lon(x - MOUSE_WINDOW_X / 2);
             var maxLon = x2lon(x + MOUSE_WINDOW_X / 2);
-            var minLat = y2lat(y - MOUSE_WINDOW_Y / 2);
-            var maxLat = y2lat(y + MOUSE_WINDOW_Y / 2);
+            var minLat = y2lat(y + MOUSE_WINDOW_Y / 2);
+            var maxLat = y2lat(y - MOUSE_WINDOW_Y / 2);
             
             var newHighlighted = [];
             _.each(w.options.photos, function(photo) {
@@ -122,12 +123,12 @@ $.widget('ui.bphotomap', {
         //console.log(photoResponses.size(), photoResponses);
         
         var x = d3.scale.linear()
-                .range([0, d3points.attr('width')])
+                .range([w.options.pixelBbox[0], w.options.pixelBbox[2]])
                 .domain([w.options.bbox[0], w.options.bbox[2]]);
         
         // y - domain depends on time scaling
         var y = d3.scale.linear()
-                .range([0, d3points.attr('height')])
+                .range([w.options.pixelBbox[1], w.options.pixelBbox[3]])
                 .domain([w.options.bbox[1], w.options.bbox[3]]);
         
         // SVG Line generator

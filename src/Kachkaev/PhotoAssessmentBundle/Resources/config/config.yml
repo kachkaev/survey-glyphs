@@ -9,3 +9,4 @@ parameters:
     pat.results.max_submitted_at: ~
         # 1358183114 #14 Jan 
         # 1359219914 # 26 Jan
+    pat.photos_location_grid.path: %kernel.root_dir%/../src/Kachkaev/PhotoAssessmentBundle/Resources/config/photos_location_grid.yml
