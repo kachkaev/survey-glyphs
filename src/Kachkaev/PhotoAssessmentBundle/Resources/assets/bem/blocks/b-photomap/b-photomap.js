@@ -34,6 +34,10 @@ $.widget('ui.bphotomap', {
         // Objects with UI
         // =====================================
 
+        w.$element
+            .find('.b-photomap__copyright_visibility_hidden')
+            .removeClass('b-photomap__copyright_visibility_hidden');
+        
         w.$map = $('<div/>').addClass('b-photomap__map').appendTo(w.$element);
         // Hint
 //        w.$hint = $('<div/>').addClass('b-photoresponsepattern__hint').appendTo(w.$element);
