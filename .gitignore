@@ -9,6 +9,7 @@
 /app/config/parameters.yml
 /build/
 /vendor/
+/data/extra/
 
 /-misc
 /nbproject*
