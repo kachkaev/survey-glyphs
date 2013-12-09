@@ -502,7 +502,7 @@ $(function(){
                 $item.toggleClass('photo_problem_severe', data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1);
                 $item.toggleClass('unchecked', data.isUnchecked);
                 
-                var hint = 'User ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
+                var hint = 'Participant ' + id + ': ' + data.photoResponseCounts[PHOTO_RESPONSE_COMPLETE] + ' completed';
                 if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM]) {
                     hint += ' / ' + data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] + ' photo problem';
                     if (data.photoResponseCounts[PHOTO_RESPONSE_PHOTO_PROBLEM] > 1) {
@@ -579,7 +579,7 @@ $(function(){
         var userId = ui.newValue;
         
         // Update user caption
-        $bListCaptionUser.text(userId ? 'User ' + userId : '');
+        $bListCaptionUser.text(userId ? 'Participant ' + userId : '');
         
         // Hide patterns if nothing is selected
         if (userId === null) {
